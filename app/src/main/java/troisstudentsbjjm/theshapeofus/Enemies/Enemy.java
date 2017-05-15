@@ -13,7 +13,13 @@ public abstract class Enemy {
                 health;
 
     // Setter and Getter
-    public void (PointF velocity) { this.ve}
+    public void setVelocity(PointF velocity) { this.velocity = velocity;   }
+    public void setRotate(float rotate) { this.rotate = rotate; }
+    
+
+    public PointF getVelocity() { return velocity;  }
+    public float getRotate() {  return rotate;  }
+    public int getDamage() { return damage; }
 
 
 }
