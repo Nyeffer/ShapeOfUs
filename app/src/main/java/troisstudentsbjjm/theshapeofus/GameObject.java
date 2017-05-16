@@ -27,7 +27,6 @@ public abstract class GameObject  {
 
     private boolean traversable = false;
 
-    public abstract void update(long fps, float gravity);
 
     public String getBitmapName() {
         return bitmapName;
