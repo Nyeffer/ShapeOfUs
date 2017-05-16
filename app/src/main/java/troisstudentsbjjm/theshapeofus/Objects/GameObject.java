@@ -30,9 +30,6 @@ public abstract class GameObject  {
     private int facing;
     private boolean moves = false;
 
-    private Animation anim = null;
-    private int animFps = 1;
-
     private boolean traversable = false;
 
     public abstract void update(long fps, float gravity);
@@ -94,6 +91,94 @@ public abstract class GameObject  {
     public void setWidth(float width) {
         this.width = width;
     }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public char getType() {
+        return type;
+    }
+
+    public void setType(char type) {
+        this.type = type;
+    }
+
+    public int getFacing() {
+        return facing;
+    }
+
+    public void setFacing(int facing) {
+        this.facing = facing;
+    }
+
+
+    public float getxVelocity() {
+        return xVelocity;
+    }
+
+    public void setxVelocity(float xVelocity) {
+        if (moves) {
+            this.xVelocity = xVelocity;
+        }
+    }
+
+    public float getyVelocity() {
+        return  yVelocity;
+    }
+
+    public void setyVelocity(float yVelocity) {
+        if (moves) {
+            this.yVelocity = yVelocity;
+        }
+    }
+
+    public boolean isMoves() {
+        return moves;
+    }
+
+    public void setMoves(boolean moves) {
+        this.moves = moves;
+    }
+
+    public void setWorldLocationY(float y) {
+        this.worldLocation.y = y;
+    }
+
+    public void setWorldLocationX(float x) {
+        this.worldLocation.x = x;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setTraversable() {
+        traversable = true;
+    }
+
+    public boolean isTraversable() {
+        return traversable;
+    }
+
+
+
 
 
 
