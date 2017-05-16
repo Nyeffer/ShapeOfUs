@@ -2,7 +2,7 @@ package troisstudentsbjjm.theshapeofus.Primatives;
 
 import android.graphics.Rect;
 
-import troisstudentsbjjm.theshapeofus.GameObject;
+import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 /**
  * Created by mrber on 2017-05-15.
