@@ -1,5 +1,6 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
+
 import android.graphics.PointF;
 
 import java.util.Random;
@@ -62,4 +63,5 @@ public class Enemy_Circle {
         }
         return i;
     }
+
 }

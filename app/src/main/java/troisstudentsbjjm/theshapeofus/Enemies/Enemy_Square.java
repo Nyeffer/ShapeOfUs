@@ -1,5 +1,6 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
+
 import android.graphics.PointF;
 
 import java.util.Random;
@@ -77,6 +78,7 @@ public class Enemy_Square {
 //    public int getDamage() { return damage; }
 //    public int getHealth() { return health; }
 //    public boolean getIsDead() { return isDead; }
+
 
 
 }
