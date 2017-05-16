@@ -7,4 +7,7 @@ package troisstudentsbjjm.theshapeofus.Input;
 //We can implement a joystick controller class down the line
 
 public class InputController {
+
+    public double mHorizontalFactor;
+    public double mVerticalFactor;
 }
