@@ -2,8 +2,6 @@ package troisstudentsbjjm.theshapeofus.Primatives;
 
 import android.graphics.Point;
 
-import troisstudentsbjjm.theshapeofus.GameObject;
-
 /**
  * Created by mrber on 2017-05-15.
  */
