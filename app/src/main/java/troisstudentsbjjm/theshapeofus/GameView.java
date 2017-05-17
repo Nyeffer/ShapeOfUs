@@ -9,9 +9,13 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import troisstudentsbjjm.theshapeofus.Input.InputController;
+
 /**
  * Created by mrber on 2017-05-15.
  */
+
+//this is where we update and draw
 
 public class GameView extends SurfaceView implements Runnable {
 
