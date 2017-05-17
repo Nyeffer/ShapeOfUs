@@ -2,9 +2,11 @@ package troisstudentsbjjm.theshapeofus.Enemies;
 
 
 
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
 
 import android.graphics.PointF;
 
@@ -51,6 +53,7 @@ public class Enemy_Square extends Square{
     }
 
 
+
     // the enemy squares update will rotate the square by incrementing a angle and using this angle to rotate the rect in draw
     // if the angle is approaching +-90 degrees then the shape is moved and the angle is reset.
     // also if the angle is greater than 45 degree the square rotates faster, think of a tipping over effect
@@ -59,10 +62,29 @@ public class Enemy_Square extends Square{
             roll(pixelsPerMeter,fps);
         } else {
             jump(pixelsPerMeter,fps);       //TODO
+
         }
 
 
     }
+
+
+    public void deathAnim() {
+        if(isDead) {
+            // Draw the death sprite here
+
+
+            for(int i = 0; i < directionY; i++) {
+                y--; // Cause the sprite to go up
+                for(int j = 0; j < directionX; j++) {
+                    // check if it's left or right
+                    if(LeftorRight() == 1) {
+                        x++; // Go to the right
+                    }   else    {
+                        x--; // Go to the left
+                    }
+                }
+            }
 
 
     private void roll(int pixelsPerMeter, long fps){

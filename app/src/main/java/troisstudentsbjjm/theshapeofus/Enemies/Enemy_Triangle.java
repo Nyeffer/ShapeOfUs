@@ -55,6 +55,17 @@ public class Enemy_Triangle extends Triangle{
         if(isDead) {
             // Draw the death sprite here
 
+            for(int i = 0; i < directionY; i++) {
+                y--; // Cause the sprite to go up
+                for(int j = 0; j < directionX; j++) {
+                    // check if it's left or right
+                    if(LeftorRight() == 1) {
+                        x++; // Go to the right
+                    }   else    {
+                        x--; // Go to the left
+                    }
+                }
+            }
 
         }
     }
@@ -82,5 +93,4 @@ public class Enemy_Triangle extends Triangle{
     public int getDamage() { return damage; }
     public int getHealth() { return health; }
     public boolean getIsDead() { return isDead; }
-
 }
