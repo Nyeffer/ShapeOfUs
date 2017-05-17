@@ -1,9 +1,11 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
 
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
 import android.graphics.PointF;
 
 import java.util.Random;
@@ -49,6 +51,7 @@ public class Enemy_Square extends Square{
 
     }
 
+
     // the enemy squares update will rotate the square by incrementing a angle and using this angle to rotate the rect in draw
     // if the angle is approaching +-90 degrees then the shape is moved and the angle is reset.
     // also if the angle is greater than 45 degree the square rotates faster, think of a tipping over effect
@@ -72,15 +75,28 @@ public class Enemy_Square extends Square{
             } else {
                 angleD -= angularVelocity/fps;
             }
-        }
-    }
-
-    public void deathAnim() {
-        if(isDead) {
-            // Draw the death sprite here
 
         }
     }
+
+//    public void deathAnim() {
+//        if(isDead) {
+//            // Draw the death sprite here
+//
+//            for(int i = 0; i < directionY; i++) {
+//                y--; // Cause the sprite to go up
+//                for(int j = 0; j < directionX; j++) {
+//                    // check if it's left or right
+//                    if(LeftorRight() == 1) {
+//                        x++; // Go to the right
+//                    }   else    {
+//                        x--; // Go to the left
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
 
     //shows relationship between health and size.
     private void updateSize(){setSize ((float) (health * 0.025));}
@@ -119,6 +135,7 @@ public class Enemy_Square extends Square{
 
 
     // Setter and Getter
+
 //    public void setVelocity(PointF velocity) { this.velocity = velocity;   }
 //    public void setRotate(float rotate) { this.rotate = rotate; }
 //    public void setDamage(int damage) { this.damage = damage;   }
@@ -129,6 +146,7 @@ public class Enemy_Square extends Square{
 //    public int getDamage() { return damage; }
 //    public int getHealth() { return health; }
 //    public boolean getIsDead() { return isDead; }
+
 
 
 
