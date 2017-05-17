@@ -1,6 +1,10 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Jeff's-Branch
 import android.graphics.PointF;
 
 import java.util.Random;
@@ -35,6 +39,10 @@ public class Enemy_Triangle {
     public void update(int spawnPointX, int spawnPointY) {
         x = spawnPointX + speed;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Jeff's-Branch
         if(isBlocked) {
             speed = 0;
             // BuildUp();
@@ -45,6 +53,10 @@ public class Enemy_Triangle {
     public void deathAnim() {
         if(isDead) {
             // Draw the death sprite here
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Jeff's-Branch
             for(int i = 0; i < directionY; i++) {
                 y--; // Cause the sprite to go up
                 for(int j = 0; j < directionX; j++) {
@@ -56,6 +68,10 @@ public class Enemy_Triangle {
                     }
                 }
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Jeff's-Branch
         }
     }
 
@@ -89,4 +105,8 @@ public class Enemy_Triangle {
     public int getDamage() { return damage; }
     public int getHealth() { return health; }
     public boolean getIsDead() { return isDead; }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Jeff's-Branch
 }

@@ -35,7 +35,11 @@ public class Enemy_Circle {
 
     public void update(int spawnPointX, int spawnPointY) {
         x = spawnPointX + speed;
+<<<<<<< HEAD
         y = spawnPointY;
+=======
+
+>>>>>>> origin/Jeff's-Branch
 
         if(isBlocked) {
             speed = 0;
@@ -47,6 +51,10 @@ public class Enemy_Circle {
     public void deathAnim() {
         if(isDead) {
             // Draw the death sprite here
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Jeff's-Branch
             for(int i = 0; i < directionY; i++) {
                     y--; // Cause the sprite to go up
                 for(int j = 0; j < directionX; j++) {
@@ -58,11 +66,21 @@ public class Enemy_Circle {
                         }
                 }
             }
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Jeff's-Branch
         }
     }
 
 
+<<<<<<< HEAD
     // Randomly returns either 1 or -1
+=======
+
+    // Randomly returns either 1 or -1
+
+>>>>>>> origin/Jeff's-Branch
     public int LeftorRight() {
         Random rand = new Random();
         int i = 0;
@@ -77,6 +95,11 @@ public class Enemy_Circle {
         return i;
     }
 
+<<<<<<< HEAD
+=======
+
+  
+>>>>>>> origin/Jeff's-Branch
     // Setter and Getter
     public void setVelocity(PointF velocity) { this.velocity = velocity;   }
     public void setRotate(float rotate) { this.rotate = rotate; }
@@ -89,4 +112,9 @@ public class Enemy_Circle {
     public int getDamage() { return damage; }
     public int getHealth() { return health; }
     public boolean getIsDead() { return isDead; }
+<<<<<<< HEAD
+=======
+
+  
+>>>>>>> origin/Jeff's-Branch
 }

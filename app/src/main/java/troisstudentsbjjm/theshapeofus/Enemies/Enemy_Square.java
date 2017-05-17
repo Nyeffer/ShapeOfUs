@@ -1,9 +1,14 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> refs/remotes/origin/SimplerPrototype
+=======
+
+
+>>>>>>> origin/Jeff's-Branch
 import android.graphics.PointF;
 
 import java.util.Random;
@@ -38,9 +43,14 @@ public class Enemy_Square {
     public void update(int spawnPointX, int spawnPointY) {
         x = spawnPointX + speed;
 <<<<<<< HEAD
+<<<<<<< HEAD
         y = spawnPointY;
 =======
 >>>>>>> refs/remotes/origin/SimplerPrototype
+=======
+
+
+>>>>>>> origin/Jeff's-Branch
         if(isBlocked) {
             speed = 0;
             // BuildUp();
@@ -52,6 +62,10 @@ public class Enemy_Square {
         if(isDead) {
             // Draw the death sprite here
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Jeff's-Branch
             for(int i = 0; i < directionY; i++) {
                 y--; // Cause the sprite to go up
                 for(int j = 0; j < directionX; j++) {
@@ -63,9 +77,13 @@ public class Enemy_Square {
                     }
                 }
             }
+<<<<<<< HEAD
 =======
 
 >>>>>>> refs/remotes/origin/SimplerPrototype
+=======
+
+>>>>>>> origin/Jeff's-Branch
         }
     }
 
@@ -89,6 +107,10 @@ public class Enemy_Square {
 
     // Setter and Getter
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/Jeff's-Branch
     public void setVelocity(PointF velocity) { this.velocity = velocity;   }
     public void setRotate(float rotate) { this.rotate = rotate; }
     public void setDamage(int damage) { this.damage = damage;   }
@@ -100,6 +122,7 @@ public class Enemy_Square {
     public int getDamage() { return damage; }
     public int getHealth() { return health; }
     public boolean getIsDead() { return isDead; }
+<<<<<<< HEAD
 =======
 //    public void setVelocity(PointF velocity) { this.velocity = velocity;   }
 //    public void setRotate(float rotate) { this.rotate = rotate; }
@@ -114,6 +137,9 @@ public class Enemy_Square {
 //    public boolean getIsDead() { return isDead; }
 
 >>>>>>> refs/remotes/origin/SimplerPrototype
+=======
+
+>>>>>>> origin/Jeff's-Branch
 
 
 }
