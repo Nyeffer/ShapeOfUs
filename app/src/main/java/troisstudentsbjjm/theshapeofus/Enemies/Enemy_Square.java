@@ -25,18 +25,17 @@ public class Enemy_Square extends Square{
     private boolean facingRight = true;
 
     private int angleD = 0;                             //angle to rotate square on canvas
-    private int angularVelocity = 180;                  //angular velocity in degrees per second
-    private final int GRAVITY = 7;
+    private int angularVelocity = 180;                  //angular velocity in degrees per second we will divide it by fps to get degrees to rotate per frame
+    private final int GRAVITY = 7;                      //this will be in meters per second per second we will multiply by pixelspermeter to get pixels per second per second
 
-    private boolean isDead;
-    private boolean rolling;
+    private boolean isDead;                             //this will be used to initialize our death animation and to remove the object
+    private boolean rolling;                            // the shape is either rolling or jumping
 
-    private int damage;
-    private int health;
-    private int speed;
-    private int pixelsPerMeter;
+    private int damage;                                 //TODO
+    private int health;                                 //added in constructor
+    private int pixelsPerMeter;                         //temporary
 
-    private boolean isBlocked;
+    private boolean isBlocked;                          //if not blocked...move, if blocked... attack.
 
     public Enemy_Square(int x,int y, int health, int pixelsPerMeter) {
 
@@ -48,7 +47,7 @@ public class Enemy_Square extends Square{
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;
-
+        rolling = true;
     }
 
 
@@ -56,7 +55,17 @@ public class Enemy_Square extends Square{
     // if the angle is approaching +-90 degrees then the shape is moved and the angle is reset.
     // also if the angle is greater than 45 degree the square rotates faster, think of a tipping over effect
     public void update(int pixelsPerMeter, long fps) {
-        setPivot();
+        if (rolling){
+            roll(pixelsPerMeter,fps);
+        } else {
+            jump(pixelsPerMeter,fps);       //TODO
+        }
+
+
+    }
+
+
+    private void roll(int pixelsPerMeter, long fps){
         if (facingRight){
             if (angleD >= 85){
                 Move(pixelsPerMeter);
@@ -75,9 +84,15 @@ public class Enemy_Square extends Square{
             } else {
                 angleD -= angularVelocity/fps;
             }
-
         }
+        setPivot();
     }
+
+
+    private void jump(int pixelsPerMeter, long fps){
+
+    }
+
 
 //    public void deathAnim() {
 //        if(isDead) {
