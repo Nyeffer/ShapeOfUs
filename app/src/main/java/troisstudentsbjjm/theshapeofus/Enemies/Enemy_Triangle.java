@@ -1,5 +1,6 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
+
 import android.graphics.PointF;
 
 import java.util.Random;
@@ -33,7 +34,7 @@ public class Enemy_Triangle {
 
     public void update(int spawnPointX, int spawnPointY) {
         x = spawnPointX + speed;
-        y = spawnPointY;
+
         if(isBlocked) {
             speed = 0;
             // BuildUp();
@@ -73,6 +74,7 @@ public class Enemy_Triangle {
         }
         return i;
     }
+
 
 
     // Setter and Getter

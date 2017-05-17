@@ -1,5 +1,7 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
+
+
 import android.graphics.PointF;
 
 import java.util.Random;
@@ -34,6 +36,7 @@ public class Enemy_Circle {
     public void update(int spawnPointX, int spawnPointY) {
         x = spawnPointX + speed;
         y = spawnPointY;
+
         if(isBlocked) {
             speed = 0;
             // BuildUp();

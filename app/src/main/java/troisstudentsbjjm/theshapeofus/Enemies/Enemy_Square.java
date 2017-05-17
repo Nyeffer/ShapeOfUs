@@ -1,5 +1,9 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/origin/SimplerPrototype
 import android.graphics.PointF;
 
 import java.util.Random;
@@ -33,7 +37,10 @@ public class Enemy_Square {
 
     public void update(int spawnPointX, int spawnPointY) {
         x = spawnPointX + speed;
+<<<<<<< HEAD
         y = spawnPointY;
+=======
+>>>>>>> refs/remotes/origin/SimplerPrototype
         if(isBlocked) {
             speed = 0;
             // BuildUp();
@@ -44,6 +51,7 @@ public class Enemy_Square {
     public void deathAnim() {
         if(isDead) {
             // Draw the death sprite here
+<<<<<<< HEAD
             for(int i = 0; i < directionY; i++) {
                 y--; // Cause the sprite to go up
                 for(int j = 0; j < directionX; j++) {
@@ -55,6 +63,9 @@ public class Enemy_Square {
                     }
                 }
             }
+=======
+
+>>>>>>> refs/remotes/origin/SimplerPrototype
         }
     }
 
@@ -77,6 +88,7 @@ public class Enemy_Square {
     // Update here
 
     // Setter and Getter
+<<<<<<< HEAD
     public void setVelocity(PointF velocity) { this.velocity = velocity;   }
     public void setRotate(float rotate) { this.rotate = rotate; }
     public void setDamage(int damage) { this.damage = damage;   }
@@ -88,6 +100,20 @@ public class Enemy_Square {
     public int getDamage() { return damage; }
     public int getHealth() { return health; }
     public boolean getIsDead() { return isDead; }
+=======
+//    public void setVelocity(PointF velocity) { this.velocity = velocity;   }
+//    public void setRotate(float rotate) { this.rotate = rotate; }
+//    public void setDamage(int damage) { this.damage = damage;   }
+//    public void setHealth(int health) { this.health = health;   }
+//    public void setIsDead(boolean isDead) { this.isDead = isDead;   }
+//
+//    public PointF getVelocity() { return velocity;  }
+//    public float getRotate() {  return rotate;  }
+//    public int getDamage() { return damage; }
+//    public int getHealth() { return health; }
+//    public boolean getIsDead() { return isDead; }
+
+>>>>>>> refs/remotes/origin/SimplerPrototype
 
 
 }
