@@ -63,31 +63,6 @@ public class Enemy_Square extends Square{
     // if the angle is approaching +-90 degrees then the shape is moved and the angle is reset.
     // also if the angle is greater than 45 degree the square rotates faster, think of a tipping over effect
     public void update(int pixelsPerMeter, long fps) {
-        setPivot();
-        if (facingRight){
-            if (angleD >= 85){
-                Move(pixelsPerMeter);
-                angleD = 0;
-            } else if (angleD > 45){
-                angleD += angularVelocity*2/fps;
-            } else {
-                angleD += angularVelocity/fps;
-            }
-        } else if (!facingRight){
-            if (angleD <= -85){
-                Move(pixelsPerMeter);
-                angleD = 0;
-            } else if (angleD < -45){
-                angleD -= angularVelocity*2/fps;
-            } else {
-                angleD -= angularVelocity/fps;
-            }
-
-
-    // the enemy squares update will rotate the square by incrementing a angle and using this angle to rotate the rect in draw
-    // if the angle is approaching +-90 degrees then the shape is moved and the angle is reset.
-    // also if the angle is greater than 45 degree the square rotates faster, think of a tipping over effect
-    public void update(int pixelsPerMeter, long fps) {
         if (rolling){
             roll(pixelsPerMeter,fps);
         } else {
@@ -99,22 +74,24 @@ public class Enemy_Square extends Square{
     }
 
 
-    public void deathAnim() {
-        if(isDead) {
-            // Draw the death sprite here
-
-
-            for(int i = 0; i < directionY; i++) {
-                y--; // Cause the sprite to go up
-                for(int j = 0; j < directionX; j++) {
-                    // check if it's left or right
-                    if(LeftorRight() == 1) {
-                        x++; // Go to the right
-                    }   else    {
-                        x--; // Go to the left
-                    }
-                }
-            }
+//    public void deathAnim() {
+//            if (isDead) {
+//                // Draw the death sprite here
+//
+//
+//                for (int i = 0; i < directionY; i++) {
+//                    y--; // Cause the sprite to go up
+//                    for (int j = 0; j < directionX; j++) {
+//                        // check if it's left or right
+//                        if (LeftorRight() == 1) {
+//                            x++; // Go to the right
+//                        } else {
+//                            x--; // Go to the left
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
 
     private void roll(int pixelsPerMeter, long fps){
@@ -144,7 +121,6 @@ public class Enemy_Square extends Square{
 
 
     private void jump(int pixelsPerMeter, long fps){
-
     }
 
 
