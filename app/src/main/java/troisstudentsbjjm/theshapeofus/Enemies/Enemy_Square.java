@@ -33,7 +33,6 @@ public class Enemy_Square extends Square{
 
     private int damage;
     private int health;
-    private int speed;
     private int pixelsPerMeter;
 
     private boolean isBlocked;
@@ -78,6 +77,7 @@ public class Enemy_Square extends Square{
 
         }
     }
+
 
 //    public void deathAnim() {
 //        if(isDead) {
