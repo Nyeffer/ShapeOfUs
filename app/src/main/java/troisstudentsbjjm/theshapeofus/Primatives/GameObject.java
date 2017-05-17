@@ -11,7 +11,8 @@ import android.graphics.PointF;
 
 public abstract class GameObject  {
 
-    private float size;
+    public float size;
+
 
     private boolean active = false;
     private boolean visible = false;
@@ -20,7 +21,7 @@ public abstract class GameObject  {
 
     private String bitmapName;
 
-    private PointF location;
+    public PointF location = new PointF();
 
     private int facing;
 

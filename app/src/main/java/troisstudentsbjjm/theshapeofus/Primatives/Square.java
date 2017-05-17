@@ -2,6 +2,7 @@ package troisstudentsbjjm.theshapeofus.Primatives;
 
 
 import android.graphics.Rect;
+import android.graphics.RectF;
 
 
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
@@ -13,14 +14,14 @@ import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 public class Square extends GameObject {
 
 
-    Rect hitBox;
+
+    public RectF hitBox = new RectF();
 
 
-    public Square(){
-        //initialize hitbox, we can set it later
-        //note: The hitboxes will in-effect be the objects themselves as they are the same shape and will be updated as such
-
-        hitBox = new Rect();
-
+    public void setHitBox(int x, int y, int pixelsPerMeter){
+        hitBox.left = x;
+        hitBox.top = y;
+        hitBox.right = hitBox.left + size*pixelsPerMeter;
+        hitBox.bottom = hitBox.top + size*pixelsPerMeter;
     }
 }

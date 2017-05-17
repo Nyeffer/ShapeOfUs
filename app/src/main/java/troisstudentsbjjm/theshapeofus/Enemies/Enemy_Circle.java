@@ -6,11 +6,13 @@ import android.graphics.PointF;
 
 import java.util.Random;
 
+import troisstudentsbjjm.theshapeofus.Primatives.Circle;
+
 /**
  * Created by Jeffherson on 2017-05-15.
  */
 
-public class Enemy_Circle {
+public class Enemy_Circle extends Circle{
     private PointF velocity;
     private float rotate;
     private int damage,

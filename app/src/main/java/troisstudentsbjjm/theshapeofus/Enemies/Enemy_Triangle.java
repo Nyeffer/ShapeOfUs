@@ -2,45 +2,52 @@ package troisstudentsbjjm.theshapeofus.Enemies;
 
 
 
+import android.graphics.Point;
+
 import android.graphics.PointF;
 
 import java.util.Random;
+
+import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 
 /**
  * Created by Jeffherson on 2017-05-15.
  */
 
-public class Enemy_Triangle {
+public class Enemy_Triangle extends Triangle{
+
     private PointF velocity;
-    private float rotate;
-    private int damage,
-            health;
+
+    private float angleD = 0;           //angular velocity in degrees per second
+
     private boolean isDead;
-    private int x, y,
-            speed,
-            directionX, directionY,
-            gravity;
-    private boolean isBlocked;
+    private boolean facingRight = true;
+
+    private int damage;
+    private int health;
+    private int x;
+    private int y;
+    private int speed;
+    private int directionX;
+    private int directionY;
+    private int gravity;
 
 
-    public Enemy_Triangle(int x,int y) {
+    Enemy_Triangle() {
+
         isDead = false;
         Random rand = new Random();
         directionX = rand.nextInt(5);
         directionY = -rand.nextInt(10);
         speed = rand.nextInt(7);
         gravity = 7;
-        isBlocked = false;
     }
 
-    public void update(int spawnPointX, int spawnPointY) {
-        x = spawnPointX + speed;
 
 
-        if(isBlocked) {
-            speed = 0;
-            // BuildUp();
-        }
+    public void update(int pixelsPerMeter, long fps) {
+
+
 
     }
 
@@ -48,48 +55,30 @@ public class Enemy_Triangle {
         if(isDead) {
             // Draw the death sprite here
 
-            for(int i = 0; i < directionY; i++) {
-                y--; // Cause the sprite to go up
-                for(int j = 0; j < directionX; j++) {
-                    // check if it's left or right
-                    if(LeftorRight() == 1) {
-                        x++; // Go to the right
-                    }   else    {
-                        x--; // Go to the left
-                    }
-                }
-            }
 
         }
     }
 
 
 
-    public int LeftorRight() {
-        Random rand = new Random();
-        int i = 0;
-        if(isDead) {
-            i = rand.nextInt(1);
-            if (i != 0){
-                i = 1;
-            }   else {
-                i = -1;
-            }
-        }
-        return i;
-    }
+
+
+
+
+
+
 
 
 
     // Setter and Getter
     public void setVelocity(PointF velocity) { this.velocity = velocity;   }
-    public void setRotate(float rotate) { this.rotate = rotate; }
+    //public void setRotate(float rotate) { this.rotate = rotate; }
     public void setDamage(int damage) { this.damage = damage;   }
     public void setHealth(int health) { this.health = health;   }
     public void setIsDead(boolean isDead) { this.isDead = isDead;   }
 
     public PointF getVelocity() { return velocity;  }
-    public float getRotate() {  return rotate;  }
+    //public float getRotate() {  return rotate;  }
     public int getDamage() { return damage; }
     public int getHealth() { return health; }
     public boolean getIsDead() { return isDead; }
