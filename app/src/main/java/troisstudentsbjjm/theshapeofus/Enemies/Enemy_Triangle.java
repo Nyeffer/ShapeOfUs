@@ -23,6 +23,8 @@ public class Enemy_Triangle extends Triangle{
     private boolean isDead;
     private boolean facingRight = true;
 
+
+
     private int damage;
     private int health;
     private int x;
@@ -34,6 +36,8 @@ public class Enemy_Triangle extends Triangle{
 
 
     Enemy_Triangle() {
+
+
 
         isDead = false;
         Random rand = new Random();
@@ -82,5 +86,4 @@ public class Enemy_Triangle extends Triangle{
     public int getDamage() { return damage; }
     public int getHealth() { return health; }
     public boolean getIsDead() { return isDead; }
-
 }

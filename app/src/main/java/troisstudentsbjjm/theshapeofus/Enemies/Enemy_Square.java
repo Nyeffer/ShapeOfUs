@@ -2,9 +2,13 @@ package troisstudentsbjjm.theshapeofus.Enemies;
 
 
 
+
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
+
 
 import android.graphics.PointF;
 
@@ -25,17 +29,19 @@ public class Enemy_Square extends Square{
     private boolean facingRight = true;
 
     private int angleD = 0;                             //angle to rotate square on canvas
-    private int angularVelocity = 180;                  //angular velocity in degrees per second
-    private final int GRAVITY = 7;
 
-    private boolean isDead;
-    private boolean rolling;
+    private int angularVelocity = 180;                  //angular velocity in degrees per second we will divide it by fps to get degrees to rotate per frame
+    private final int GRAVITY = 7;                      //this will be in meters per second per second we will multiply by pixelspermeter to get pixels per second per second
 
-    private int damage;
-    private int health;
-    private int pixelsPerMeter;
+    private boolean isDead;                             //this will be used to initialize our death animation and to remove the object
+    private boolean rolling;                            // the shape is either rolling or jumping
 
-    private boolean isBlocked;
+    private int damage;                                 //TODO
+    private int health;                                 //added in constructor
+    private int pixelsPerMeter;                         //temporary
+
+    private boolean isBlocked;                          //if not blocked...move, if blocked... attack.
+
 
     public Enemy_Square(int x,int y, int health, int pixelsPerMeter) {
 
@@ -47,6 +53,8 @@ public class Enemy_Square extends Square{
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;
+
+        rolling = true;
 
     }
 
@@ -75,7 +83,68 @@ public class Enemy_Square extends Square{
                 angleD -= angularVelocity/fps;
             }
 
+
+    // the enemy squares update will rotate the square by incrementing a angle and using this angle to rotate the rect in draw
+    // if the angle is approaching +-90 degrees then the shape is moved and the angle is reset.
+    // also if the angle is greater than 45 degree the square rotates faster, think of a tipping over effect
+    public void update(int pixelsPerMeter, long fps) {
+        if (rolling){
+            roll(pixelsPerMeter,fps);
+        } else {
+            jump(pixelsPerMeter,fps);       //TODO
+
         }
+
+
+    }
+
+
+    public void deathAnim() {
+        if(isDead) {
+            // Draw the death sprite here
+
+
+            for(int i = 0; i < directionY; i++) {
+                y--; // Cause the sprite to go up
+                for(int j = 0; j < directionX; j++) {
+                    // check if it's left or right
+                    if(LeftorRight() == 1) {
+                        x++; // Go to the right
+                    }   else    {
+                        x--; // Go to the left
+                    }
+                }
+            }
+
+
+    private void roll(int pixelsPerMeter, long fps){
+        if (facingRight){
+            if (angleD >= 85){
+                Move(pixelsPerMeter);
+                angleD = 0;
+            } else if (angleD > 45){
+                angleD += angularVelocity*2/fps;
+            } else {
+                angleD += angularVelocity/fps;
+            }
+        } else if (!facingRight){
+            if (angleD <= -85){
+                Move(pixelsPerMeter);
+                angleD = 0;
+            } else if (angleD < -45){
+                angleD -= angularVelocity*2/fps;
+            } else {
+                angleD -= angularVelocity/fps;
+            }
+
+        }
+        setPivot();
+    }
+
+
+
+    private void jump(int pixelsPerMeter, long fps){
+
     }
 
 
@@ -123,6 +192,7 @@ public class Enemy_Square extends Square{
             angleD = 0;
         }
     }
+
 
     // set color to white, rotate canvas, draw rect, save the orientation, return the rest of the canvas to normal.
     public void draw(Canvas canvas, Paint paint){
