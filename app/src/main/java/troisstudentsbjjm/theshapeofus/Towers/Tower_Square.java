@@ -6,5 +6,5 @@ package troisstudentsbjjm.theshapeofus.Towers;
 
 public class Tower_Square {
     // HitBox to of other gameobjects
-    // to trigger IsBlock 
+    // to trigger IsBlock
 }
