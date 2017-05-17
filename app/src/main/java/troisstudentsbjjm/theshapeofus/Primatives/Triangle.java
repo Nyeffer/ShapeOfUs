@@ -11,7 +11,9 @@ public class Triangle extends GameObject {
 
     float area;
     PointF A = new PointF(location.x, location.y + size);
-    PointF B = new PointF(A.x + size, A.y);
+
+    PointF B = new PointF(A.x + size, A.y + size);
+
     PointF C = new PointF((float) (A.x + size*0.5), A.y - size);
 
 
