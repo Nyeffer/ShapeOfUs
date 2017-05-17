@@ -11,10 +11,10 @@ import troisstudentsbjjm.theshapeofus.R;
 
 public class LevelInterface extends InputController {
     // Level Interface will have all the elements needed for the player to interface things in the level
-    // Like panning/scaling the screen, interacting with defenses, upgrading, etc...
+    // Like panning/scaling the screen, upgrade button, etc...
 
     LevelInterface(View view) {
-        view.findViewById(R.id.upgrade_button).setOnTouchListener(UpgradeButton);
+        //view.findViewById(R.id.upgrade_button).setOnTouchListener(UpgradeButton);
     }
 
     private class UpgradeButton implements View.OnTouchListener {
