@@ -1,6 +1,7 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
 
+
 import android.graphics.PointF;
 
 import java.util.Random;
@@ -34,6 +35,8 @@ public class Enemy_Circle {
 
     public void update(int spawnPointX, int spawnPointY) {
         x = spawnPointX + speed;
+
+
         if(isBlocked) {
             speed = 0;
             // BuildUp();
@@ -45,10 +48,24 @@ public class Enemy_Circle {
         if(isDead) {
             // Draw the death sprite here
 
+            for(int i = 0; i < directionY; i++) {
+                    y--; // Cause the sprite to go up
+                for(int j = 0; j < directionX; j++) {
+                    // check if it's left or right
+                    if(LeftorRight() == 1) {
+                            x++; // Go to the right
+                        }   else    {
+                            x--; // Go to the left
+                        }
+                }
+            }
+
         }
     }
 
 
+
+    // Randomly returns either 1 or -1
 
     public int LeftorRight() {
         Random rand = new Random();
@@ -64,4 +81,20 @@ public class Enemy_Circle {
         return i;
     }
 
+
+  
+    // Setter and Getter
+    public void setVelocity(PointF velocity) { this.velocity = velocity;   }
+    public void setRotate(float rotate) { this.rotate = rotate; }
+    public void setDamage(int damage) { this.damage = damage;   }
+    public void setHealth(int health) { this.health = health;   }
+    public void setIsDead(boolean isDead) { this.isDead = isDead;   }
+
+    public PointF getVelocity() { return velocity;  }
+    public float getRotate() {  return rotate;  }
+    public int getDamage() { return damage; }
+    public int getHealth() { return health; }
+    public boolean getIsDead() { return isDead; }
+
+  
 }
