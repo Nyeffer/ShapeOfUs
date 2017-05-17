@@ -6,11 +6,13 @@ import android.graphics.PointF;
 
 import java.util.Random;
 
+import troisstudentsbjjm.theshapeofus.Primatives.Circle;
+
 /**
  * Created by Jeffherson on 2017-05-15.
  */
 
-public class Enemy_Circle {
+public class Enemy_Circle extends Circle{
     private PointF velocity;
     private float rotate;
     private int damage,
@@ -35,6 +37,7 @@ public class Enemy_Circle {
 
     public void update(int spawnPointX, int spawnPointY) {
         x = spawnPointX + speed;
+        y = spawnPointY;
 
 
         if(isBlocked) {
@@ -60,13 +63,14 @@ public class Enemy_Circle {
                 }
             }
 
-        }
+
+    }
     }
 
 
 
-    // Randomly returns either 1 or -1
 
+    // Randomly returns either 1 or -1
     public int LeftorRight() {
         Random rand = new Random();
         int i = 0;
@@ -82,7 +86,6 @@ public class Enemy_Circle {
     }
 
 
-  
     // Setter and Getter
     public void setVelocity(PointF velocity) { this.velocity = velocity;   }
     public void setRotate(float rotate) { this.rotate = rotate; }
@@ -96,5 +99,4 @@ public class Enemy_Circle {
     public int getHealth() { return health; }
     public boolean getIsDead() { return isDead; }
 
-  
 }

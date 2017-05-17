@@ -1,8 +1,7 @@
 package troisstudentsbjjm.theshapeofus.Primatives;
 
 import android.graphics.Point;
-
-import troisstudentsbjjm.theshapeofus.GameObject;
+import android.graphics.PointF;
 
 /**
  * Created by mrber on 2017-05-15.
@@ -11,19 +10,11 @@ import troisstudentsbjjm.theshapeofus.GameObject;
 public class Triangle extends GameObject {
 
     float area;
-    Point A;
-    Point B;
-    Point C;
+    PointF A = new PointF(location.x, location.y + size);
 
-    Triangle(Point A, Point B, Point C){
-        //This is the constructor that will create a triangle with three points
-        //alternatively we can just add in a height and width, we would just need a little more math here
-        this.A = new Point(A.x,A.y);                                                    //          O
-        this.B = new Point(B.x,B.y);                                                    //         / \
-        this.C = new Point(C.x,C.y);                                                    //        /   \
-                                                                                        //       /     \
-        setArea();                                                                      //      O-------O
-    }
+    PointF B = new PointF(A.x + size, A.y + size);
+
+    PointF C = new PointF((float) (A.x + size*0.5), A.y - size);
 
 
     public boolean contains(int x, int y){
@@ -40,11 +31,11 @@ public class Triangle extends GameObject {
         }
     }
 
-    //area of triangle, calculated from values inputed in constructor
-    private void setArea(){area =(float) Math.abs(0.5 * (A.x * (B.y - C.y) + B.x * (C.y - A.y) + C.x * (A.y - B.y)));}
+    //area of triangle, half base times height
+    private void setArea(){area =(float) (0.5*size*size);}
     public float getArea(){return area;}
     //the following getters we would use to check if the triangle is in another objects hitbox
-    public Point getA(){return A;}
-    public Point getB(){return B;}
-    public Point getC() {return C;}
+    public PointF getA(){return A;}
+    public PointF getB(){return B;}
+    public PointF getC() {return C;}
 }

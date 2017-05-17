@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 
 /**
@@ -37,6 +38,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Viewport vp;
     private InputController ic;
+    private Enemy_Square E_Square;
 
 
     GameView(Context context, int screenWidth, int screenHeight){
@@ -50,13 +52,15 @@ public class GameView extends SurfaceView implements Runnable {
         paint = new Paint();
         ourHolder = getHolder();
 
+        vp = new Viewport(screenWidth,screenHeight);
+        E_Square = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter);      //40 is the square's health for now
+
         running = true;
     }
 
 
     @Override
     public void run(){
-
         while (running){
             startFrameTime = System.currentTimeMillis();
 
@@ -97,6 +101,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update(){
 
+        E_Square.update(vp.pixelsPerMeter,fps);
     }
 
 
@@ -106,9 +111,13 @@ public class GameView extends SurfaceView implements Runnable {
 
             paint.setColor(Color.argb(255, 0, 0, 0));
             canvas.drawColor(Color.argb(255, 0, 0, 0));
-
             paint.setColor(Color.argb(255,255,255,255));
-            canvas.drawRect(screenHeight/2,screenWidth/2,screenHeight/2 + 100,screenWidth/2 +100,paint);
+            paint.setTextSize(30);
+            canvas.drawText("FPS:"+fps,screenWidth/5,screenHeight/5,paint);
+
+            canvas.drawRect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight,paint);
+
+            E_Square.draw(canvas,paint);
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
