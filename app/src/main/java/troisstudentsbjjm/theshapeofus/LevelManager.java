@@ -2,12 +2,12 @@ package troisstudentsbjjm.theshapeofus;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 
 import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Level.LevelData;
+import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 /**
  * Created by mrber on 2017-05-15.
