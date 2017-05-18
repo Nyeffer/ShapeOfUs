@@ -47,7 +47,7 @@ public class Enemy_Square extends Square{
 
         this.health = health;
         updateSize();
-        location.set(x,y);
+        this.location.set(x,y);
         setHitBox(x,y,pixelsPerMeter);
         pivot = new PointF();
         isDead = false;
@@ -73,25 +73,6 @@ public class Enemy_Square extends Square{
 
     }
 
-
-//    public void deathAnim() {
-//            if (isDead) {
-//                // Draw the death sprite here
-//
-//
-//                for (int i = 0; i < directionY; i++) {
-//                    y--; // Cause the sprite to go up
-//                    for (int j = 0; j < directionX; j++) {
-//                        // check if it's left or right
-//                        if (LeftorRight() == 1) {
-//                            x++; // Go to the right
-//                        } else {
-//                            x--; // Go to the left
-//                        }
-//                    }
-//                }
-//            }
-//        }
 
 
     private void roll(int pixelsPerMeter, long fps){
@@ -159,12 +140,12 @@ public class Enemy_Square extends Square{
     // moves rect over by a factor of its size
     public void Move(int pixelsPerMeter){
         if (angleD >= 85){
-            location.x += size*pixelsPerMeter;
+            this.location.x += this.size*pixelsPerMeter;
             setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
             angleD = 0;
         } else if (angleD <= -85){
-            location.x -= size*pixelsPerMeter;
-            setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
+            this.location.x -= this.size*pixelsPerMeter;
+            setHitBox((int)this.location.x,(int)this.location.y,pixelsPerMeter);
             angleD = 0;
         }
     }

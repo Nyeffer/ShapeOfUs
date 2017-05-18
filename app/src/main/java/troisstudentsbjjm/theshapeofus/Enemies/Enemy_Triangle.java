@@ -55,13 +55,6 @@ public class Enemy_Triangle extends Triangle{
 
     }
 
-    public void deathAnim() {
-        if(isDead) {
-            // Draw the death sprite here
-
-
-        }
-    }
 
 
 

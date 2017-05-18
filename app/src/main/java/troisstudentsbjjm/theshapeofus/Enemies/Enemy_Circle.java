@@ -2,7 +2,11 @@ package troisstudentsbjjm.theshapeofus.Enemies;
 
 
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PointF;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -12,91 +16,58 @@ import troisstudentsbjjm.theshapeofus.Primatives.Circle;
  * Created by Jeffherson on 2017-05-15.
  */
 
-public class Enemy_Circle extends Circle{
+public class Enemy_Circle extends Circle {
     private PointF velocity;
     private float rotate;
     private int damage,
             health;
     private boolean isDead;
     private int x, y,
-                speed,
-                directionX, directionY,
-                gravity;
+            pixelsPerMeter;
     private boolean isBlocked;
+    private boolean rolling;
 
 
-    public Enemy_Circle(int x,int y) {
+    public Enemy_Circle(int x, int y, int health, int pixelsPerMeter) {
+        this.health = health;
+        updateSize();
+        this.location.set(x, y);
         isDead = false;
-        Random rand = new Random();
-        directionX = rand.nextInt(5);
-        directionY = -rand.nextInt(10);
-        speed = rand.nextInt(7);
-        gravity = 7;
+        this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;
+
+        // rolling = true;
     }
 
-    public void update(int spawnPointX, int spawnPointY) {
-        x = spawnPointX + speed;
-        y = spawnPointY;
-
-
-        if(isBlocked) {
-            speed = 0;
-            // BuildUp();
+    public void update(int pixelsPerMeter, long fps) {
+        if (rolling) {
+            // roll(pixelsPerMeter,fps);
         }
-
     }
 
-    public void deathAnim() {
-        if(isDead) {
-            // Draw the death sprite here
-
-            for(int i = 0; i < directionY; i++) {
-                    y--; // Cause the sprite to go up
-                for(int j = 0; j < directionX; j++) {
-                    // check if it's left or right
-                    if(LeftorRight() == 1) {
-                            x++; // Go to the right
-                        }   else    {
-                            x--; // Go to the left
-                        }
-                }
-            }
-
-
-    }
+    private void updateSize() {
+        setSize((float) (health * 0.025));
     }
 
-
+    public void draw(Canvas canvas, Paint paint) {
+        Log.d("Enemy_Circle", "Draw");
+        paint.setColor(Color.argb(255, 255, 255, 255));
+        canvas.drawCircle(location.x, location.y, size * pixelsPerMeter, paint);
+    }
 
 
     // Randomly returns either 1 or -1
     public int LeftorRight() {
         Random rand = new Random();
         int i = 0;
-        if(isDead) {
+        if (isDead) {
             i = rand.nextInt(1);
-            if (i != 0){
+            if (i != 0) {
                 i = 1;
-            }   else {
+            } else {
                 i = -1;
             }
         }
         return i;
     }
-
-
-    // Setter and Getter
-    public void setVelocity(PointF velocity) { this.velocity = velocity;   }
-    public void setRotate(float rotate) { this.rotate = rotate; }
-    public void setDamage(int damage) { this.damage = damage;   }
-    public void setHealth(int health) { this.health = health;   }
-    public void setIsDead(boolean isDead) { this.isDead = isDead;   }
-
-    public PointF getVelocity() { return velocity;  }
-    public float getRotate() {  return rotate;  }
-    public int getDamage() { return damage; }
-    public int getHealth() { return health; }
-    public boolean getIsDead() { return isDead; }
-
 }
