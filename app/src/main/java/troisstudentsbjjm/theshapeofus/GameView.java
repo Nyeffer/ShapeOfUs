@@ -156,17 +156,32 @@ public class GameView extends SurfaceView implements Runnable {
             RectF rp = new RectF(drawPause.left, drawPause.top, drawPause.right, drawPause.bottom);
             canvas.drawRoundRect(rp, 15f, 15f, paint);
 
-            // Draws the upgrade button
-            if(ic.isUpgradeTapped() == true) {
+            if(lm.isPlaying()) {
                 paint.setColor(Color.argb(200, 255, 255, 255));
+                paint.setTextSize(64);
+                canvas.drawText("Pause", drawPause.left + 25, drawPause.bottom - 50, paint);
+            } else if(!lm.isPlaying()) {
+                paint.setColor(Color.argb(200, 255, 255, 255));
+                paint.setTextSize(64);
+                canvas.drawText("Play", drawPause.left + 50, drawPause.bottom - 50, paint);
+            }
+
+            // Draws the upgrade button
+            // determines whether the button is active or not
+            if(ic.isUpgradeTapped() == true) {
+                paint.setColor(Color.argb(180, 255, 255, 255));
             } else if(ic.isUpgradeTapped() == false) {
-                paint.setColor(Color.argb(100, 255, 255, 255));
+                paint.setColor(Color.argb(80, 255, 255, 255));
             }
             Rect drawUpgrade;
             drawUpgrade = ic.UpgradeButton();
 
             RectF ru = new RectF(drawUpgrade.left, drawUpgrade.top, drawUpgrade.right, drawUpgrade.bottom);
             canvas.drawRoundRect(ru, 15f, 15f, paint);
+
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setTextSize(52);
+            canvas.drawText("Upgrade", drawUpgrade.left + 15, drawUpgrade.bottom - 55, paint);
 
 
             //for(Rect rect : buttonsToDraw) {
