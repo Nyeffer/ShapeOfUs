@@ -15,6 +15,8 @@ import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 
+import static android.R.attr.gravity;
+
 /**
  * Created by mrber on 2017-05-15.
  */
@@ -116,7 +118,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void update(){
 
         E_Square.update(vp.pixelsPerMeter,fps);
-        E_Triangle.update(vp.pixelsPerMeter,fps);
+        E_Triangle.update(vp.pixelsPerMeter,fps,gravity);
     }
 
 

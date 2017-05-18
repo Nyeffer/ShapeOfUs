@@ -86,11 +86,35 @@ public class Enemy_Triangle extends Triangle{
 
 
 
-    public void update(float pixelsPerMeter, long fps) {
-        Log.d("Triangle", location.x + "");
-        location.x+= pixelsPerMeter / fps;
-        location.y-= pixelsPerMeter / fps;
-        setPoints((int)pixelsPerMeter);
+    public void update(float pixelsPerMeter, long fps, float gravity) {
+
+        if(isJumping) {
+            long timeJumping = System.currentTimeMillis() - jumpTime;
+            if(timeJumping < MAXJumpTime){
+                if(timeJumping < MAXJumpTime / 2) {
+                    location.x+= pixelsPerMeter / fps;
+                    location.y-= pixelsPerMeter / fps;
+                    setPoints((int)pixelsPerMeter);
+                } else if ( timeJumping > MAXJumpTime /2) {
+                    location.x-= pixelsPerMeter / fps;
+                    location.y+= pixelsPerMeter / fps;
+                    setPoints((int)pixelsPerMeter);
+                }
+            } else {
+                isJumping = false;
+            }
+
+        } else {
+            location.x+= pixelsPerMeter / fps;
+            location.y-= pixelsPerMeter / fps;
+            setPoints((int)pixelsPerMeter);
+            isFalling = true;
+        }
+
+        //Log.d("Triangle", location.x + "");
+        //location.x+= pixelsPerMeter / fps;
+        //location.y-= pixelsPerMeter / fps;
+        //setPoints((int)pixelsPerMeter);
     }
 
 
