@@ -4,10 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
@@ -37,8 +41,11 @@ public class GameView extends SurfaceView implements Runnable {
     int screenHeight;
 
     private Viewport vp;
-    private InputController ic;
+    private LevelManager lm;
     private Enemy_Square E_Square;
+    InputController ic;
+
+    private boolean debugging = true;
 
 
     GameView(Context context, int screenWidth, int screenHeight){
@@ -53,9 +60,12 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
 
         vp = new Viewport(screenWidth,screenHeight);
-        E_Square = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter);      //40 is the square's health for now
+        lm = new LevelManager(context, vp.getPixelsPerMeterX(), screenWidth, ic, "1", 0, 0);
+        E_Square = new Enemy_Square(vp.getPixelsPerMeterX(),(int)((screenHeight*0.5)), 40, vp.getPixelsPerMeterY());      //40 is the square's health for now
 
         running = true;
+
+        ic = new InputController(vp.getScreenWidth(), vp.getScreenHeight());
     }
 
 
@@ -77,7 +87,9 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent){
-
+        if(lm != null) {
+            ic.handleInput(motionEvent, lm, vp);
+        }
         return true;
     }
 
@@ -101,7 +113,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private void update(){
 
-        E_Square.update(vp.pixelsPerMeter,fps);
+        E_Square.update(vp.getPixelsPerMeterX(),fps);
     }
 
 
@@ -113,9 +125,46 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawColor(Color.argb(255, 0, 0, 0));
             paint.setColor(Color.argb(255,255,255,255));
             paint.setTextSize(30);
-            canvas.drawText("FPS:"+fps,screenWidth/5,screenHeight/5,paint);
+            //canvas.drawText("FPS:"+fps,screenWidth/5,screenHeight/5,paint);
 
-            canvas.drawRect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight,paint);
+            // Text for debugging
+            if(debugging) {
+                paint.setTextSize(16);
+                paint.setTextAlign(Paint.Align.LEFT);
+                paint.setColor(Color.argb(255, 255, 255, 255));
+                canvas.drawText("fps: " + fps, 10, 60, paint);
+
+                canvas.drawText("num objects: " + lm.gameObjects.size(), 10, 80, paint);
+
+                canvas.drawText("num clipped: " + vp.getNumClipped(), 10, 100, paint);
+
+                canvas.drawText("Gravity: " + lm.gravity, 10, 120, paint);
+
+                // For reset the number of clipped objects per frame
+                vp.resetNumClipped();
+            }// End if(debugging)
+
+            // Draw buttons
+            paint.setColor(Color.argb(80, 255, 255, 255));
+            ArrayList<Rect> buttonsToDraw;
+            buttonsToDraw = ic.getButtons();
+
+            for(Rect rect : buttonsToDraw) {
+                RectF rf = new RectF(rect.left, rect.top, rect.right, rect.bottom);
+
+                canvas.drawRoundRect(rf, 15f, 15f, paint);
+            }
+
+            // draw paused text
+            if(!this.lm.isPlaying()) {
+                paint.setTextAlign(Paint.Align.CENTER);
+                paint.setColor(Color.argb(255, 255, 255, 255));
+
+                paint.setTextSize(120);
+                canvas.drawText("Paused", vp.getScreenWidth() / 2, vp.getScreenHeight() / 2, paint);
+            }
+
+            canvas.drawRect(0,screenHeight/2+vp.getPixelsPerMeterX(),screenWidth,screenHeight,paint);
 
             E_Square.draw(canvas,paint);
 
