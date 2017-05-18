@@ -14,6 +14,7 @@ import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
+import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
 
 /**
  * Created by mrber on 2017-05-15.
@@ -47,6 +48,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Rect terrain;
 
     private Enemy_Triangle E_Triangle;
+    private Triangle_Tower T_Tower;
 
 
 
@@ -67,7 +69,8 @@ public class GameView extends SurfaceView implements Runnable {
 
         terrain = new Rect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight);
 
-        E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
+        E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 10, vp.pixelsPerMeter);
+        T_Tower =  new Triangle_Tower((int)(screenWidth*0.5), (int)(screenHeight*0.5), vp.pixelsPerMeter);
 
         running = true;
     }
@@ -116,6 +119,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void update(){
 
         E_Square.update(vp.pixelsPerMeter,fps);
+        T_Tower.update(E_Square);
     }
 
 
@@ -134,7 +138,7 @@ public class GameView extends SurfaceView implements Runnable {
             E_Square.draw(canvas,paint);
 
             E_Triangle.draw(canvas, paint);
-
+            T_Tower.draw(canvas, paint);
 
             ourHolder.unlockCanvasAndPost(canvas);
         }

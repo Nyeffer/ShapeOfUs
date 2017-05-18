@@ -49,8 +49,9 @@ public class Enemy_Triangle extends Triangle{
 
 
         this.health = health;
-        this.location.set(x,y);
-        setPoints(pixelsPerMeter);
+        location.set(x,y);
+        updateSize();
+        setPoints((int)location.x, (int)location.y, pixelsPerMeter);
 
         isDead = false;
     }
@@ -83,6 +84,8 @@ public class Enemy_Triangle extends Triangle{
         }
     }
 
+
+    private void updateSize(){setSize ((float) (health * 0.05));}
 
 
     public void update(int pixelsPerMeter, long fps) {

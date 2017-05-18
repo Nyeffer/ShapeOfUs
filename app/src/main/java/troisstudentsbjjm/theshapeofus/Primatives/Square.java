@@ -20,9 +20,9 @@ public class Square extends GameObject {
 
     public void setHitBox(int x, int y, int pixelsPerMeter){
         hitBox.left = x;
-        hitBox.top = y;
         hitBox.right = hitBox.left + size*pixelsPerMeter;
-        hitBox.bottom = hitBox.top + size*pixelsPerMeter;
+        hitBox.bottom = y + pixelsPerMeter;
+        hitBox.top = hitBox.bottom - size*pixelsPerMeter;
 
     }
 }
