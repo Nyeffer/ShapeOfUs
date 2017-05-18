@@ -129,16 +129,16 @@ public class GameView extends SurfaceView implements Runnable {
 
             // Text for debugging
             if(debugging) {
-                paint.setTextSize(16);
+                paint.setTextSize(24);
                 paint.setTextAlign(Paint.Align.LEFT);
                 paint.setColor(Color.argb(255, 255, 255, 255));
                 canvas.drawText("fps: " + fps, 10, 60, paint);
 
-                canvas.drawText("num objects: " + lm.gameObjects.size(), 10, 80, paint);
+                canvas.drawText("num objects: " + lm.gameObjects.size(), 10, 100, paint);
 
-                canvas.drawText("num clipped: " + vp.getNumClipped(), 10, 100, paint);
+                canvas.drawText("num clipped: " + vp.getNumClipped(), 10, 140, paint);
 
-                canvas.drawText("Gravity: " + lm.gravity, 10, 120, paint);
+                canvas.drawText("Gravity: " + lm.gravity, 10, 180, paint);
 
                 // For reset the number of clipped objects per frame
                 vp.resetNumClipped();
@@ -146,14 +146,34 @@ public class GameView extends SurfaceView implements Runnable {
 
             // Draw buttons
             paint.setColor(Color.argb(80, 255, 255, 255));
-            ArrayList<Rect> buttonsToDraw;
-            buttonsToDraw = ic.getButtons();
+            //ArrayList<Rect> buttonsToDraw;
+            //buttonsToDraw = ic.getButtons();
 
-            for(Rect rect : buttonsToDraw) {
-                RectF rf = new RectF(rect.left, rect.top, rect.right, rect.bottom);
+            // Draws the pause button
+            Rect drawPause;
+            drawPause = ic.PauseButton();
 
-                canvas.drawRoundRect(rf, 15f, 15f, paint);
+            RectF rp = new RectF(drawPause.left, drawPause.top, drawPause.right, drawPause.bottom);
+            canvas.drawRoundRect(rp, 15f, 15f, paint);
+
+            // Draws the upgrade button
+            if(ic.isUpgradeTapped() == true) {
+                paint.setColor(Color.argb(200, 255, 255, 255));
+            } else if(ic.isUpgradeTapped() == false) {
+                paint.setColor(Color.argb(100, 255, 255, 255));
             }
+            Rect drawUpgrade;
+            drawUpgrade = ic.UpgradeButton();
+
+            RectF ru = new RectF(drawUpgrade.left, drawUpgrade.top, drawUpgrade.right, drawUpgrade.bottom);
+            canvas.drawRoundRect(ru, 15f, 15f, paint);
+
+
+            //for(Rect rect : buttonsToDraw) {
+            //    RectF rf = new RectF(rect.left, rect.top, rect.right, rect.bottom);
+
+            //    canvas.drawRoundRect(rf, 15f, 15f, paint);
+            //}
 
             // draw paused text
             if(!this.lm.isPlaying()) {

@@ -41,6 +41,8 @@ public class InputController {
                 buttonPadding,
                 screenX - buttonPadding,
                 buttonPadding + buttonHeight);
+
+        upgradeTap = true;
     }
 
     public void handleInput(MotionEvent motionEvent, LevelManager l, Viewport vp) {
@@ -56,9 +58,9 @@ public class InputController {
                         if(pauseButton.contains(x, y)) {
                             l.switchPlayingStatus();
                         } else if(upgradeButton.contains(x, y)) {
-                            if(upgradeTap = true) {
+                            if(upgradeTap == true) {
                                 upgradeTap = false;
-                            } else if(upgradeTap = false) {
+                            } else if(upgradeTap == false) {
                                 upgradeTap = true;
                             }
                         } else {
@@ -90,6 +92,14 @@ public class InputController {
         currentButtonList.add(upgradeButton);
         currentButtonList.add(pauseButton);
         return currentButtonList;
+    }
+
+    public Rect UpgradeButton() {
+        return upgradeButton;
+    }
+
+    public Rect PauseButton() {
+        return pauseButton;
     }
 
     public boolean isUpgradeTapped() {
