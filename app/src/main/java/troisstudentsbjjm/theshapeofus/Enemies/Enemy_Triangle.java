@@ -49,15 +49,10 @@ public class Enemy_Triangle extends Triangle{
 
 
         this.health = health;
-        location.set(x,y);
+        this.location.set(x,y);
         setPoints(pixelsPerMeter);
 
         isDead = false;
-        Random rand = new Random();
-        directionX = rand.nextInt(5);
-        directionY = -rand.nextInt(10);
-        speed = rand.nextInt(7);
-        gravity = 7;
     }
 
     public void setupPivot (int x,int y, int pixelsPerMeter, Canvas canvas, Paint paint) {

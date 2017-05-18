@@ -30,16 +30,6 @@ public abstract class GameObject  {
     private boolean traversable = false;
 
 
-    public Bitmap prepareBitmap(Context context, String bitmapName, int pixelsPerMetre) {
-        int resID = context.getResources().getIdentifier(bitmapName, "drawable", context.getPackageName());
-
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resID);
-
-        bitmap = Bitmap.createScaledBitmap(bitmap, (int)(size * pixelsPerMetre), (int)(size * pixelsPerMetre), false);
-
-        return bitmap;
-    }
-
     //boolean getters
     public boolean isActive() {
         return active;
