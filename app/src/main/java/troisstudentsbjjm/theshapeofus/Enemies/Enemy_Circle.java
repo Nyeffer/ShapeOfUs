@@ -22,7 +22,7 @@ public class Enemy_Circle extends Circle {
     private int damage,
             health;
     private boolean isDead;
-    private int x, y,
+    float center,
             pixelsPerMeter;
     private boolean isBlocked;
     private boolean rolling;
@@ -32,6 +32,7 @@ public class Enemy_Circle extends Circle {
         this.health = health;
         updateSize();
         location.set(x, y);
+        center = location.y + pixelsPerMeter - (float) (size*0.5)*pixelsPerMeter;
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;
@@ -48,9 +49,10 @@ public class Enemy_Circle extends Circle {
         setSize((float) (health * 0.025));
     }
 
+
     public void draw(Canvas canvas, Paint paint) {
         paint.setColor(Color.argb(255, 255, 255, 255));
-        canvas.drawCircle(location.x, location.y, size * pixelsPerMeter, paint);
+        canvas.drawCircle(location.x, center, (float)(size*0.5*pixelsPerMeter), paint);
     }
 
 

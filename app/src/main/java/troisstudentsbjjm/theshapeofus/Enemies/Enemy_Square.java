@@ -47,7 +47,7 @@ public class Enemy_Square extends Square{
 
         this.health = health;
         updateSize();
-        this.location.set(x,y);
+        location.set(x,y);
         setHitBox(x,y,pixelsPerMeter);
         pivot = new PointF();
         isDead = false;
