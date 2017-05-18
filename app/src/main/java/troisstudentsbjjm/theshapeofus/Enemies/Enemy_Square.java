@@ -151,7 +151,9 @@ public class Enemy_Square extends Square{
             angleD = 0;
         } else if (angleD <= -85){
             location.x -= size*pixelsPerMeter;
+
             setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
+
             angleD = 0;
         }
     }
