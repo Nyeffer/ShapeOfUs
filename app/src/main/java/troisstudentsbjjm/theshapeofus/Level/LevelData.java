@@ -10,6 +10,6 @@ import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 public class LevelData {
 
-    ArrayList<String> terrain;
+    public ArrayList<String> terrain;
 }
 
