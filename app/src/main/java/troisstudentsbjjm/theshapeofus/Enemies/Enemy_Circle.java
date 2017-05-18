@@ -31,7 +31,7 @@ public class Enemy_Circle extends Circle {
     public Enemy_Circle(int x, int y, int health, int pixelsPerMeter) {
         this.health = health;
         updateSize();
-        this.location.set(x, y);
+        location.set(x, y);
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;

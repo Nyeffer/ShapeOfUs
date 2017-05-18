@@ -140,11 +140,11 @@ public class Enemy_Square extends Square{
     // moves rect over by a factor of its size
     public void Move(int pixelsPerMeter){
         if (angleD >= 85){
-            this.location.x += this.size*pixelsPerMeter;
+            location.x += size*pixelsPerMeter;
             setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
             angleD = 0;
         } else if (angleD <= -85){
-            this.location.x -= this.size*pixelsPerMeter;
+            location.x -= size*pixelsPerMeter;
             setHitBox((int)this.location.x,(int)this.location.y,pixelsPerMeter);
             angleD = 0;
         }
@@ -153,10 +153,10 @@ public class Enemy_Square extends Square{
 
     // set color to white, rotate canvas, draw rect, save the orientation, return the rest of the canvas to normal.
     public void draw(Canvas canvas, Paint paint){
+        canvas.save();
         paint.setColor(Color.argb(255,255,255,255));
         canvas.rotate(angleD,pivot.x,pivot.y);
         canvas.drawRect(hitBox,paint);
-        canvas.save();
         canvas.restore();
     }
 
