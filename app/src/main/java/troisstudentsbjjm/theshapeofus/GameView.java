@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -40,6 +41,8 @@ public class GameView extends SurfaceView implements Runnable {
     private InputController ic;
     private Enemy_Square E_Square;
 
+    private Rect terrain;
+
 
     GameView(Context context, int screenWidth, int screenHeight){
 
@@ -54,6 +57,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         vp = new Viewport(screenWidth,screenHeight);
         E_Square = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter);      //40 is the square's health for now
+        terrain = new Rect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight);
 
         running = true;
     }
@@ -115,7 +119,7 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setTextSize(30);
             canvas.drawText("FPS:"+fps,screenWidth/5,screenHeight/5,paint);
 
-            canvas.drawRect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight,paint);
+            canvas.drawRect(terrain,paint);
 
             E_Square.draw(canvas,paint);
 
