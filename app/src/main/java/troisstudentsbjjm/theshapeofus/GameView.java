@@ -10,7 +10,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
+import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 
 /**
@@ -41,7 +43,11 @@ public class GameView extends SurfaceView implements Runnable {
     private InputController ic;
     private Enemy_Square E_Square;
 
+
     private Rect terrain;
+
+    private Enemy_Triangle E_Triangle;
+
 
 
     GameView(Context context, int screenWidth, int screenHeight){
@@ -56,8 +62,14 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
 
         vp = new Viewport(screenWidth,screenHeight);
+
         E_Square = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter);      //40 is the square's health for now
+
         terrain = new Rect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight);
+
+        E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
+
+
 
         running = true;
     }
@@ -106,6 +118,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void update(){
 
         E_Square.update(vp.pixelsPerMeter,fps);
+        E_Circle.update(vp.pixelsPerMeter,fps);
     }
 
 
@@ -122,6 +135,9 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawRect(terrain,paint);
 
             E_Square.draw(canvas,paint);
+
+            E_Triangle.draw(canvas, paint);
+
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
