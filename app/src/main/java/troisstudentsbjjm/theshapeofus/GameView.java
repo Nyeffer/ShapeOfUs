@@ -60,7 +60,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         E_Square = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter);      //40 is the square's health for now
         E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
-        E_Circle = new Enemy_Circle(0, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
+        E_Circle = new Enemy_Circle(vp.pixelsPerMeter, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
 
 
         running = true;
@@ -110,6 +110,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void update(){
 
         E_Square.update(vp.pixelsPerMeter,fps);
+        E_Circle.update(vp.pixelsPerMeter,fps);
     }
 
 

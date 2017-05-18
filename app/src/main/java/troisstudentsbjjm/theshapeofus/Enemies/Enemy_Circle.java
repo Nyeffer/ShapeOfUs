@@ -35,13 +35,12 @@ public class Enemy_Circle extends Circle {
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;
-
-        // rolling = true;
+        rolling = true;
     }
 
     public void update(int pixelsPerMeter, long fps) {
         if (rolling) {
-            // roll(pixelsPerMeter,fps);
+            this.location.x += ((float)pixelsPerMeter/fps);
         }
     }
 
@@ -50,7 +49,6 @@ public class Enemy_Circle extends Circle {
     }
 
     public void draw(Canvas canvas, Paint paint) {
-        Log.d("Enemy_Circle", "Draw");
         paint.setColor(Color.argb(255, 255, 255, 255));
         canvas.drawCircle(location.x, location.y, size * pixelsPerMeter, paint);
     }
