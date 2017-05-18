@@ -2,6 +2,9 @@ package troisstudentsbjjm.theshapeofus.Enemies;
 
 
 
+
+import android.graphics.Color;
+import android.graphics.Path;
 import android.graphics.Point;
 
 import android.graphics.PointF;
@@ -9,6 +12,8 @@ import android.graphics.PointF;
 import java.util.Random;
 
 import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 
 /**
  * Created by Jeffherson on 2017-05-15.
@@ -33,11 +38,19 @@ public class Enemy_Triangle extends Triangle{
     private int directionX;
     private int directionY;
     private int gravity;
+    public boolean isFalling;
+    private boolean isJumping;
+    private long jumpTime;
+    private long MAXJumpTime = 700;
 
 
-    Enemy_Triangle() {
+    public Enemy_Triangle(int x,int y, int health, int pixelsPerMeter) {
 
 
+
+        this.health = health;
+        location.set(x,y);
+        setPoints(pixelsPerMeter);
 
         isDead = false;
         Random rand = new Random();
@@ -47,11 +60,37 @@ public class Enemy_Triangle extends Triangle{
         gravity = 7;
     }
 
+    public void setupPivot (int x,int y, int pixelsPerMeter, Canvas canvas, Paint paint) {
+
+
+    }
+
+    public void draw(Canvas canvas, Paint paint){
+
+        paint.setColor(Color.argb(255,255,255,255));
+
+        Path Triangle = new Path();
+        Triangle.moveTo(A.x,A.y);
+        Triangle.lineTo(B.x,B.y);
+        Triangle.lineTo(C.x,C.y);
+        Triangle.close();
+        canvas.drawPath(Triangle,paint);
+        
+    }
+
+
+    public void startJump() {
+        if (!isFalling) {
+            if (!isJumping) {
+                isJumping = true;
+                jumpTime = System.currentTimeMillis();
+            }
+        }
+    }
+
 
 
     public void update(int pixelsPerMeter, long fps) {
-
-
 
     }
 

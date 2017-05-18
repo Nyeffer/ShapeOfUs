@@ -10,11 +10,16 @@ import android.graphics.PointF;
 public class Triangle extends GameObject {
 
     float area;
-    PointF A = new PointF(location.x, location.y + size);
 
-    PointF B = new PointF(A.x + size, A.y + size);
+    public PointF A = new PointF();
+    public PointF B = new PointF();
+    public PointF C = new PointF();
 
-    PointF C = new PointF((float) (A.x + size*0.5), A.y - size);
+    public void setPoints(int pixelsPerMeter) {
+        A.set(location.x, A.y = location.y + 1 * pixelsPerMeter);
+        B.set((float) (A.x + 0.5 * pixelsPerMeter), A.y);
+        C.set((float) (A.x + 0.25 * pixelsPerMeter), (float) (A.y - 0.5 * pixelsPerMeter) );
+    }
 
 
     public boolean contains(int x, int y){
