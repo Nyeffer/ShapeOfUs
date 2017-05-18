@@ -23,5 +23,6 @@ public class Square extends GameObject {
         hitBox.top = y;
         hitBox.right = hitBox.left + size*pixelsPerMeter;
         hitBox.bottom = hitBox.top + size*pixelsPerMeter;
+
     }
 }

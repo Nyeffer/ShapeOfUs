@@ -14,8 +14,5 @@ public class Circle extends GameObject {
     //it does not need to be precise so I think one to the bottom right and one to the bottom left at 45 degrees should be ok
     Point bottomRight;
     Point bottomLeft;
-
-    public Circle(){
-
-    }
+    Point center;
 }

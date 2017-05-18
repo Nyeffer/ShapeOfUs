@@ -28,6 +28,8 @@ public class Enemy_Triangle extends Triangle{
     private boolean isDead;
     private boolean facingRight = true;
 
+
+
     private int damage;
     private int health;
     private int x;
@@ -45,9 +47,11 @@ public class Enemy_Triangle extends Triangle{
     public Enemy_Triangle(int x,int y, int health, int pixelsPerMeter) {
 
 
+
         this.health = health;
         location.set(x,y);
         setPoints(pixelsPerMeter);
+
         isDead = false;
         Random rand = new Random();
         directionX = rand.nextInt(5);
@@ -90,13 +94,6 @@ public class Enemy_Triangle extends Triangle{
 
     }
 
-    public void deathAnim() {
-        if(isDead) {
-            // Draw the death sprite here
-
-
-        }
-    }
 
 
 
@@ -121,5 +118,4 @@ public class Enemy_Triangle extends Triangle{
     public int getDamage() { return damage; }
     public int getHealth() { return health; }
     public boolean getIsDead() { return isDead; }
-
 }

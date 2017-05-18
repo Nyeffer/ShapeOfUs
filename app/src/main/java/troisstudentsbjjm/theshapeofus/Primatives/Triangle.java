@@ -10,6 +10,7 @@ import android.graphics.PointF;
 public class Triangle extends GameObject {
 
     float area;
+
     public PointF A = new PointF();
     public PointF B = new PointF();
     public PointF C = new PointF();
@@ -19,6 +20,7 @@ public class Triangle extends GameObject {
         B.set((float) (A.x + 0.5 * pixelsPerMeter), A.y);
         C.set((float) (A.x + 0.25 * pixelsPerMeter), (float) (A.y - 0.5 * pixelsPerMeter) );
     }
+
 
     public boolean contains(int x, int y){
         //function takes in a x and y position, it then creates areas using this position, adds them together and then checks

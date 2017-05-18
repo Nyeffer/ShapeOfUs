@@ -2,9 +2,13 @@ package troisstudentsbjjm.theshapeofus.Enemies;
 
 
 
+
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+
+
 
 import android.graphics.PointF;
 
@@ -25,6 +29,7 @@ public class Enemy_Square extends Square{
     private boolean facingRight = true;
 
     private int angleD = 0;                             //angle to rotate square on canvas
+
     private int angularVelocity = 180;                  //angular velocity in degrees per second we will divide it by fps to get degrees to rotate per frame
     private final int GRAVITY = 7;                      //this will be in meters per second per second we will multiply by pixelspermeter to get pixels per second per second
 
@@ -37,17 +42,20 @@ public class Enemy_Square extends Square{
 
     private boolean isBlocked;                          //if not blocked...move, if blocked... attack.
 
+
     public Enemy_Square(int x,int y, int health, int pixelsPerMeter) {
 
         this.health = health;
         updateSize();
-        location.set(x,y);
+        this.location.set(x,y);
         setHitBox(x,y,pixelsPerMeter);
         pivot = new PointF();
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;
+
         rolling = true;
+
     }
 
 
@@ -59,10 +67,12 @@ public class Enemy_Square extends Square{
             roll(pixelsPerMeter,fps);
         } else {
             jump(pixelsPerMeter,fps);       //TODO
+
         }
 
 
     }
+
 
 
     private void roll(int pixelsPerMeter, long fps){
@@ -84,13 +94,14 @@ public class Enemy_Square extends Square{
             } else {
                 angleD -= angularVelocity/fps;
             }
+
         }
         setPivot();
     }
 
 
-    private void jump(int pixelsPerMeter, long fps){
 
+    private void jump(int pixelsPerMeter, long fps){
     }
 
 
@@ -129,15 +140,16 @@ public class Enemy_Square extends Square{
     // moves rect over by a factor of its size
     public void Move(int pixelsPerMeter){
         if (angleD >= 85){
-            location.x += size*pixelsPerMeter;
+            this.location.x += this.size*pixelsPerMeter;
             setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
             angleD = 0;
         } else if (angleD <= -85){
-            location.x -= size*pixelsPerMeter;
-            setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
+            this.location.x -= this.size*pixelsPerMeter;
+            setHitBox((int)this.location.x,(int)this.location.y,pixelsPerMeter);
             angleD = 0;
         }
     }
+
 
     // set color to white, rotate canvas, draw rect, save the orientation, return the rest of the canvas to normal.
     public void draw(Canvas canvas, Paint paint){
