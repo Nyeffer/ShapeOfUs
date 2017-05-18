@@ -14,6 +14,7 @@ import java.util.Random;
 import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 /**
  * Created by Jeffherson on 2017-05-15.
@@ -65,9 +66,9 @@ public class Enemy_Triangle extends Triangle{
         paint.setColor(Color.argb(255,255,255,255));
 
         Path Triangle = new Path();
-        Triangle.moveTo(A.x,A.y);
-        Triangle.lineTo(B.x,B.y);
-        Triangle.lineTo(C.x,C.y);
+        Triangle.moveTo(A.x, A.y);
+        Triangle.lineTo(B.x, B.y);
+        Triangle.lineTo(C.x, C.y);
         Triangle.close();
         canvas.drawPath(Triangle,paint);
         
@@ -85,8 +86,11 @@ public class Enemy_Triangle extends Triangle{
 
 
 
-    public void update(int pixelsPerMeter, long fps) {
-
+    public void update(float pixelsPerMeter, long fps) {
+        Log.d("Triangle", location.x + "");
+        location.x+= pixelsPerMeter / fps;
+        location.y-= pixelsPerMeter / fps;
+        setPoints((int)pixelsPerMeter);
     }
 
 
