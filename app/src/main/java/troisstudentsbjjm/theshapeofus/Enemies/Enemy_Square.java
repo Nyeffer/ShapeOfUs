@@ -24,17 +24,21 @@ import troisstudentsbjjm.theshapeofus.Primatives.Square;
 public class Enemy_Square extends Square{
 
     private PointF velocity;
-    private PointF pivot;
+    public PointF pivot;
 
     private boolean facingRight = true;
 
-    private int angleD = 0;                             //angle to rotate square on canvas
+    private float angleD = 0;                           //angle to rotate square on canvas
+    private float angularVelocity;                      //angular velocity in degrees per second we will divide it by fps to get degrees to rotate per frame
 
-    private int angularVelocity = 180;                  //angular velocity in degrees per second we will divide it by fps to get degrees to rotate per frame
     private final int GRAVITY = 7;                      //this will be in meters per second per second we will multiply by pixelspermeter to get pixels per second per second
 
-    private boolean isDead;                             //this will be used to initialize our death animation and to remove the object
+    private boolean isDead = false;                             //this will be used to initialize our death animation and to remove the object
     private boolean rolling;                            // the shape is either rolling or jumping
+    private boolean jumping;                            // used to jump
+
+    private long jumpStartTime;
+    private final long JUMP_DURATION = 1000;            // milliseconds, so 1 second
 
     private int damage;                                 //TODO
     private int health;                                 //added in constructor
@@ -59,20 +63,23 @@ public class Enemy_Square extends Square{
     }
 
 
+
     // the enemy squares update will rotate the square by incrementing a angle and using this angle to rotate the rect in draw
     // if the angle is approaching +-90 degrees then the shape is moved and the angle is reset.
     // also if the angle is greater than 45 degree the square rotates faster, think of a tipping over effect
     public void update(int pixelsPerMeter, long fps) {
-        if (rolling){
-            roll(pixelsPerMeter,fps);
+        if (!isDead){
+            angularVelocity = 60;
+            if (rolling){
+                roll(pixelsPerMeter,fps);
+            } else {
+                jump(pixelsPerMeter,fps);       //TODO
+
+            }
         } else {
-            jump(pixelsPerMeter,fps);       //TODO
-
+            angularVelocity = 0;
         }
-
-
     }
-
 
 
     private void roll(int pixelsPerMeter, long fps){
@@ -81,9 +88,9 @@ public class Enemy_Square extends Square{
                 Move(pixelsPerMeter);
                 angleD = 0;
             } else if (angleD > 45){
-                angleD += angularVelocity*2/fps;
+                angleD += angularVelocity*2/(fps*size);
             } else {
-                angleD += angularVelocity/fps;
+                angleD += angularVelocity/(fps*size);
             }
         } else if (!facingRight){
             if (angleD <= -85){
@@ -94,7 +101,6 @@ public class Enemy_Square extends Square{
             } else {
                 angleD -= angularVelocity/fps;
             }
-
         }
         setPivot();
     }
@@ -145,7 +151,9 @@ public class Enemy_Square extends Square{
             angleD = 0;
         } else if (angleD <= -85){
             location.x -= size*pixelsPerMeter;
-            setHitBox((int)this.location.x,(int)this.location.y,pixelsPerMeter);
+
+            setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
+
             angleD = 0;
         }
     }
@@ -161,6 +169,15 @@ public class Enemy_Square extends Square{
     }
 
 
+    public void destroy(){
+        isDead = true;
+    }
+
+
+    public void takeDamage(int damage){
+        health -= damage;
+    }
+
     // Setter and Getter
 
 //    public void setVelocity(PointF velocity) { this.velocity = velocity;   }
@@ -171,7 +188,7 @@ public class Enemy_Square extends Square{
 //    public PointF getVelocity() { return velocity;  }
 //    public float getRotate() {  return rotate;  }
 //    public int getDamage() { return damage; }
-//    public int getHealth() { return health; }
+    public int getHealth() { return health; }
 //    public boolean getIsDead() { return isDead; }
 
 

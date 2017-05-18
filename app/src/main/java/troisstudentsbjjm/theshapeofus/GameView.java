@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -13,7 +14,11 @@ import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
+
 import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
+
+import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
+
 
 /**
  * Created by mrber on 2017-05-15.
@@ -43,13 +48,20 @@ public class GameView extends SurfaceView implements Runnable {
     private InputController ic;
 
 
+
     // Towers
     private Square_Tower T_Square;
 
     // Enemies
     private Enemy_Square E_Square;
     private Enemy_Circle E_Circle;
+
+    private Rect terrain;
+
+
     private Enemy_Triangle E_Triangle;
+    private Triangle_Tower T_Tower;
+
 
 
     GameView(Context context, int screenWidth, int screenHeight){
@@ -71,9 +83,15 @@ public class GameView extends SurfaceView implements Runnable {
 
         // Enemies
         E_Square = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter);      //40 is the square's health for now
+
         E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
         E_Circle = new Enemy_Circle(vp.pixelsPerMeter, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
 
+
+        terrain = new Rect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight);
+
+        E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 10, vp.pixelsPerMeter);
+        T_Tower =  new Triangle_Tower((int)(screenWidth*0.5), (int)(screenHeight*0.5), vp.pixelsPerMeter);
 
         running = true;
     }
@@ -122,7 +140,7 @@ public class GameView extends SurfaceView implements Runnable {
     private void update(){
 
         E_Square.update(vp.pixelsPerMeter,fps);
-        E_Circle.update(vp.pixelsPerMeter,fps);
+        T_Tower.update(E_Square);
     }
 
 
@@ -136,7 +154,7 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setTextSize(30);
             canvas.drawText("FPS:"+fps,screenWidth/5,screenHeight/5,paint);
 
-            canvas.drawRect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight,paint);
+            canvas.drawRect(terrain,paint);
 
             // Towers
             T_Square.draw(canvas,paint);
@@ -145,7 +163,7 @@ public class GameView extends SurfaceView implements Runnable {
             E_Square.draw(canvas,paint);
             E_Circle.draw(canvas,paint);
             E_Triangle.draw(canvas, paint);
-
+            T_Tower.draw(canvas, paint);
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
