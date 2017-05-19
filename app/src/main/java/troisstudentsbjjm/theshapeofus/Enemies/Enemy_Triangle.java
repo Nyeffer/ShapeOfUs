@@ -83,8 +83,16 @@ public class Enemy_Triangle extends Triangle{
         }
         angle += Math.PI / fps;
         location.y = (float) (tempPostion - gravity * Math.abs(Math.sin(angle)));
+
     }
 
+
+
+    private void updateSize(){setSize ((float) (health * 0.05));}
+
+
+
+    }
 
     private void updateSize(){setSize ((float) (health * 0.05));}
 
@@ -94,9 +102,31 @@ public class Enemy_Triangle extends Triangle{
     }
 
     public void update(float pixelsPerMeter, long fps, int gravity) {
+
+
+
+//    public void destroy()   {
+//        isDead = true;
+//    }
+
+
+
+
+        jump(fps);
+        location.x+= pixelsPerMeter / fps;
+        setPoints(((int)location.x),((int) location.y), (int)pixelsPerMeter);
+
+
+
+        //Log.d("Triangle", location.x + "");
+        //location.x+= pixelsPerMeter / fps;
+        //location.y-= pixelsPerMeter / fps;
+        //setPoints((int)pixelsPerMeter);
+
         jump(fps);
         location.x+= pixelsPerMeter / fps;
         setPoints((int)(location.x),(int)(location.y),(int)pixelsPerMeter);
+
     }
 
 
