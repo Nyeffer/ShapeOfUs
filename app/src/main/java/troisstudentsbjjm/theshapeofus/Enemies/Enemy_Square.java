@@ -25,11 +25,13 @@ public class Enemy_Square extends Square{
 
     private PointF velocity;
     public PointF pivot;
+    public PointF center;
 
     private boolean facingRight = true;
 
-    private float angleD = 0;                           //angle to rotate square on canvas
+    public float angleD = 0;                           //angle to rotate square on canvas
     private float angularVelocity;                      //angular velocity in degrees per second we will divide it by fps to get degrees to rotate per frame
+    private float MAX_JUMP_VELOCITY = 100;
 
     private final int GRAVITY = 7;                      //this will be in meters per second per second we will multiply by pixelspermeter to get pixels per second per second
 
@@ -41,7 +43,7 @@ public class Enemy_Square extends Square{
     private final long JUMP_DURATION = 1000;            // milliseconds, so 1 second
 
     private int damage;                                 //TODO
-    private int health;                                 //added in constructor
+    private float health;                               //added in constructor
     private int pixelsPerMeter;                         //temporary
 
     private boolean isBlocked;                          //if not blocked...move, if blocked... attack.
@@ -53,6 +55,7 @@ public class Enemy_Square extends Square{
         updateSize();
         location.set(x,y);
         setHitBox(x,y,pixelsPerMeter);
+        center = new PointF((float) (hitBox.left+0.5*size), hitBox.bottom);
         pivot = new PointF();
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
@@ -108,30 +111,18 @@ public class Enemy_Square extends Square{
 
 
     private void jump(int pixelsPerMeter, long fps){
+
     }
 
-
-//    public void deathAnim() {
-//        if(isDead) {
-//            // Draw the death sprite here
-//
-//            for(int i = 0; i < directionY; i++) {
-//                y--; // Cause the sprite to go up
-//                for(int j = 0; j < directionX; j++) {
-//                    // check if it's left or right
-//                    if(LeftorRight() == 1) {
-//                        x++; // Go to the right
-//                    }   else    {
-//                        x--; // Go to the left
-//                    }
-//                }
-//            }
-//
-//        }
-//    }
-
     //shows relationship between health and size.
-    private void updateSize(){setSize ((float) (health * 0.025));}
+    public void updateSize(){
+        if (health * 0.025 >= 0.5){
+            setSize ((float) (health * 0.025));
+        } else {
+            setSize((float) 0.5);
+        }
+
+    }
 
 
     public void setPivot(){
@@ -148,14 +139,15 @@ public class Enemy_Square extends Square{
         if (angleD >= 85){
             location.x += size*pixelsPerMeter;
             setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
+            center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
             angleD = 0;
         } else if (angleD <= -85){
             location.x -= size*pixelsPerMeter;
             setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
+            center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
             angleD = 0;
         }
     }
-
 
     // set color to white, rotate canvas, draw rect, save the orientation, return the rest of the canvas to normal.
     public void draw(Canvas canvas, Paint paint){
@@ -172,7 +164,7 @@ public class Enemy_Square extends Square{
     }
 
 
-    public void takeDamage(int damage){
+    public void takeDamage(float damage){
         health -= damage;
     }
 
@@ -186,7 +178,7 @@ public class Enemy_Square extends Square{
 //    public PointF getVelocity() { return velocity;  }
 //    public float getRotate() {  return rotate;  }
 //    public int getDamage() { return damage; }
-    public int getHealth() { return health; }
+    public float getHealth() { return health; }
 //    public boolean getIsDead() { return isDead; }
 
 

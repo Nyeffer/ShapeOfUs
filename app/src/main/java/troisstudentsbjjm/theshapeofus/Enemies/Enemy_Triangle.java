@@ -93,15 +93,14 @@ public class Enemy_Triangle extends Triangle{
     }
 
 
+    public void takeDamage(float damage){
+        health -= damage;
+    }
 
 
-
-
-
-
-
-
-
+    public void destroy(){
+        isDead = true;
+    }
 
 
     // Setter and Getter
