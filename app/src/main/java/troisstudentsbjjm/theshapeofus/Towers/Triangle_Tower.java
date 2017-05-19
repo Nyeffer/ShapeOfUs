@@ -93,7 +93,7 @@ public class Triangle_Tower {
             Log.d("Enemy health",Enemy.getHealth()+"");
             Enemy.takeDamage(damage/fps);
             if (Enemy.getHealth() <= 0){
-                Enemy.destroy();
+//                Enemy.destroy();
             }
         }
     }

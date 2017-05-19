@@ -83,4 +83,5 @@ public class Enemy_Circle extends Circle {
 
 
     public float getHealth() { return health; }
+    public boolean getIsDead() { return isDead;   }
 }
