@@ -36,8 +36,6 @@ public class Enemy_Triangle extends Triangle{
     private int x;
     private int y;
     private int speed;
-    private int directionX;
-    private int directionY;
     private float gravity;
     public boolean isFalling;
     private boolean isJumping;
@@ -49,24 +47,19 @@ public class Enemy_Triangle extends Triangle{
 
     public Enemy_Triangle(int x,int y, int health, int pixelsPerMeter) {
 
-
-
         this.health = health;
-
         tempPostion = location.y;
         this.gravity = pixelsPerMeter;
         location.set(x,y);
         updateSize();
         setPoints((int)location.x, (int)location.y, pixelsPerMeter);
-
-
         isDead = false;
     }
 
+
     public void setupPivot (int x,int y, int pixelsPerMeter, Canvas canvas, Paint paint) {
-
-
     }
+
 
     public void draw(Canvas canvas, Paint paint){
 
@@ -81,18 +74,21 @@ public class Enemy_Triangle extends Triangle{
         
     }
 
+
     public void jump(long fps) {
 
-
         if (angle >= Math.PI * 2) {
-
-
             angle = 0;
             tempPostion = location.y;
         }
         angle += Math.PI / fps;
         location.y = (float) (tempPostion - gravity * Math.abs(Math.sin(angle)));
 
+    }
+
+
+
+    private void updateSize(){setSize ((float) (health * 0.05));}
 
 
 
@@ -100,11 +96,13 @@ public class Enemy_Triangle extends Triangle{
 
     private void updateSize(){setSize ((float) (health * 0.05));}
 
+
     public void takeDamage(float damage){
         health -= damage;
     }
 
     public void update(float pixelsPerMeter, long fps, int gravity) {
+
 
 
 //    public void destroy()   {
@@ -124,10 +122,17 @@ public class Enemy_Triangle extends Triangle{
         //location.x+= pixelsPerMeter / fps;
         //location.y-= pixelsPerMeter / fps;
         //setPoints((int)pixelsPerMeter);
+
+        jump(fps);
+        location.x+= pixelsPerMeter / fps;
+        setPoints((int)(location.x),(int)(location.y),(int)pixelsPerMeter);
+
     }
 
 
-
+    public void destroy(){
+        isDead = true;
+    }
 
     // Setter and Getter
     public void setVelocity(PointF velocity) { this.velocity = velocity;   }

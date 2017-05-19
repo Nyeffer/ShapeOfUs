@@ -22,8 +22,8 @@ import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 public class Triangle_Tower {
 
     public ArrayList<Triangle> spikes;
-    public final int NUM_SPIKES = 5;
-    public float spikeSize = (float) (0.2);
+    public final int NUM_SPIKES = 4;
+    public float spikeSize = (float) (0.25);
     public RectF hitbox;
     private float damage = 7;
     int pixelsPerMeter;
@@ -63,12 +63,19 @@ public class Triangle_Tower {
     }
 
 
+
+    public void update(Enemy_Square Enemy){
+        if (System.currentTimeMillis() - timeAttacked > TIME_BETWEEN_DAMAGE_TICKS){
+            if (hitbox.contains(Enemy.pivot.x,Enemy.pivot.y)){
+                Enemy.takeDamage(damage);
+
     public void update(Enemy_Square Enemy, long fps){
 
         if (Enemy.angleD > 60){
             if (hitbox.contains(Enemy.pivot.x+pixelsPerMeter,Enemy.pivot.y) || hitbox.contains(Enemy.center.x+pixelsPerMeter, Enemy.center.y)){
                 Log.d("Enemy health",Enemy.getHealth()+"");
                 Enemy.takeDamage(damage/fps);
+
                 if (Enemy.getHealth() <= 0) {
                     Enemy.destroy();
                 }
@@ -90,7 +97,6 @@ public class Triangle_Tower {
     public void update(Enemy_Triangle Enemy, long fps){
 
         if (hitbox.contains(Enemy.A.x,Enemy.A.y) || hitbox.contains(Enemy.B.x, Enemy.B.y)){
-            Log.d("Enemy health",Enemy.getHealth()+"");
             Enemy.takeDamage(damage/fps);
             if (Enemy.getHealth() <= 0){
 //                Enemy.destroy();

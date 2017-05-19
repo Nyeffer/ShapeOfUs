@@ -18,11 +18,10 @@ public class Square extends GameObject {
     public RectF hitBox = new RectF();
 
 
-    public void setHitBox(int x, int y, int pixelsPerMeter){
+    public void setHitBox(float x, float y, int pixelsPerMeter){
         hitBox.left = x;
         hitBox.right = hitBox.left + size*pixelsPerMeter;
         hitBox.bottom = y + pixelsPerMeter;
         hitBox.top = hitBox.bottom - size*pixelsPerMeter;
-
     }
 }
