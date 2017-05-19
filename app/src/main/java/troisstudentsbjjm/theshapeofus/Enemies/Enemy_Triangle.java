@@ -100,8 +100,16 @@ public class Enemy_Triangle extends Triangle{
 
     }
 
+    public void takeDamage(float damage){
+        health -= damage;
+    }
 
     public void update(float pixelsPerMeter, long fps, int gravity) {
+
+
+    public void destroy(){
+        isDead = true;
+    }
 
 
 
@@ -117,6 +125,7 @@ public class Enemy_Triangle extends Triangle{
         //location.y-= pixelsPerMeter / fps;
         //setPoints((int)pixelsPerMeter);
     }
+
 
 
 

@@ -5,14 +5,14 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
 
 import java.util.ArrayList;
 
+import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
-import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
+import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
 import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 
 /**
@@ -25,13 +25,13 @@ public class Triangle_Tower {
     public final int NUM_SPIKES = 5;
     public float spikeSize = (float) (0.2);
     public RectF hitbox;
-    private int damage = 40;
-    private final long TIME_BETWEEN_DAMAGE_TICKS = 500;
-    private long timeAttacked = 0;
+    private float damage = 7;
+    int pixelsPerMeter;
 
     public PointF location;
 
     public Triangle_Tower(int x, int y, int pixelsPerMeter){
+        this.pixelsPerMeter = pixelsPerMeter;
         location = new PointF(x,y);
         spikes = new ArrayList<Triangle>();
         initSpikes(pixelsPerMeter);
@@ -63,20 +63,49 @@ public class Triangle_Tower {
     }
 
 
-    public void update(Enemy_Square Enemy){
-        if (System.currentTimeMillis() - timeAttacked > TIME_BETWEEN_DAMAGE_TICKS){
-            if (hitbox.contains(Enemy.pivot.x,Enemy.pivot.y)){
-                Log.d("hit","bang");
-                Enemy.takeDamage(damage);
+    public void update(Enemy_Square Enemy, long fps){
+
+        if (Enemy.angleD > 60){
+            if (hitbox.contains(Enemy.pivot.x+pixelsPerMeter,Enemy.pivot.y) || hitbox.contains(Enemy.center.x+pixelsPerMeter, Enemy.center.y)){
+                Log.d("Enemy health",Enemy.getHealth()+"");
+                Enemy.takeDamage(damage/fps);
                 if (Enemy.getHealth() <= 0) {
                     Enemy.destroy();
                 }
-            } else {
-                Log.d("not hit","no dmg");
+                Enemy.updateSize();
+            }
+        }  else {
+            if (hitbox.contains(Enemy.pivot.x,Enemy.pivot.y) || hitbox.contains(Enemy.center.x, Enemy.center.y)){
+                Log.d("Enemy health",Enemy.getHealth()+"");
+                Enemy.takeDamage(damage/fps);
+                if (Enemy.getHealth() <= 0) {
+                    Enemy.destroy();
+                }
+                Enemy.updateSize();
             }
         }
     }
 
 
+    public void update(Enemy_Triangle Enemy, long fps){
 
+        if (hitbox.contains(Enemy.A.x,Enemy.A.y) || hitbox.contains(Enemy.B.x, Enemy.B.y)){
+            Log.d("Enemy health",Enemy.getHealth()+"");
+            Enemy.takeDamage(damage/fps);
+            if (Enemy.getHealth() <= 0){
+                Enemy.destroy();
+            }
+        }
+    }
+
+
+    public void update(Enemy_Circle Enemy, long fps){
+
+        if (hitbox.contains(Enemy.location.x, Enemy.location.y)){
+            Enemy.takeDamage(damage/fps);
+            if (Enemy.getHealth() <= 0) {
+                Enemy.destroy();
+            }
+        }
+    }
 }

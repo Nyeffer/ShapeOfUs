@@ -70,4 +70,17 @@ public class Enemy_Circle extends Circle {
         }
         return i;
     }
+
+
+    public void destroy(){
+        isDead = true;
+    }
+
+
+    public void takeDamage(float damage){
+        health -= damage;
+    }
+
+
+    public float getHealth() { return health; }
 }
