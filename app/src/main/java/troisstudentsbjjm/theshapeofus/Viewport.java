@@ -37,7 +37,7 @@ public class Viewport {
         currentViewportWorldCenter = new Vector2Point();
     }
 
-    void setWorldCenter(float x, float y) {
+    public void setWorldCenter(float x, float y) {
         currentViewportWorldCenter.x = x;
         currentViewportWorldCenter.y = y;
     }
@@ -64,6 +64,10 @@ public class Viewport {
 
     public float getViewportWorldCenterY() {
         return currentViewportWorldCenter.y;
+    }
+
+    public float getViewportWorldCenterX() {
+        return currentViewportWorldCenter.x;
     }
 
     public Rect worldToScreen(float objX, float objY, float objWidth, float objHeight) {
@@ -107,27 +111,27 @@ public class Viewport {
     }
 
     // Material to move the viewport, but this is only for small movements
-    /*public void moveViewPortRight(int maxWidth) {
+    public void moveViewPortRight(int maxWidth, float move) {
         if(currentViewportWorldCenter.x < maxWidth - (metersToShowX/2) + 3) {
-            currentViewportWorldCenter.x += 1;
+            currentViewportWorldCenter.x += move;
         }
     }
 
-    public void moveViewPortLeft() {
+    public void moveViewPortLeft(float move) {
         if(currentViewportWorldCenter.x > (metersToShowX/2) - 3) {
-            currentViewportWorldCenter.x -= 1;
+            currentViewportWorldCenter.x -= move;
         }
     }
 
-    public void moveViewPortUp() {
+    public void moveViewPortUp(float move) {
         if(currentViewportWorldCenter.y < (metersToShowY/2) - 3) {
-            currentViewportWorldCenter.y -= 1;
+            currentViewportWorldCenter.y -= move;
         }
     }
 
-    public void moveViewPortDown(int maxHeight) {
+    public void moveViewPortDown(int maxHeight, float move) {
         if(currentViewportWorldCenter.y < maxHeight - (metersToShowY/2) + 3) {
-            currentViewportWorldCenter.y += 1;
+            currentViewportWorldCenter.y += move;
         }
-    }*/
+    }
 }

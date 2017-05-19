@@ -48,6 +48,8 @@ public class InputController {
 
     public void handleInput(MotionEvent motionEvent, LevelManager l, Viewport vp) {
         int pointerCount = motionEvent.getPointerCount();
+        float dX = 0;
+        float dY = 0;
 
         for(int i = 0; i < pointerCount; i++) {
             int x = (int) motionEvent.getX(i);
@@ -64,10 +66,26 @@ public class InputController {
                             } else if(upgradeTap == false) {
                                 upgradeTap = true;
                             }
-                        } else {
+                        } //else {
                             // pan the screen here
-
+                            //dX = vp.getViewportWorldCenterX() - motionEvent.getRawX();
+                            //dY = vp.getViewportWorldCenterY() - motionEvent.getRawY();
                             // isTapping = true;
+                        //}
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        //vp.setWorldCenter(dX + motionEvent.getRawX(), dY + motionEvent.getRawY());
+                        if(motionEvent.getRawX() > 0) {
+                            vp.moveViewPortLeft(motionEvent.getRawX());
+                        }
+                        if(motionEvent.getRawX() < 0) {
+                            vp.moveViewPortRight(vp.getScreenWidth(), motionEvent.getRawX());
+                        }
+                        if(motionEvent.getRawY() > 0) {
+                            vp.moveViewPortUp(motionEvent.getRawY());
+                        }
+                        if(motionEvent.getRawY() < 0) {
+                            vp.moveViewPortDown(vp.getScreenHeight(), motionEvent.getRawY());
                         }
                         break;
                     case MotionEvent.ACTION_UP:

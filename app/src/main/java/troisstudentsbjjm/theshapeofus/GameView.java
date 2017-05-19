@@ -121,8 +121,8 @@ public class GameView extends SurfaceView implements Runnable {
 
             paint.setColor(Color.argb(255, 0, 0, 0));
             canvas.drawColor(Color.argb(255, 0, 0, 0));
-            paint.setColor(Color.argb(255,255,255,255));
-            paint.setTextSize(30);
+            //paint.setColor(Color.argb(255,255,255,255));
+            //paint.setTextSize(30);
             //canvas.drawText("FPS:"+fps,screenWidth/5,screenHeight/5,paint);
 
             // Text for debugging
