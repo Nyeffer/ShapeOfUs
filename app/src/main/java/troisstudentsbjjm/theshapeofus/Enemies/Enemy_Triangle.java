@@ -14,6 +14,7 @@ import java.util.Random;
 import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 /**
  * Created by Jeffherson on 2017-05-15.
@@ -37,11 +38,13 @@ public class Enemy_Triangle extends Triangle{
     private int speed;
     private int directionX;
     private int directionY;
-    private int gravity;
+    private float gravity;
     public boolean isFalling;
     private boolean isJumping;
     private long jumpTime;
-    private long MAXJumpTime = 700;
+    private final long MAXJUMPTIME = 700;
+    private float angle = 0;
+    private float tempPostion;
 
 
     public Enemy_Triangle(int x,int y, int health, int pixelsPerMeter) {
@@ -49,9 +52,13 @@ public class Enemy_Triangle extends Triangle{
 
 
         this.health = health;
+
+        tempPostion = location.y;
+        this.gravity = pixelsPerMeter;
         location.set(x,y);
         updateSize();
         setPoints((int)location.x, (int)location.y, pixelsPerMeter);
+
 
         isDead = false;
     }
@@ -63,44 +70,63 @@ public class Enemy_Triangle extends Triangle{
 
     public void draw(Canvas canvas, Paint paint){
 
-        paint.setColor(Color.argb(255,255,255,255));
+        paint.setColor(Color.argb(255,100,255,255));
 
         Path Triangle = new Path();
-        Triangle.moveTo(A.x,A.y);
-        Triangle.lineTo(B.x,B.y);
-        Triangle.lineTo(C.x,C.y);
+        Triangle.moveTo(A.x, A.y);
+        Triangle.lineTo(B.x, B.y);
+        Triangle.lineTo(C.x, C.y);
         Triangle.close();
         canvas.drawPath(Triangle,paint);
         
     }
 
+    public void jump(long fps) {
 
-    public void startJump() {
-        if (!isFalling) {
-            if (!isJumping) {
-                isJumping = true;
-                jumpTime = System.currentTimeMillis();
-            }
+
+        if (angle >= Math.PI * 2) {
+
+
+            angle = 0;
+            tempPostion = location.y;
         }
-    }
-
+        angle += Math.PI / fps;
+        location.y = (float) (tempPostion - gravity * Math.abs(Math.sin(angle)));
 
     private void updateSize(){setSize ((float) (health * 0.05));}
 
 
-    public void update(int pixelsPerMeter, long fps) {
+
 
     }
-
 
     public void takeDamage(float damage){
         health -= damage;
     }
 
+    public void update(float pixelsPerMeter, long fps, int gravity) {
+
 
     public void destroy(){
         isDead = true;
     }
+
+
+
+
+        jump(fps);
+        location.x+= pixelsPerMeter / fps;
+        setPoints((int)pixelsPerMeter);
+
+
+
+        //Log.d("Triangle", location.x + "");
+        //location.x+= pixelsPerMeter / fps;
+        //location.y-= pixelsPerMeter / fps;
+        //setPoints((int)pixelsPerMeter);
+    }
+
+
 
 
     // Setter and Getter
