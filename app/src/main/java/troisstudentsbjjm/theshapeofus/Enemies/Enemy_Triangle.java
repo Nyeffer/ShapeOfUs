@@ -38,11 +38,13 @@ public class Enemy_Triangle extends Triangle{
     private int speed;
     private int directionX;
     private int directionY;
-    private int gravity;
+    private float gravity;
     public boolean isFalling;
     private boolean isJumping;
     private long jumpTime;
-    private long MAXJumpTime = 700;
+    private final long MAXJUMPTIME = 700;
+    private float angle = 0;
+    private float tempPostion;
 
 
     public Enemy_Triangle(int x,int y, int health, int pixelsPerMeter) {
@@ -51,7 +53,11 @@ public class Enemy_Triangle extends Triangle{
 
         this.health = health;
         this.location.set(x,y);
+        tempPostion = location.y;
         setPoints(pixelsPerMeter);
+        isJumping = true;
+        this.gravity = pixelsPerMeter;
+        jumpTime = System.currentTimeMillis();
 
         isDead = false;
     }
@@ -63,7 +69,7 @@ public class Enemy_Triangle extends Triangle{
 
     public void draw(Canvas canvas, Paint paint){
 
-        paint.setColor(Color.argb(255,255,255,255));
+        paint.setColor(Color.argb(255,100,255,255));
 
         Path Triangle = new Path();
         Triangle.moveTo(A.x, A.y);
@@ -74,58 +80,37 @@ public class Enemy_Triangle extends Triangle{
         
     }
 
+    public void jump(long fps) {
 
-    public void startJump() {
-        if (!isFalling) {
-            if (!isJumping) {
-                isJumping = true;
-                jumpTime = System.currentTimeMillis();
-            }
+
+        if (angle >= Math.PI * 2) {
+
+            angle = 0;
+            tempPostion = location.y;
         }
+        angle += Math.PI / fps;
+        location.y = (float) (tempPostion - gravity * Math.abs(Math.sin(angle)));
+
+
     }
 
 
+    public void update(float pixelsPerMeter, long fps, int gravity) {
 
-    public void update(float pixelsPerMeter, long fps, float gravity) {
 
-        if(isJumping) {
-            long timeJumping = System.currentTimeMillis() - jumpTime;
-            if(timeJumping < MAXJumpTime){
-                if(timeJumping < MAXJumpTime / 2) {
-                    location.x+= pixelsPerMeter / fps;
-                    location.y-= pixelsPerMeter / fps;
-                    setPoints((int)pixelsPerMeter);
-                } else if ( timeJumping > MAXJumpTime /2) {
-                    location.x-= pixelsPerMeter / fps;
-                    location.y+= pixelsPerMeter / fps;
-                    setPoints((int)pixelsPerMeter);
-                }
-            } else {
-                isJumping = false;
-            }
 
-        } else {
-            location.x+= pixelsPerMeter / fps;
-            location.y-= pixelsPerMeter / fps;
-            setPoints((int)pixelsPerMeter);
-            isFalling = true;
-        }
+
+        jump(fps);
+        location.x+= pixelsPerMeter / fps;
+        setPoints((int)pixelsPerMeter);
+
+
 
         //Log.d("Triangle", location.x + "");
         //location.x+= pixelsPerMeter / fps;
         //location.y-= pixelsPerMeter / fps;
         //setPoints((int)pixelsPerMeter);
     }
-
-
-
-
-
-
-
-
-
-
 
 
 
