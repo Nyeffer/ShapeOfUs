@@ -15,10 +15,12 @@ public class Triangle extends GameObject {
     public PointF B = new PointF();
     public PointF C = new PointF();
 
-    public void setPoints(int pixelsPerMeter) {
-        A.set(location.x, location.y + 1 * pixelsPerMeter);
-        B.set((float) (A.x + 0.5 * pixelsPerMeter), A.y);
-        C.set((float) (A.x + 0.25 * pixelsPerMeter), (float) (A.y - 0.5 * pixelsPerMeter) );
+
+    public void setPoints(int x, int y,int pixelsPerMeter) {
+        A.set(x, y + pixelsPerMeter);
+        B.set((float) (A.x + size * pixelsPerMeter), A.y);
+        C.set((float) (A.x + 0.5 * size * pixelsPerMeter), (float) (A.y - size * pixelsPerMeter) );
+
     }
 
 

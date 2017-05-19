@@ -13,7 +13,6 @@ public abstract class GameObject  {
 
     public float size;
 
-
     private boolean active = false;
     private boolean visible = false;
 
@@ -28,7 +27,6 @@ public abstract class GameObject  {
     private boolean moves = false;
 
     private boolean traversable = false;
-
 
     //boolean getters
     public boolean isActive() {

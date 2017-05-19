@@ -52,12 +52,13 @@ public class Enemy_Triangle extends Triangle{
 
 
         this.health = health;
-        this.location.set(x,y);
+
         tempPostion = location.y;
-        setPoints(pixelsPerMeter);
-        isJumping = true;
         this.gravity = pixelsPerMeter;
-        jumpTime = System.currentTimeMillis();
+        location.set(x,y);
+        updateSize();
+        setPoints((int)location.x, (int)location.y, pixelsPerMeter);
+
 
         isDead = false;
     }
@@ -85,11 +86,16 @@ public class Enemy_Triangle extends Triangle{
 
         if (angle >= Math.PI * 2) {
 
+
             angle = 0;
             tempPostion = location.y;
         }
         angle += Math.PI / fps;
         location.y = (float) (tempPostion - gravity * Math.abs(Math.sin(angle)));
+
+    private void updateSize(){setSize ((float) (health * 0.05));}
+
+
 
 
     }
