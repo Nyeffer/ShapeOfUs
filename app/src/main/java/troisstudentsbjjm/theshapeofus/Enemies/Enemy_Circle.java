@@ -96,6 +96,7 @@ public class Enemy_Circle extends Circle {
         return i;
     }
 
+
     // Getter
     public PointF getCollisionPoint() {  return CollisionPoint;  }
     public float getSpeed() {   return speed;   }
@@ -105,4 +106,18 @@ public class Enemy_Circle extends Circle {
     public void setSpeed(float speed) { this.speed = speed;  }
     public void setHealth(int health) { this.health = health;   }
     public void setIsBlocked(boolean isBlocked) {   this.isBlocked = isBlocked; }
+
+
+    public void destroy(){
+        isDead = true;
+    }
+
+
+    public void takeDamage(float damage){
+        health -= damage;
+    }
+
+
+    public float getHealth() { return health; }
+
 }

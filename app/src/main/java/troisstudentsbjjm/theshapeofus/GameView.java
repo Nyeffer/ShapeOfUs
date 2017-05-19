@@ -15,9 +15,13 @@ import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 
+
+import static android.R.attr.gravity;
+
 import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
 
 import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
+
 
 
 /**
@@ -140,9 +144,17 @@ public class GameView extends SurfaceView implements Runnable {
     private void update(){
 
         E_Square.update(vp.pixelsPerMeter,fps);
+
         E_Circle.update(vp.pixelsPerMeter,fps);
         T_Square.update(E_Circle);
         T_Tower.update(E_Square);
+
+
+
+        E_Triangle.update(vp.pixelsPerMeter,fps,gravity);
+
+
+
     }
 
 
