@@ -28,7 +28,7 @@ public class ViewPanning extends ImageView{
 
     public ViewPanning(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        mScaleDetector = new ScaleGestureDetector(getContext(), new ScaleListener());
+        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
     }
 
     public ViewPanning(Context context, AttributeSet attrs, int defStyle) {

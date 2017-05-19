@@ -20,6 +20,7 @@ public class InputController {
     // upgradeTap will determine whether the upgrade button is active or not.
     public boolean isTapping;
     public boolean upgradeTap;
+    public boolean dragging;
 
     Rect upgradeButton;
     Rect pauseButton;

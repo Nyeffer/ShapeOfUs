@@ -11,8 +11,6 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.ArrayList;
-
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 
@@ -60,7 +58,7 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
 
         vp = new Viewport(screenWidth,screenHeight);
-        lm = new LevelManager(context, vp.getPixelsPerMeterX(), screenWidth, ic, "1", 0, 0);
+        lm = new LevelManager(context, vp.getPixelsPerMeterX(), screenWidth + 1000, ic, "1", 0, 0);
         E_Square = new Enemy_Square(vp.getPixelsPerMeterX(),(int)((screenHeight*0.5)), 40, vp.getPixelsPerMeterY());      //40 is the square's health for now
 
         running = true;
@@ -157,11 +155,11 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawRoundRect(rp, 15f, 15f, paint);
 
             if(lm.isPlaying()) {
-                paint.setColor(Color.argb(200, 255, 255, 255));
+                paint.setColor(Color.argb(255, 255, 255, 255));
                 paint.setTextSize(64);
                 canvas.drawText("Pause", drawPause.left + 25, drawPause.bottom - 50, paint);
             } else if(!lm.isPlaying()) {
-                paint.setColor(Color.argb(200, 255, 255, 255));
+                paint.setColor(Color.argb(255, 255, 255, 255));
                 paint.setTextSize(64);
                 canvas.drawText("Play", drawPause.left + 50, drawPause.bottom - 50, paint);
             }
