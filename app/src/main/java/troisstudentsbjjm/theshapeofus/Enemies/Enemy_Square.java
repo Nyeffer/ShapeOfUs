@@ -11,6 +11,7 @@ import android.graphics.Paint;
 
 
 import android.graphics.PointF;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -27,26 +28,24 @@ public class Enemy_Square extends Square{
     public PointF pivot;
     public PointF center;
 
-    private boolean facingRight = true;
-
-    public float angleD = 0;                           //angle to rotate square on canvas
+    public float angleD = 0;                            //angle to rotate square on canvas
     private float angularVelocity;                      //angular velocity in degrees per second we will divide it by fps to get degrees to rotate per frame
-    private float MAX_JUMP_VELOCITY = 100;
+    private final float MAX_JUMP_VELOCITY = -200;
+    private float tempYpos;
+    private float health;                               //added in constructor
 
-    private final int GRAVITY = 7;                      //this will be in meters per second per second we will multiply by pixelspermeter to get pixels per second per second
+    private final float GRAVITY = -10;                   //this will be in meters per second per second we will multiply by pixelspermeter to get pixels per second per second
 
-    private boolean isDead = false;                             //this will be used to initialize our death animation and to remove the object
-    private boolean rolling;                            // the shape is either rolling or jumping
-    private boolean jumping;                            // used to jump
-
-    private long jumpStartTime;
-    private final long JUMP_DURATION = 1000;            // milliseconds, so 1 second
+    private boolean isDead = false;                     //this will be used to initialize our death animation and to remove the object
+    public boolean rolling;                            // the shape is either rolling or jumping
+    private boolean facingRight = true;
+    private boolean isBlocked;                          //if not blocked...move, if blocked... attack.
 
     private int damage;                                 //TODO
-    private float health;                               //added in constructor
     private int pixelsPerMeter;                         //temporary
 
-    private boolean isBlocked;                          //if not blocked...move, if blocked... attack.
+    private final long TIME_BETWEEN_JUMPS = 500;
+    private long jumpStop = 0;
 
 
     public Enemy_Square(int x,int y, int health, int pixelsPerMeter) {
@@ -57,37 +56,34 @@ public class Enemy_Square extends Square{
         setHitBox(x,y,pixelsPerMeter);
         center = new PointF((float) (hitBox.left+0.5*size), hitBox.bottom);
         pivot = new PointF();
+        velocity = new PointF();
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;
-
-        rolling = true;
-
+        tempYpos = location.y + 1;
+        jumpStop = 0;
+        setRolling();
     }
-
-
-
     // the enemy squares update will rotate the square by incrementing a angle and using this angle to rotate the rect in draw
     // if the angle is approaching +-90 degrees then the shape is moved and the angle is reset.
     // also if the angle is greater than 45 degree the square rotates faster, think of a tipping over effect
     public void update(int pixelsPerMeter, long fps) {
         if (!isDead){
-            angularVelocity = 60;
             if (rolling){
+                angularVelocity = 60;
                 roll(pixelsPerMeter,fps);
             } else {
-                jump(pixelsPerMeter,fps);       //TODO
-
+                jump(pixelsPerMeter,fps);
             }
         } else {
             angularVelocity = 0;
         }
     }
 
-
+    // increments the angle and moves the square if necessary
     private void roll(int pixelsPerMeter, long fps){
         if (facingRight){
-            if (angleD >= 85){
+            if (angleD >= 87){
                 Move(pixelsPerMeter);
                 angleD = 0;
             } else if (angleD > 45){
@@ -96,7 +92,7 @@ public class Enemy_Square extends Square{
                 angleD += angularVelocity/(fps*size);
             }
         } else if (!facingRight){
-            if (angleD <= -85){
+            if (angleD <= -87){
                 Move(pixelsPerMeter);
                 angleD = 0;
             } else if (angleD < -45){
@@ -111,7 +107,24 @@ public class Enemy_Square extends Square{
 
 
     private void jump(int pixelsPerMeter, long fps){
-
+        updateSize();
+        if (System.currentTimeMillis() >= TIME_BETWEEN_JUMPS + jumpStop){
+            if (tempYpos <= location.y){
+                velocity.set(1,MAX_JUMP_VELOCITY);
+                location.y = tempYpos;
+                jumpStop = System.currentTimeMillis();
+            }
+            if (location.y + velocity.y/fps >= tempYpos){
+                location.y = tempYpos;
+            } else {
+                location.y += velocity.y/fps;
+                velocity.y -= GRAVITY;
+            }
+            location.x += velocity.x;
+            setHitBox(location.x,location.y,pixelsPerMeter);
+            center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
+            setPivot();
+        }
     }
 
     //shows relationship between health and size.
@@ -121,7 +134,6 @@ public class Enemy_Square extends Square{
         } else {
             setSize((float) 0.5);
         }
-
     }
 
 
@@ -136,29 +148,32 @@ public class Enemy_Square extends Square{
 
     // moves rect over by a factor of its size
     public void Move(int pixelsPerMeter){
-        if (angleD >= 85){
+        if (facingRight){
             location.x += size*pixelsPerMeter;
-            setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
+            updateSize();
+            setHitBox(location.x,location.y,pixelsPerMeter);
             center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
-            angleD = 0;
-        } else if (angleD <= -85){
+            setRolling();
+        } else {
             location.x -= size*pixelsPerMeter;
-
-            setHitBox((int)location.x,(int)location.y,pixelsPerMeter);
-
+            updateSize();
+            setHitBox(location.x,location.y,pixelsPerMeter);
             center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
-
-            angleD = 0;
+            setRolling();
         }
     }
 
     // set color to white, rotate canvas, draw rect, save the orientation, return the rest of the canvas to normal.
     public void draw(Canvas canvas, Paint paint){
-        canvas.save();
         paint.setColor(Color.argb(255,255,255,255));
-        canvas.rotate(angleD,pivot.x,pivot.y);
-        canvas.drawRect(hitBox,paint);
-        canvas.restore();
+        if (rolling){
+            canvas.save();
+            canvas.rotate(angleD,pivot.x,pivot.y);
+            canvas.drawRect(hitBox,paint);
+            canvas.restore();
+        } else {
+            canvas.drawRect(hitBox,paint);
+        }
     }
 
 
@@ -182,6 +197,13 @@ public class Enemy_Square extends Square{
 //    public float getRotate() {  return rotate;  }
 //    public int getDamage() { return damage; }
     public float getHealth() { return health; }
+    public void setRolling(){
+        if (health <= 40){
+            rolling = false;
+        } else {
+            rolling = true;
+        }
+    }
 //    public boolean getIsDead() { return isDead; }
 
 

@@ -22,8 +22,8 @@ import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 public class Triangle_Tower {
 
     public ArrayList<Triangle> spikes;
-    public final int NUM_SPIKES = 5;
-    public float spikeSize = (float) (0.2);
+    public final int NUM_SPIKES = 4;
+    public float spikeSize = (float) (0.25);
     public RectF hitbox;
     private float damage = 7;
     int pixelsPerMeter;
@@ -97,7 +97,6 @@ public class Triangle_Tower {
     public void update(Enemy_Triangle Enemy, long fps){
 
         if (hitbox.contains(Enemy.A.x,Enemy.A.y) || hitbox.contains(Enemy.B.x, Enemy.B.y)){
-            Log.d("Enemy health",Enemy.getHealth()+"");
             Enemy.takeDamage(damage/fps);
             if (Enemy.getHealth() <= 0){
                 Enemy.destroy();
