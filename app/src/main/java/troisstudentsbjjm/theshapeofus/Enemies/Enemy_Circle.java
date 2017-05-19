@@ -17,12 +17,14 @@ import troisstudentsbjjm.theshapeofus.Primatives.Circle;
  */
 
 public class Enemy_Circle extends Circle {
-    private PointF velocity;
+    public PointF CollisionPoint;
     private float rotate;
     private int damage,
             health;
+    private float speed;
     private boolean isDead;
-    float center,
+    float centerY, centerX,
+            collisionY, collisionX,
             pixelsPerMeter;
     private boolean isBlocked;
     private boolean rolling;
@@ -32,17 +34,40 @@ public class Enemy_Circle extends Circle {
         this.health = health;
         updateSize();
         location.set(x, y);
-        center = location.y + pixelsPerMeter - (float) (size*0.5)*pixelsPerMeter;
+        setHitBox(x,y,pixelsPerMeter);
+        centerY = location.y + pixelsPerMeter - (float) (size*0.5)*pixelsPerMeter;
+        centerX = location.x + pixelsPerMeter - (float) (size*0.5)*pixelsPerMeter;
+        collisionY = centerY;
+        collisionX = centerX;
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;
         rolling = true;
+        CollisionPoint = new PointF(collisionX,collisionY);
     }
 
     public void update(int pixelsPerMeter, long fps) {
         if (rolling) {
-            this.location.x += ((float)pixelsPerMeter/fps);
+            if(isBlocked)   {
+            } else {
+                speed = ((float) pixelsPerMeter/fps);
+                location.x += speed;
+                CollisionPoint.x += speed;
+            }
+
         }
+    }
+
+    public void update(Enemy_Circle Enemy) {
+        if(hitBox.contains(Enemy.getCollisionPoint().x,Enemy.getCollisionPoint().y)) {
+            BuildUp(Enemy);
+            updateSize();
+            
+        }
+    }
+
+    public void BuildUp(Enemy_Circle Enemy) {
+        setHealth(health + Enemy.getHealth());
     }
 
     private void updateSize() {
@@ -52,7 +77,7 @@ public class Enemy_Circle extends Circle {
 
     public void draw(Canvas canvas, Paint paint) {
         paint.setColor(Color.argb(255, 255, 255, 255));
-        canvas.drawCircle(location.x, center, (float)(size*0.5*pixelsPerMeter), paint);
+        canvas.drawCircle(location.x, centerY, (float)(size*0.5*pixelsPerMeter), paint);
     }
 
 
@@ -70,4 +95,14 @@ public class Enemy_Circle extends Circle {
         }
         return i;
     }
+
+    // Getter
+    public PointF getCollisionPoint() {  return CollisionPoint;  }
+    public float getSpeed() {   return speed;   }
+    public int getHealth() {    return health;  }
+
+    // Setter
+    public void setSpeed(float speed) { this.speed = speed;  }
+    public void setHealth(int health) { this.health = health;   }
+    public void setIsBlocked(boolean isBlocked) {   this.isBlocked = isBlocked; }
 }

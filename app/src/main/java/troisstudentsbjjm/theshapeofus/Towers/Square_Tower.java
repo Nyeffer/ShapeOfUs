@@ -4,7 +4,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
+import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
+import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Primatives.Square;
 
 /**
@@ -26,6 +29,14 @@ public class Square_Tower extends Square {
     }
 
     private void updateSize(){setSize ((int) (75*0.025));}
+
+    public void update(Enemy_Circle Enemy) {
+            if(hitBox.contains(Enemy.getCollisionPoint().x + 1,Enemy.getCollisionPoint().y)) {
+                Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
+                Log.d("Square_Tower", "Hit!");
+                Enemy.setIsBlocked(true);
+        }
+    }
 
 
     public void draw(Canvas canvas, Paint paint){

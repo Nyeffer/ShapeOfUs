@@ -78,7 +78,7 @@ public class GameView extends SurfaceView implements Runnable {
         vp = new Viewport(screenWidth,screenHeight);
 
         // Towers
-        T_Square = new Square_Tower(4,(int) ((screenHeight*0.5)),40, vp.pixelsPerMeter);
+        T_Square = new Square_Tower(700,(int) ((screenHeight*0.5)),40, vp.pixelsPerMeter);
 
 
         // Enemies
@@ -140,6 +140,8 @@ public class GameView extends SurfaceView implements Runnable {
     private void update(){
 
         E_Square.update(vp.pixelsPerMeter,fps);
+        E_Circle.update(vp.pixelsPerMeter,fps);
+        T_Square.update(E_Circle);
         T_Tower.update(E_Square);
     }
 
@@ -158,12 +160,13 @@ public class GameView extends SurfaceView implements Runnable {
 
             // Towers
             T_Square.draw(canvas,paint);
+            T_Tower.draw(canvas, paint);
 
             // Enemies
             E_Square.draw(canvas,paint);
             E_Circle.draw(canvas,paint);
             E_Triangle.draw(canvas, paint);
-            T_Tower.draw(canvas, paint);
+
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
