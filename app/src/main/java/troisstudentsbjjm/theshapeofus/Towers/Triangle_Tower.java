@@ -67,7 +67,6 @@ public class Triangle_Tower {
 
         if (Enemy.angleD > 60){
             if (hitbox.contains(Enemy.pivot.x+pixelsPerMeter,Enemy.pivot.y) || hitbox.contains(Enemy.center.x+pixelsPerMeter, Enemy.center.y)){
-                Log.d("Enemy health",Enemy.getHealth()+"");
                 Enemy.takeDamage(damage/fps);
 
                 if (Enemy.getHealth() <= 0) {

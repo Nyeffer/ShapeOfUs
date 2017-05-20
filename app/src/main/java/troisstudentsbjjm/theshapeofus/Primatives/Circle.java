@@ -17,6 +17,8 @@ public class Circle extends GameObject {
     PointF bottomRight;
     PointF bottomLeft;
     public PointF center;
+    public PointF particleVel;
+    public PointF distanceToOmniGon;
 
     public RectF hitBox = new RectF();
 
