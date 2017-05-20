@@ -86,7 +86,7 @@ public class GameView extends SurfaceView implements Runnable {
         // Towers
 
         T_Tower =  new Triangle_Tower((int)(screenWidth*0.5), (int)(screenHeight*0.5), vp.pixelsPerMeter);
-        C_Tower = new Circle_Tower(screenWidth-200,(float) (screenHeight*0.5),vp.pixelsPerMeter);
+        C_Tower = new Circle_Tower(500,(float) (screenHeight*0.5),vp.pixelsPerMeter);
         T_Square = new Square_Tower(700,(int) ((screenHeight*0.5)),40, vp.pixelsPerMeter);
 
 
@@ -145,7 +145,7 @@ public class GameView extends SurfaceView implements Runnable {
         E_Square.update(vp.pixelsPerMeter,fps);
         E_Triangle.update(vp.pixelsPerMeter,fps,gravity);
         T_Tower.update(E_Square, fps);
-        T_Tower.update(E_Triangle, fps);
+        T_Tower.update(E_Circle, fps);
         C_Tower.update(E_Square,fps);
         E_Circle.update(vp.pixelsPerMeter,fps);
         T_Square.update(E_Circle);

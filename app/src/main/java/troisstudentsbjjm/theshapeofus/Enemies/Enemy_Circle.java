@@ -22,7 +22,7 @@ public class Enemy_Circle extends Circle {
     private int damage;
     private float health;
     private float speed;
-    private boolean isDead;
+    public boolean isDead;
     float centerY, centerX,
             collisionY, collisionX,
             pixelsPerMeter;
