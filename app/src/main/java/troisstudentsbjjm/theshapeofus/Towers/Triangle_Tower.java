@@ -28,6 +28,7 @@ public class Triangle_Tower {
     private float damage = 700;
     int pixelsPerMeter;
 
+
     public PointF location;
 
     public Triangle_Tower(int x, int y, int pixelsPerMeter){
@@ -59,6 +60,15 @@ public class Triangle_Tower {
             Triangle.lineTo(spike.C.x,spike.C.y);
             Triangle.close();
             canvas.drawPath(Triangle,paint);
+        }
+    }
+
+
+
+
+    public void update(Enemy_Square Enemy) {
+        if (hitbox.contains(Enemy.pivot.x, Enemy.pivot.y)) {
+            Enemy.takeDamage(damage);
         }
     }
 

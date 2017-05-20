@@ -64,6 +64,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Enemy_Square E_Square;
     private Enemy_Square E_Square2;
     private Enemy_Circle E_Circle;
+    private Enemy_Circle E_Circle_1;
 
     private Rect terrain;
 
@@ -97,9 +98,11 @@ public class GameView extends SurfaceView implements Runnable {
 
 
         // Enemies
+
         E_Square = new Enemy_Square(-50,(int)((screenHeight*0.5)), 80, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));      //40 is the square's health for now
         E_Square2 = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
         E_Circle = new Enemy_Circle(vp.pixelsPerMeter, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
+
         E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 10, vp.pixelsPerMeter);
 
         running = true;
@@ -163,6 +166,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         T_Square.update(E_Square, fps);
         T_Tower.update(E_Square, fps);
+
         T_Tower.update(E_Square2, fps);
 //        C_Tower.update(E_Square2,fps);
 //        C_Tower.update(E_Square,fps);
@@ -191,9 +195,11 @@ public class GameView extends SurfaceView implements Runnable {
 
 
             // Enemies
+
             E_Square.draw(canvas,paint);
             E_Square2.draw(canvas,paint);
             //E_Circle.draw(canvas,paint);
+
             E_Triangle.draw(canvas, paint);
 
 

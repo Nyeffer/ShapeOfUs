@@ -24,9 +24,9 @@ public class Circle extends GameObject {
 
     public void setHitBox(int x, int y, int pixelsPerMeter){
         hitBox.left = x;
-        hitBox.right = hitBox.left + size*pixelsPerMeter;
+        hitBox.right = hitBox.left + size*((float)0.5*pixelsPerMeter);
         hitBox.bottom = y + pixelsPerMeter;
-        hitBox.top = hitBox.bottom - size*pixelsPerMeter;
+        hitBox.top = hitBox.bottom - size*((float)0.5*pixelsPerMeter);
 
     }
 }
