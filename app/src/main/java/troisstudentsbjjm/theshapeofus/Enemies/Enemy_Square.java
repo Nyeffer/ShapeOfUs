@@ -31,7 +31,7 @@ public class Enemy_Square extends Square{
     public float angleD = 0;                            //angle to rotate square on canvas
     private float angularVelocity;                      //angular velocity in degrees per second we will divide it by fps to get degrees to rotate per frame
     private final float MAX_JUMP_VELOCITY = -200;
-    private float tempYpos;
+    private int tempYpos;
     private float health;                               //added in constructor
 
     private final float GRAVITY = -10;                   //this will be in meters per second per second we will multiply by pixelspermeter to get pixels per second per second
@@ -60,7 +60,7 @@ public class Enemy_Square extends Square{
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
         isBlocked = false;
-        tempYpos = location.y + 1;
+        tempYpos = (int)location.y;
         jumpStop = 0;
         setRolling();
     }
@@ -110,20 +110,22 @@ public class Enemy_Square extends Square{
         updateSize();
         if (System.currentTimeMillis() >= TIME_BETWEEN_JUMPS + jumpStop){
             if (tempYpos <= location.y){
-                velocity.set(1,MAX_JUMP_VELOCITY);
+                velocity.set(2,MAX_JUMP_VELOCITY);
                 location.y = tempYpos;
                 jumpStop = System.currentTimeMillis();
             }
             if (location.y + velocity.y/fps >= tempYpos){
                 location.y = tempYpos;
+                setPivot();
+                setRolling();
             } else {
-                location.y += velocity.y/fps;
+                location.y += (int)(velocity.y/fps);
                 velocity.y -= GRAVITY;
             }
             location.x += velocity.x;
             setHitBox(location.x,location.y,pixelsPerMeter);
             center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
-            setPivot();
+
         }
     }
 

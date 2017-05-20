@@ -146,6 +146,7 @@ public class GameView extends SurfaceView implements Runnable {
         E_Triangle.update(vp.pixelsPerMeter,fps,gravity);
         T_Tower.update(E_Square, fps);
         T_Tower.update(E_Triangle, fps);
+        C_Tower.update(E_Square,fps);
         E_Circle.update(vp.pixelsPerMeter,fps);
         T_Square.update(E_Circle);
     }
