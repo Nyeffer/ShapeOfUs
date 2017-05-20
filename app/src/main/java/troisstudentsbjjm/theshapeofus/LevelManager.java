@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Level.LevelData;
+import troisstudentsbjjm.theshapeofus.Level.LevelOne;
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 /**
@@ -33,16 +34,32 @@ public class LevelManager {
     Bitmap[] bitmapsArray;
 
     public LevelManager(Context context, int pixelsPerMeter, int screenWidth, InputController ic, String level, float px, float py){
-
         this.level = level;
 
+        switch(level) {
+            case "Level 1":
+                levelData = new LevelOne();
+                break;
+            case "LevelCity":
+                //levelData = new LevelCity();
+                break;
+            case "LevelForest":
+                //levelData = new LevelForest();
+                break;
+            case "LevelMountain":
+                //levelData = new LevelMountain();
+                break;
+            default:
+                levelData = new LevelOne();
+                break;
+        }
 
+        // setup game objects
         gameObjects = new ArrayList<>();
+        bitmapsArray = new Bitmap[7]; // holds one of each type
 
-        bitmapsArray = new Bitmap[25];
-
-
-        // playing = true;
+        loadMapData(context, pixelsPerMeter, px, py);
+        //loadBackgrounds(context, pixelsPerMeter, screenWidth);
     }
 
     public boolean isPlaying(){
@@ -65,65 +82,17 @@ public class LevelManager {
             case 'p':
                 index = 2;
                 break;
-            case 'c':
+            case 'b':
                 index = 3;
                 break;
-            case 'u':
+            case 's':
                 index = 4;
                 break;
-            case 'e':
+            case 't':
                 index = 5;
                 break;
-            case 'd':
+            case 'c':
                 index = 6;
-                break;
-            case 'g':
-                index = 7;
-                break;
-            case 'f':
-                index = 8;
-                break;
-            case '2':
-                index = 9;
-                break;
-            case '3':
-                index = 10;
-                break;
-            case '4':
-                index = 11;
-                break;
-            case '5':
-                index = 12;
-                break;
-            case '6':
-                index = 13;
-                break;
-            case '7':
-                index = 14;
-                break;
-            case 'w':
-                index = 15;
-                break;
-            case 'x':
-                index = 16;
-                break;
-            case 'l':
-                index = 17;
-                break;
-            case 'r':
-                index = 18;
-                break;
-            case 's':
-                index = 19;
-                break;
-            case 'm':
-                index = 20;
-                break;
-            case 'z':
-                index = 21;
-                break;
-            case 't':
-                index = 22;
                 break;
             default:
                 index = 0;
@@ -133,35 +102,89 @@ public class LevelManager {
         return bitmapsArray[index];
     }
 
+    public int getBitmapIndex(char blockType){
+
+        int index;
+
+        switch (blockType){
+            case '.':
+                index = 0;
+                break;
+            case '1':
+                index = 1;
+                break;
+            case 'p':
+                index = 2;
+                break;
+            case 'b':
+                index = 3;
+                break;
+            case 's':
+                index = 4;
+                break;
+            case 't':
+                index = 5;
+                break;
+            case 'c':
+                index = 6;
+                break;
+            default:
+                index = 0;
+                break;
+        }
+
+        return index;
+    }
 
 
-//    private void loadMapData(Context context, int pixelsPerMeter, float px, float py){
-//
-//        char c;
-//
-//        int currentIndex = -1;
-//        int teleportIndex = -1;
-//
-//        mapHeight = levelData.terrain.size();
-//        mapWidth = levelData.terrain.get(0).length();
-//
-//        for (int i = 0; i < levelData.terrain.size(); i++){
-//
-//            for (int j = 0; j < levelData.terrain.get(i).length(); j++){
-//
-//                c = levelData.terrain.get(i).charAt(j);
-//
-//                if (c != '.'){
-//
-//                    currentIndex++;
-//                    switch (c) {
-//                        case '1':
-//                            break;
-//                    }
-//                }
-//            }
-//        }
-//    }
+
+    private void loadMapData(Context context, int pixelsPerMeter, float px, float py){
+
+        char c;
+
+        int currentIndex = -1;
+
+        mapHeight = levelData.terrain.size();
+        mapWidth = levelData.terrain.get(0).length();
+
+        for (int i = 0; i < levelData.terrain.size(); i++){
+
+            for (int j = 0; j < levelData.terrain.get(i).length(); j++){
+
+                c = levelData.terrain.get(i).charAt(j);
+
+                if (c != '.'){
+
+                    currentIndex++;
+                    switch (c) {
+                        case '1':
+                            // Add the floor tiles
+                            break;
+                        case 'p':
+                            // Add the player's main base
+                            break;
+                        case 'b':
+                            // Add a blank tower
+                            break;
+                        case 's':
+                            // Add square (spawner perhaps)
+                            break;
+                        case 't':
+                            // Add triangle
+                            break;
+                        case 'c':
+                            // Add circle
+                            break;
+                    }
+                }
+
+                // look to ensure that the indexed bitmap has already been loaded
+                if(bitmapsArray[getBitmapIndex(c)] == null) {
+                    bitmapsArray[getBitmapIndex(c)] = gameObjects.get(currentIndex).prepareBitmap(context, gameObjects.get(currentIndex).getBitmapName(), pixelsPerMeter);
+                }
+            }
+        }
+    }
 
 
     public void switchPlayingStatus(){

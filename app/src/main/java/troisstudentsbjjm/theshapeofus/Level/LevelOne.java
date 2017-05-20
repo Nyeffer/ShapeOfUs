@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class LevelOne extends LevelData{
 
-    LevelOne(){
+    public LevelOne(){
 
         terrain = new ArrayList<String>();
 

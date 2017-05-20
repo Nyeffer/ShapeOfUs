@@ -13,6 +13,7 @@ import android.view.SurfaceView;
 
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
+import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 /**
  * Created by mrber on 2017-05-15.
@@ -21,9 +22,7 @@ import troisstudentsbjjm.theshapeofus.Input.InputController;
 //this is where we update and draw
 
 public class GameView extends SurfaceView implements Runnable {
-
-    Context context;
-
+    private boolean debugging = true;
     private volatile boolean running;
     private Thread gameThread = null;
 
@@ -31,6 +30,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Canvas canvas;
     private SurfaceHolder ourHolder;
 
+    Context context;
     private long startFrameTime;
     private long timeThisFrame;
     private long fps = 60;
@@ -42,8 +42,6 @@ public class GameView extends SurfaceView implements Runnable {
     private LevelManager lm;
     private Enemy_Square E_Square;
     InputController ic;
-
-    private boolean debugging = true;
 
 
     GameView(Context context, int screenWidth, int screenHeight){
@@ -58,12 +56,20 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
 
         vp = new Viewport(screenWidth,screenHeight);
-        lm = new LevelManager(context, vp.getPixelsPerMeterX(), screenWidth + 1000, ic, "1", 0, 0);
         E_Square = new Enemy_Square(vp.getPixelsPerMeterX(),(int)((screenHeight*0.5)), 40, vp.getPixelsPerMeterY());      //40 is the square's health for now
 
         running = true;
 
+        loadLevel("Level 1", 0, 0);
+    }
+
+    public void loadLevel(String level, float px, float py) {
+        lm = null;
+        lm = new LevelManager(context, vp.getPixelsPerMeterX(), vp.getScreenWidth(), ic, level, px, py);
+
         ic = new InputController(vp.getScreenWidth(), vp.getScreenHeight());
+
+        vp.setWorldCenter(px, py);
     }
 
 
@@ -112,6 +118,64 @@ public class GameView extends SurfaceView implements Runnable {
     private void update(){
 
         E_Square.update(vp.getPixelsPerMeterX(),fps);
+
+        for(GameObject go : lm.gameObjects) {
+            if(go.isActive()) {
+                // Clip anything off-screen
+                if(!vp.clipObjects(go.getWorldLocation().x, go.getWorldLocation().y, go.getWidth(), go.getHeight())) {
+                    // Set visible flag to true
+                    go.setVisible(true);
+
+                    // check collisions with towers (if enemy touches them, do damage)
+                    // TODO: make code
+
+                    // Check bullet collision (for towers
+                    for(int i = 0; i < 2; i++) { // TODO: get total bullets from towers in use
+                        // Make a hitbox out of the current bullet
+                        RectHitbox r = new RectHitbox();
+                        // TODO: modify towers to get there bullets hitbox here
+                        //r.setLeft(lm.player.bfg.getBulletX(i));
+                        //r.setTop(lm.player.bfg.getBulletY(i));
+                        //r.setRight(lm.player.bfg.getBulletX(i) + .1f);
+                        //r.setBottom(lm.player.bfg.getBulletY(i) + .1f);
+
+                        if(go.getHitBox().intersects(r)) {
+                            // bullet collided, despawn until it respawns as a new bullet
+                            // TODO: bullet despawn code here
+
+                            // now respond based on what bullet collided with
+                            if(go.getType() != 'c' && go.getType() != 's' && go.getType() != 't') {
+                                // It missed, maybe play sound
+                            } else if(go.getType() == 'c') {
+                                // Circle was hit, damage it, play sound, kill it
+
+                            } else if(go.getType() == 's') {
+                                // Square was hit, damage it, play sound, kill it
+                            } else if(go.getType() == 't') {
+                                // Triangle was hit, you know the drill
+                            }
+                        }
+                    }
+
+                    if(lm.isPlaying()) {
+                        // Run any un-clipped updates
+                        go.update(fps, lm.gravity);
+                    }
+                } else {
+                    // Set visible flag to false
+                    go.setVisible(false);
+                    // Now draw() can ignore them
+                }
+            }
+        }
+        if(lm.isPlaying()) {
+            // Reset the players location as the center of the viewport
+            vp.setWorldCenter(lm.gameObjects.get(lm.playerIndex).getWorldLocation().x, lm.gameObjects.get(lm.playerIndex).getWorldLocation().y);
+            // Check if wave is over
+            if () { // TODO: Make a function to check if all enemies have been killed
+                // TODO: Start next wave, with a time delay most likely
+            }
+        }
     }
 
 
@@ -121,9 +185,30 @@ public class GameView extends SurfaceView implements Runnable {
 
             paint.setColor(Color.argb(255, 0, 0, 0));
             canvas.drawColor(Color.argb(255, 0, 0, 0));
-            //paint.setColor(Color.argb(255,255,255,255));
-            //paint.setTextSize(30);
-            //canvas.drawText("FPS:"+fps,screenWidth/5,screenHeight/5,paint);
+
+            // Draw all gameObjects
+            Rect toScreen2d = new Rect();
+
+            // Draw a layer at a time
+            for(int layer = -1; layer <= 1; layer++) {
+                for(GameObject go : lm.gameObjects) {
+                    // Only draw if visible and this layer
+                    if(go.isVisible() && go.getWorldLocation().z == layer) {
+                        toScreen2d.set(vp.worldToScreen(go.getWorldLocation().x, go.getWorldLocation().y, go.getWidth(), go.getHeight()));
+
+                        // Draw the appropriate bitmap (probably needs more for enemies and other)
+                        canvas.drawBitmap(lm.bitmapsArray[lm.getBitmapIndex(go.getType())], toScreen2d.left, toScreen2d.top, paint);
+                    }
+                }
+            }
+
+            // Draw the bullets
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            for(int i = 0; i < 2; i++) { // TODO: get total tower bullets in use
+                // Pass in x and y coords as usual, then .25 and .05 for the bullet width and height
+                toScreen2d.set(vp.worldToScreen(0, 0, .25f, .05f)); // TODO: get bullets x and y to draw acordingly (replace the 0's)
+                canvas.drawRect(toScreen2d, paint);
+            }
 
             // Text for debugging
             if(debugging) {
@@ -142,6 +227,7 @@ public class GameView extends SurfaceView implements Runnable {
                 vp.resetNumClipped();
             }// End if(debugging)
 
+            // HUD Elements
             // Draw buttons
             paint.setColor(Color.argb(80, 255, 255, 255));
             //ArrayList<Rect> buttonsToDraw;

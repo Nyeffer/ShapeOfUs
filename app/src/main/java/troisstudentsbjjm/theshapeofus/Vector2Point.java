@@ -5,7 +5,7 @@ package troisstudentsbjjm.theshapeofus;
  */
 
 public class Vector2Point {
-    float x;
-    float y;
-    int z;
+    public float x;
+    public float y;
+    public int z;
 }
