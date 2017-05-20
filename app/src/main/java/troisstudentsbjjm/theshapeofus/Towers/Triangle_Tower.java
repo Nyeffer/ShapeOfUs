@@ -28,6 +28,7 @@ public class Triangle_Tower {
     private float damage = 7;
     int pixelsPerMeter;
 
+
     public PointF location;
 
     public Triangle_Tower(int x, int y, int pixelsPerMeter){
@@ -64,10 +65,11 @@ public class Triangle_Tower {
 
 
 
-    public void update(Enemy_Square Enemy){
-        if (System.currentTimeMillis() - timeAttacked > TIME_BETWEEN_DAMAGE_TICKS){
-            if (hitbox.contains(Enemy.pivot.x,Enemy.pivot.y)){
-                Enemy.takeDamage(damage);
+    public void update(Enemy_Square Enemy) {
+        if (hitbox.contains(Enemy.pivot.x, Enemy.pivot.y)) {
+            Enemy.takeDamage(damage);
+        }
+    }
 
     public void update(Enemy_Square Enemy, long fps){
 

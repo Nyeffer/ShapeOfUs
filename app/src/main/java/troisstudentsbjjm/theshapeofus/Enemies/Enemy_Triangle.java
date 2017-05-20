@@ -88,11 +88,6 @@ public class Enemy_Triangle extends Triangle{
 
 
 
-    private void updateSize(){setSize ((float) (health * 0.05));}
-
-
-
-    }
 
     private void updateSize(){setSize ((float) (health * 0.05));}
 
@@ -140,6 +135,7 @@ public class Enemy_Triangle extends Triangle{
     public void setDamage(int damage) { this.damage = damage;   }
     public void setHealth(int health) { this.health = health;   }
     public void setIsDead(boolean isDead) { this.isDead = isDead;   }
+
 
     public PointF getVelocity() { return velocity;  }
     //public float getRotate() {  return rotate;  }

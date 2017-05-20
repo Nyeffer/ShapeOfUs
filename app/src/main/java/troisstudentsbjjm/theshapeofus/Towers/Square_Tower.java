@@ -19,6 +19,8 @@ public class Square_Tower extends Square {
     private int pixelsPerMeter;
     private int height;
     private int width;
+    public int counter = 1;
+    public boolean isAdjustmentDone;
 
     public Square_Tower(int x, int y, int health, int pixelsPerMeter) {
         this.health = health;
@@ -26,16 +28,29 @@ public class Square_Tower extends Square {
         updateSize();
         this.pixelsPerMeter = pixelsPerMeter;
         setHitBox(x,y,pixelsPerMeter);
+        isAdjustmentDone = false;
     }
 
     private void updateSize(){setSize ((int) (75*0.025));}
 
     public void update(Enemy_Circle Enemy) {
-            if(hitBox.contains(Enemy.getCollisionPoint().x + 1,Enemy.getCollisionPoint().y)) {
-                Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
-                Log.d("Square_Tower", "Hit!");
+
+            if(hitBox.contains(Enemy.getCollisionPoint().x,Enemy.getCollisionPoint().y)) {
+                Log.d("ST", Enemy.location + " ");
                 Enemy.setIsBlocked(true);
-        }
+
+                if(hitBox.contains(Enemy.getCollisionPoint().x,Enemy.getCollisionPoint().y)) {
+                    Enemy.location.x = hitBox.left - (float)(Enemy.getHealth()*0.75);
+
+                }
+//                if (counter <= Enemy.getHealth()/4 && isAdjustmentDone == false) {// To prevent Enemy_Circle to penetrate Square_Tower
+//                    Log.d("ST", counter + " ");
+//                    Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
+//                    counter++;
+//                } if(counter >= Enemy.getHealth()/4) {
+//                    isAdjustmentDone = true;
+//                }
+            }
     }
 
 
@@ -43,4 +58,10 @@ public class Square_Tower extends Square {
         paint.setColor(Color.argb(255,255,255,255));
         canvas.drawRect(hitBox,paint);
     }
+
+    public void setIsAdjust(boolean isAdjustmentDone) {
+        this.isAdjustmentDone = isAdjustmentDone;
+    }
+
+    public int setCounter(int counter) { this.counter = counter;  return counter; }
 }
