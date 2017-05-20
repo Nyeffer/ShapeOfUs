@@ -24,7 +24,8 @@ public class Enemy_Circle extends Circle {
     private float rotate;
     private int damage;
 
-    private int health, maxHealth;
+    public float health;
+    public float maxHealth;
 
     private float speed;
     public boolean isDead;
@@ -56,7 +57,6 @@ public class Enemy_Circle extends Circle {
         rolling = true;
         CollisionPoint = new PointF(centerX,centerY);
         offset = health*6;
-        squareTower = new Square_Tower(x, y, health, pixelsPerMeter);
         damage = 100;
 
 
@@ -86,8 +86,8 @@ public class Enemy_Circle extends Circle {
     public void BuildUp(Enemy_Circle Enemy) {
         if(counter == 1) {
             Enemy.destroy();
-            setHealth(health + Enemy.getHealth());
-            maxHealth = maxHealth + Enemy.getHealth();
+            health += Enemy.health;
+            maxHealth = maxHealth + Enemy.health;
             updateSize();
             updateCenter();
             squareTower.setCounter(0);
@@ -104,7 +104,7 @@ public class Enemy_Circle extends Circle {
     }
 
     private void updateSize() {
-        Log.d("updateSize", getHealth() + " ");
+        Log.d("updateSize", health + " ");
         setSize((float) (health * 0.025));
     }
 
@@ -144,7 +144,6 @@ public class Enemy_Circle extends Circle {
 
     // Setter
     public void setSpeed(float speed) { this.speed = speed;  }
-    public void setHealth(float health) { this.health = health;   }
     public void setIsBlocked(boolean isBlocked) {   this.isBlocked = isBlocked; }
     public void setIsDead(boolean isDead) { this.isDead = isDead;   }
     public void setCollisionPoint(PointF collisionPoint) { this.CollisionPoint = collisionPoint;}

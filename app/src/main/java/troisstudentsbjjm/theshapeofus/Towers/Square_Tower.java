@@ -44,7 +44,7 @@ public class Square_Tower extends Square {
                 Enemy.setSquareTower(getSquare_Tower());
 
                 if(hitBox.contains(Enemy.getCollisionPoint().x,Enemy.getCollisionPoint().y)) {
-                    Enemy.location.x = hitBox.left - (float)(Enemy.getHealth()*0.75);
+//                    Enemy.location.x = hitBox.left - (float)(Enemy.getHealth()*0.75);
 
                 }
 //                if (counter <= Enemy.getHealth()/4 && isAdjustmentDone == false) {// To prevent Enemy_Circle to penetrate Square_Tower

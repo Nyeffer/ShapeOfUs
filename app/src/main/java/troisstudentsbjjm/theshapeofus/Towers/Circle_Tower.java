@@ -132,7 +132,7 @@ public class Circle_Tower {
 
         if ( System.currentTimeMillis() > (fireTime + 1000/bulletSpeed) && bulletFired){
             Enemy.takeDamage(damage);
-            if (Enemy.getHealth() <= 0) {
+            if (Enemy.health <= 0) {
                 Enemy.destroy();
             }
             bullet.center.set(circle.center.x,circle.center.y);

@@ -111,7 +111,7 @@ public class Triangle_Tower {
 
         if (hitbox.contains(Enemy.location.x, Enemy.location.y)){
             Enemy.takeDamage(damage/fps);
-            if (Enemy.getHealth() <= 0) {
+            if (Enemy.health <= 0) {
                 Enemy.destroy();
             }
         }
