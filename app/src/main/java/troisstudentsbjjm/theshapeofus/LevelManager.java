@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Level.LevelData;
 import troisstudentsbjjm.theshapeofus.Level.LevelOne;
+import troisstudentsbjjm.theshapeofus.LevelMaterials.WhiteTile;
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 /**
@@ -159,6 +160,7 @@ public class LevelManager {
                     switch (c) {
                         case '1':
                             // Add the floor tiles
+                            gameObjects.add(new WhiteTile(j, i, c));
                             break;
                         case 'p':
                             // Add the player's main base
@@ -179,9 +181,9 @@ public class LevelManager {
                 }
 
                 // look to ensure that the indexed bitmap has already been loaded
-                if(bitmapsArray[getBitmapIndex(c)] == null) {
-                    bitmapsArray[getBitmapIndex(c)] = gameObjects.get(currentIndex).prepareBitmap(context, gameObjects.get(currentIndex).getBitmapName(), pixelsPerMeter);
-                }
+                //if(bitmapsArray[getBitmapIndex(c)] == null) {
+                //    bitmapsArray[getBitmapIndex(c)] = gameObjects.get(currentIndex).prepareBitmap(context, gameObjects.get(currentIndex).getBitmapName(), pixelsPerMeter);
+                //}
             }
         }
     }

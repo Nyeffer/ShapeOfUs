@@ -18,4 +18,9 @@ public class Circle extends GameObject {
     public Circle(){
 
     }
+
+    @Override
+    public void update(long fps, float gravity) {
+
+    }
 }

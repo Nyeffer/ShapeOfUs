@@ -7,6 +7,7 @@ package troisstudentsbjjm.theshapeofus.Primatives;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.PointF;
 
 import troisstudentsbjjm.theshapeofus.RectHitbox;
 import troisstudentsbjjm.theshapeofus.Vector2Point;
@@ -14,6 +15,7 @@ import troisstudentsbjjm.theshapeofus.Vector2Point;
 public abstract class GameObject  {
 
     public float size;
+    public PointF location = new PointF();
 
     private Vector2Point worldLocation;
     private float width;

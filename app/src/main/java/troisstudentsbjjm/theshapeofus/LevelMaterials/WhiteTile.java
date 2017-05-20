@@ -8,7 +8,7 @@ import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 public class WhiteTile extends GameObject {
 
-    WhiteTile(float worldStartX, float worldStartY, char type) {
+    public WhiteTile(float worldStartX, float worldStartY, char type) {
         final float HEIGHT = 1;
         final float WIDTH = 1;
 
@@ -20,7 +20,7 @@ public class WhiteTile extends GameObject {
         setType(type);
 
         // choose a bitmap
-        setBitmapName("turf");
+        setBitmapName("tile");
 
         setWorldLocation(worldStartX, worldStartY, 0);
         setRectHitbox();

@@ -60,7 +60,7 @@ public class GameView extends SurfaceView implements Runnable {
 
         running = true;
 
-        loadLevel("Level 1", 0, 0);
+        loadLevel("Level 1", 15, 30);
     }
 
     public void loadLevel(String level, float px, float py) {
@@ -170,11 +170,11 @@ public class GameView extends SurfaceView implements Runnable {
         }
         if(lm.isPlaying()) {
             // Reset the players location as the center of the viewport
-            vp.setWorldCenter(lm.gameObjects.get(lm.playerIndex).getWorldLocation().x, lm.gameObjects.get(lm.playerIndex).getWorldLocation().y);
+            //vp.setWorldCenter(lm.gameObjects.get(lm.playerIndex).getWorldLocation().x, lm.gameObjects.get(lm.playerIndex).getWorldLocation().y);
             // Check if wave is over
-            if () { // TODO: Make a function to check if all enemies have been killed
+            //if () { // TODO: Make a function to check if all enemies have been killed
                 // TODO: Start next wave, with a time delay most likely
-            }
+            //}
         }
     }
 
@@ -283,7 +283,7 @@ public class GameView extends SurfaceView implements Runnable {
                 canvas.drawText("Paused", vp.getScreenWidth() / 2, vp.getScreenHeight() / 2, paint);
             }
 
-            canvas.drawRect(0,screenHeight/2+vp.getPixelsPerMeterX(),screenWidth,screenHeight,paint);
+            //canvas.drawRect(0,screenHeight/2+vp.getPixelsPerMeterX(),screenWidth,screenHeight,paint);
 
             E_Square.draw(canvas,paint);
 

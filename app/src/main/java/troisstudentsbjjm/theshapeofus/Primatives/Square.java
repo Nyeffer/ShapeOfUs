@@ -24,4 +24,9 @@ public class Square extends GameObject {
         hitBox.right = hitBox.left + size*pixelsPerMeter;
         hitBox.bottom = hitBox.top + size*pixelsPerMeter;
     }
+
+    @Override
+    public void update(long fps, float gravity) {
+
+    }
 }
