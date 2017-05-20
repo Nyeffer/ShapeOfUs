@@ -19,10 +19,10 @@ import troisstudentsbjjm.theshapeofus.Primatives.Circle;
 public class Enemy_Circle extends Circle {
     public PointF CollisionPoint;
     private float rotate;
-    private int damage,
-            health;
+    private int damage;
+    private float health;
     private float speed;
-    private boolean isDead;
+    public boolean isDead;
     float centerY, centerX,
             collisionY, collisionX,
             pixelsPerMeter;
@@ -100,11 +100,10 @@ public class Enemy_Circle extends Circle {
     // Getter
     public PointF getCollisionPoint() {  return CollisionPoint;  }
     public float getSpeed() {   return speed;   }
-    public int getHealth() {    return health;  }
 
     // Setter
     public void setSpeed(float speed) { this.speed = speed;  }
-    public void setHealth(int health) { this.health = health;   }
+    public void setHealth(float health) { this.health = health;   }
     public void setIsBlocked(boolean isBlocked) {   this.isBlocked = isBlocked; }
 
 

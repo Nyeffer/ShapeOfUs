@@ -1,9 +1,13 @@
 package troisstudentsbjjm.theshapeofus;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
+import android.graphics.PointF;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import troisstudentsbjjm.theshapeofus.Primatives.Circle;
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
@@ -16,69 +20,69 @@ import troisstudentsbjjm.theshapeofus.Primatives.Square;
 public class DeathAnimation {
 
     //create Array of objects to be moved and animated upon enemy death
-    ArrayList<GameObject> particles;
+    public int explosiveForce = 1;
+    ArrayList<Circle> particles;
 
     private final int NUM_PARTICLES = 16;
+    int pixelsPerMeter;
+
+    private boolean initialized;
 
     char particlesType;
 
-    public DeathAnimation(char enemyType){                              //The enemyType is a reference to either a Square/circle or Triangle
-        this.particlesType = enemyType;                                 //So that the constructor knows what shape to put into the array
+    Random gen = new Random();
+
+    public DeathAnimation(int pixelsPerMeter){
+        this.pixelsPerMeter = pixelsPerMeter;
+        particles = new ArrayList<>(NUM_PARTICLES);
         initParticles();
+        initialized = false;
     }
 
 
     private void initParticles(){
-
-        switch (particlesType){
-            //square
-            case 's':
-                for (int i = 0; i < NUM_PARTICLES; i++){
-                    particles.add(new Square());
-                }
-                break;
-            //circle
-            case 'c':
-                for (int i = 0; i < NUM_PARTICLES; i++){
-                    particles.add(new Circle());
-                }
-                break;
-            //triangle
-            case 't':
-                for (int i = 0; i < NUM_PARTICLES; i++){
-                    particles.add(new Square());
-                }
-                break;
+        for (int i = 0; i < NUM_PARTICLES; i++){
+            particles.add(i, new Circle());
         }
     }
 
 
-    public void setParticles(Point position, int height, int width){
+    public void setParticles(float x, float y, float size){
+        for (int i = 0; i < NUM_PARTICLES; i++){
+            particles.get(i).size = (float) (size*0.25);
+            particles.get(i).center = new PointF((float) ((x - size*pixelsPerMeter) + 0.125*size*pixelsPerMeter) ,(float) ((y - size*pixelsPerMeter) + 0.125*size*pixelsPerMeter));
+        }
 
-        switch (particlesType){
-            //square
-            case 's':
-                for (int i = 0; i < NUM_PARTICLES; i++){
-                    //for each particle we need to update their position, size and velocity upon enemy death because enemies will die at different positions and different sizes
-                }
-                break;
-            //circle
-            case 'c':
-                for (int i = 0; i < NUM_PARTICLES; i++){
+//        for (int i = 0; i < NUM_PARTICLES/4; i++){
+//            particles.get(i).size = (float) (size*0.25);
+//            for (int j = 0; j < NUM_PARTICLES/4; j++){
+//                particles.get(i).center = new PointF((float) ((x - size*pixelsPerMeter) + 0.125*size*(j+1)*pixelsPerMeter) ,(float) ((y - size*pixelsPerMeter) + 0.125*size*(j+1)*pixelsPerMeter));
+//            }
+//        }
+    }
 
-                }
-                break;
-            //triangle
-            case 't':
-                for (int i = 0; i < NUM_PARTICLES; i++){
 
-                }
-                break;
+    public void update(float x, float y, float size, long fps){
+        if (!initialized){
+            setParticles(x, y, size);
+            initialized = true;
+        } else {
+//            for (Circle particle : particles){
+//                x = gen.nextInt(6);
+//                y = gen.nextInt(6);
+//                particle.center.x += x;
+//                particle.center.y += y;
+//            }
         }
     }
 
 
-    public void draw(Canvas canvas){
-
+    public void draw(Canvas canvas, Paint paint){
+        paint.setColor(Color.argb(255, 255, 255, 255));
+        if (initialized){
+            for (Circle particle : particles){
+                canvas.drawCircle(particle.center.x, particle.center.y, (float)(particle.size*0.5*pixelsPerMeter), paint);
+            }
+        }
     }
 }

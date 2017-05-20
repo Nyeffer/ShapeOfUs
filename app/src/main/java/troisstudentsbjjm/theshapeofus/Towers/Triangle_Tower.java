@@ -63,12 +63,6 @@ public class Triangle_Tower {
     }
 
 
-
-    public void update(Enemy_Square Enemy){
-        if (System.currentTimeMillis() - timeAttacked > TIME_BETWEEN_DAMAGE_TICKS){
-            if (hitbox.contains(Enemy.pivot.x,Enemy.pivot.y)){
-                Enemy.takeDamage(damage);
-
     public void update(Enemy_Square Enemy, long fps){
 
         if (Enemy.angleD > 60){
