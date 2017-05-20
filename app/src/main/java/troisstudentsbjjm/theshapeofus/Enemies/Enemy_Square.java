@@ -41,13 +41,15 @@ public class Enemy_Square extends Square{
 
     public boolean isDead = false;                     //this will be used to initialize our death animation and to remove the object
     public boolean rolling;                            // the shape is either rolling or jumping
-    private boolean facingRight = true;
+    public boolean facingRight = true;
     public boolean isBlocked = false;                  //if not blocked...move, if blocked... attack.
+    public boolean attacking = false;                  // used to monitor attack speed
 
     private int damage;                                 //TODO
     private int pixelsPerMeter;                         //temporary
 
     private final long TIME_BETWEEN_JUMPS = 500;
+    private final long TIME_BETWEEN_ATTACKS = 1000;
     private long jumpStop = 0;
 
 
@@ -67,24 +69,27 @@ public class Enemy_Square extends Square{
         deathAnimation = new DeathAnimation(pixelsPerMeter, location.y + pixelsPerMeter, omniGonPosX, omniGonPosY);
         deathAnimation.setParticles(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size);
         isBlocked = false;
+        velocity.set(2,MAX_JUMP_VELOCITY);
         tempYpos = (int)location.y;
         jumpStop = 0;
         setRolling();
     }
 
 
-    public void update(int pixelsPerMeter, long fps) {
+    public void update(Enemy_Square Enemy, int pixelsPerMeter, long fps) {
         if (isDead && isActive){
             deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);        //passing in the center point of the shape
-        } else if ((!isDead || !isBlocked) && isActive){
+        } else if (!isDead && !isBlocked && isActive){
+            combine(Enemy);
             if (rolling){
                 angularVelocity = 60;
                 roll(pixelsPerMeter,fps);
             } else {
                 jump(pixelsPerMeter,fps);
             }
+            setHitBox(location.x,location.y,pixelsPerMeter);
         } else if (!isDead && isBlocked){
-            //attack();
+            attackAnimation(pixelsPerMeter,fps);
         }
 //        else if (isDead && !isActive){
 //            location.set(spawnPoint.x,spawnPoint.y);
@@ -126,6 +131,32 @@ public class Enemy_Square extends Square{
     }
 
 
+    private void combine(Enemy_Square Enemy){
+        if (hitBox.contains(Enemy.center.x, Enemy.center.y)){
+
+        }
+    }
+
+
+    private void attackAnimation(int pixelsPerMeter, long fps){
+        updateSize();
+        if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + jumpStop){
+            if (tempYpos <= location.y){
+                velocity.y = (float) (MAX_JUMP_VELOCITY/size);
+                location.y = tempYpos;
+                jumpStop = System.currentTimeMillis();
+            }
+            if (location.y + velocity.y/fps >= tempYpos){
+                location.y = tempYpos;
+            } else {
+                location.y += (int)(velocity.y/fps);
+                velocity.y -= (GRAVITY*5);
+            }
+            center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
+        }
+    }
+
+
     private void respawn(){
 
     }
@@ -135,7 +166,7 @@ public class Enemy_Square extends Square{
         updateSize();
         if (System.currentTimeMillis() >= TIME_BETWEEN_JUMPS + jumpStop){
             if (tempYpos <= location.y){
-                velocity.set(2,MAX_JUMP_VELOCITY);
+                velocity.y = MAX_JUMP_VELOCITY;
                 location.y = tempYpos;
                 jumpStop = System.currentTimeMillis();
             }
@@ -148,7 +179,6 @@ public class Enemy_Square extends Square{
                 velocity.y -= GRAVITY;
             }
             location.x += velocity.x;
-            setHitBox(location.x,location.y,pixelsPerMeter);
             center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
         }
     }

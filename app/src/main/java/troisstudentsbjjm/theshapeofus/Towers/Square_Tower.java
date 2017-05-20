@@ -15,25 +15,42 @@ import troisstudentsbjjm.theshapeofus.Primatives.Square;
  */
 
 public class Square_Tower extends Square {
-    private int health;
+    private int health = 40;
     private int pixelsPerMeter;
     private int height;
     private int width;
 
-    public Square_Tower(int x, int y, int health, int pixelsPerMeter) {
-        this.health = health;
+    public Square_Tower(int x, int y, int pixelsPerMeter) {
         location.set(x,y);
-        updateSize();
+        size = 1;
         this.pixelsPerMeter = pixelsPerMeter;
         setHitBox(x,y,pixelsPerMeter);
     }
 
-    private void updateSize(){setSize ((int) (75*0.025));}
 
-    public void update(Enemy_Circle Enemy) {
+    public void update(Enemy_Circle Enemy, long fps) {
             if(hitBox.contains(Enemy.getCollisionPoint().x + 1,Enemy.getCollisionPoint().y)) {
                 Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
                 Enemy.setIsBlocked(true);
+        }
+    }
+
+
+    public void update(Enemy_Square Enemy, long fps) {
+        if (Enemy.facingRight){
+            if (!Enemy.rolling && !Enemy.isBlocked){
+                if ((Enemy.hitBox.right + Enemy.velocity.x) >= hitBox.left){
+                    Enemy.location.x += (hitBox.left - Enemy.hitBox.right);
+                    Enemy.velocity.x = 0;
+                    if (Enemy.location.y == Enemy.spawnPoint.y){
+                        Enemy.isBlocked = true;
+                    }
+                }
+            } else if (Enemy.rolling && !Enemy.isBlocked){
+                if ((Enemy.hitBox.right + Enemy.size*pixelsPerMeter) >= hitBox.left){
+                    Enemy.rolling = false;
+                }
+            }
         }
     }
 

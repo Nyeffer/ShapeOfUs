@@ -89,16 +89,15 @@ public class GameView extends SurfaceView implements Runnable {
         terrain = new Rect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight);
         // Towers
 
-        T_Square = new Square_Tower(100,(int) ((screenHeight*0.5)),40, vp.pixelsPerMeter);
 
         T_Tower =  new Triangle_Tower((int)(screenWidth*0.5), (int)(screenHeight*0.5), vp.pixelsPerMeter);
         C_Tower = new Circle_Tower(500,(float) (screenHeight*0.5),vp.pixelsPerMeter);
-        T_Square = new Square_Tower(700,(int) ((screenHeight*0.5)),40, vp.pixelsPerMeter);
+        T_Square = new Square_Tower(700,(int) ((screenHeight*0.5)), vp.pixelsPerMeter);
 
 
 
         // Enemies
-        E_Square = new Enemy_Square(-50,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));      //40 is the square's health for now
+        E_Square = new Enemy_Square(-50,(int)((screenHeight*0.5)), 80, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));      //40 is the square's health for now
         E_Square2 = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
         E_Circle = new Enemy_Circle(vp.pixelsPerMeter, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
         E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 10, vp.pixelsPerMeter);
@@ -160,15 +159,15 @@ public class GameView extends SurfaceView implements Runnable {
         E_Square2.update(vp.pixelsPerMeter,fps);
         E_Triangle.update(vp.pixelsPerMeter,fps,gravity);
 
-        
 
 
+        T_Square.update(E_Square, fps);
         T_Tower.update(E_Square, fps);
-        T_Tower.update(E_Circle, fps);
-        C_Tower.update(E_Square2,fps);
-        C_Tower.update(E_Square,fps);
-        E_Circle.update(vp.pixelsPerMeter,fps);
-        T_Square.update(E_Circle);
+        T_Tower.update(E_Square2, fps);
+//        C_Tower.update(E_Square2,fps);
+//        C_Tower.update(E_Square,fps);
+        E_Circle.update(vp.pixelsPerMeter, fps);
+//        T_Square.update(E_Circle, fps);
 
     }
 
