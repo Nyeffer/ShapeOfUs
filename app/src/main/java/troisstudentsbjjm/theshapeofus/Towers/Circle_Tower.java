@@ -29,7 +29,7 @@ public class Circle_Tower {
 
     private int pixelsPerMeter;
     private int range = 15;
-    private int damage = 10;
+    private int damage = 30;
     private int bulletSpeed = 10;
     private final int CIRCLE_MAX_SIZE = 2;
     private float velocity = 0;
@@ -100,6 +100,9 @@ public class Circle_Tower {
 
         if ( System.currentTimeMillis() > (fireTime + 1000/bulletSpeed) && bulletFired || Enemy.hitBox.contains(bullet.center.x,bullet.center.y)){
             Enemy.takeDamage(damage);
+            if (Enemy.getHealth() <= 0) {
+                Enemy.destroy();
+            }
             bullet.center.set(circle.center.x,circle.center.y);
             bulletFired = false;
         } else if (bulletFired){
@@ -129,6 +132,9 @@ public class Circle_Tower {
 
         if ( System.currentTimeMillis() > (fireTime + 1000/bulletSpeed) && bulletFired){
             Enemy.takeDamage(damage);
+            if (Enemy.getHealth() <= 0) {
+                Enemy.destroy();
+            }
             bullet.center.set(circle.center.x,circle.center.y);
             bulletFired = false;
         } else if (bulletFired){
@@ -158,6 +164,9 @@ public class Circle_Tower {
 
         if ( System.currentTimeMillis() > (fireTime + 1000/bulletSpeed) && bulletFired){
             Enemy.takeDamage(damage);
+            if (Enemy.getHealth() <= 0) {
+                Enemy.destroy();
+            }
             bullet.center.set(circle.center.x,circle.center.y);
             bulletFired = false;
         } else if (bulletFired){

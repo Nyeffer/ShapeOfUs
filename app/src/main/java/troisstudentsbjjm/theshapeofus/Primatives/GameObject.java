@@ -13,8 +13,8 @@ public abstract class GameObject  {
 
     public float size;
 
-    private boolean active = false;
-    private boolean visible = false;
+    public boolean isActive = true;
+    public boolean isVisible = true;
 
     private char type;
 
@@ -29,17 +29,11 @@ public abstract class GameObject  {
     private boolean traversable = false;
 
     //boolean getters
-    public boolean isActive() {
-        return active;
-    }
     public boolean isMoves() {
         return moves;
     }
     public boolean isTraversable() {
         return traversable;
-    }
-    public boolean isVisible() {
-        return visible;
     }
     //getters
     public String getBitmapName() {return bitmapName;}
@@ -56,9 +50,6 @@ public abstract class GameObject  {
         return type;
     }
     //setters
-    public void setActive(boolean active) {
-        this.active = active;
-    }
     public void setBitmapName(String bitmapName) {
         this.bitmapName = bitmapName;
     }
@@ -80,11 +71,5 @@ public abstract class GameObject  {
     public void setType(char type) {
         this.type = type;
     }
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-
-
-
 }
 

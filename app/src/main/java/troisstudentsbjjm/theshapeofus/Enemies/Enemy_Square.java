@@ -43,7 +43,6 @@ public class Enemy_Square extends Square{
     public boolean rolling;                            // the shape is either rolling or jumping
     private boolean facingRight = true;
     public boolean isBlocked = false;                  //if not blocked...move, if blocked... attack.
-    public boolean isActive = true;
 
     private int damage;                                 //TODO
     private int pixelsPerMeter;                         //temporary
@@ -52,7 +51,7 @@ public class Enemy_Square extends Square{
     private long jumpStop = 0;
 
 
-    public Enemy_Square(int x,int y, int health, int pixelsPerMeter) {
+    public Enemy_Square(int x,int y, int health, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
 
         this.health = health;
         updateSize();
@@ -65,41 +64,41 @@ public class Enemy_Square extends Square{
         spawnPoint = new PointF(x,y);
         isDead = false;
         this.pixelsPerMeter = pixelsPerMeter;
-        deathAnimation = new DeathAnimation(pixelsPerMeter);
+        deathAnimation = new DeathAnimation(pixelsPerMeter, location.y + pixelsPerMeter, omniGonPosX, omniGonPosY);
         deathAnimation.setParticles(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size);
         isBlocked = false;
         tempYpos = (int)location.y;
         jumpStop = 0;
         setRolling();
     }
-    // the enemy squares update will rotate the square by incrementing a angle and using this angle to rotate the rect in draw
-    // if the angle is approaching +-90 degrees then the shape is moved and the angle is reset.
-    // also if the angle is greater than 45 degree the square rotates faster, think of a tipping over effect
+
+
     public void update(int pixelsPerMeter, long fps) {
-        if (!isDead || !isBlocked && isActive){
+        if (isDead && isActive){
+            deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);        //passing in the center point of the shape
+        } else if ((!isDead || !isBlocked) && isActive){
             if (rolling){
                 angularVelocity = 60;
                 roll(pixelsPerMeter,fps);
             } else {
                 jump(pixelsPerMeter,fps);
             }
-        } else if (isDead && isActive){
-            deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
-
-        } else if (isDead && !isActive){
-            location.set(spawnPoint.x,spawnPoint.y);
-            setHitBox(spawnPoint.x,spawnPoint.y,pixelsPerMeter);
-            center = new PointF((float) (hitBox.left+0.5*size), hitBox.bottom);
-            pivot = new PointF();
-            velocity = new PointF();
-            isDead = false;
-            this.pixelsPerMeter = pixelsPerMeter;
-            deathAnimation = new DeathAnimation(pixelsPerMeter);
-            isBlocked = false;
-            tempYpos = (int)location.y;
-            jumpStop = 0;
-            setRolling();
+        } else if (!isDead && isBlocked){
+            //attack();
         }
+//        else if (isDead && !isActive){
+//            location.set(spawnPoint.x,spawnPoint.y);
+//            setHitBox(spawnPoint.x,spawnPoint.y,pixelsPerMeter);
+//            center = new PointF((float) (hitBox.left+0.5*size), hitBox.bottom);
+//            pivot = new PointF();
+//            velocity = new PointF();
+//            isDead = false;
+//            this.pixelsPerMeter = pixelsPerMeter;
+//            isBlocked = false;
+//            tempYpos = (int)location.y;
+//            jumpStop = 0;
+//            setRolling();
+//        }
     }
 
     // increments the angle and moves the square if necessary
@@ -193,7 +192,7 @@ public class Enemy_Square extends Square{
     // set color to white, rotate canvas, draw rect, save the orientation, return the rest of the canvas to normal.
     public void draw(Canvas canvas, Paint paint){
         paint.setColor(Color.argb(255,255,255,255));
-        if (!isDead && isActive){
+        if (!isDead && isVisible){
             if (rolling){
                 canvas.save();
                 canvas.rotate(angleD,pivot.x,pivot.y);

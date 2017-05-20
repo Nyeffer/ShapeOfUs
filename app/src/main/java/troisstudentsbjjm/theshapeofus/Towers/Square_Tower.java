@@ -33,7 +33,6 @@ public class Square_Tower extends Square {
     public void update(Enemy_Circle Enemy) {
             if(hitBox.contains(Enemy.getCollisionPoint().x + 1,Enemy.getCollisionPoint().y)) {
                 Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
-                Log.d("Square_Tower", "Hit!");
                 Enemy.setIsBlocked(true);
         }
     }

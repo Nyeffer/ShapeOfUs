@@ -21,44 +21,56 @@ public class DeathAnimation {
 
     //create Array of objects to be moved and animated upon enemy death
     public int explosiveForce = 1;
-    ArrayList<Circle> particles;
+    public ArrayList<Circle> particles;
+
+    public PointF omniGonPos;
 
     private final int NUM_PARTICLES = 16;
-    int pixelsPerMeter;
+    private int pixelsPerMeter;
+    private int stopCounter = 0;
+    float maxY;
+
+    private final long PARTICLE_REST_TIME = 3000;
+    private long particleStopTime;
 
     private boolean initialized;
+    private boolean resting;
+    private boolean rising = true;
 
     char particlesType;
 
     Random gen = new Random();
 
-    public DeathAnimation(int pixelsPerMeter){
+
+    public DeathAnimation(int pixelsPerMeter, float maxY, float omniGonPosX, float omniGonPosY){
         this.pixelsPerMeter = pixelsPerMeter;
+        this.maxY = maxY;
         particles = new ArrayList<>(NUM_PARTICLES);
         initParticles();
         initialized = false;
+        omniGonPos = new PointF(omniGonPosX,omniGonPosY);
+
     }
 
 
     private void initParticles(){
         for (int i = 0; i < NUM_PARTICLES; i++){
             particles.add(i, new Circle());
+            particles.get(i).center = new PointF();
+            particles.get(i).particleVel = new PointF();
         }
     }
 
 
     public void setParticles(float x, float y, float size){
-        for (int i = 0; i < NUM_PARTICLES; i++){
-            particles.get(i).size = (float) (size*0.25);
-            particles.get(i).center = new PointF((float) ((x - size*pixelsPerMeter) + 0.125*size*pixelsPerMeter) ,(float) ((y - size*pixelsPerMeter) + 0.125*size*pixelsPerMeter));
+        rising = true;
+        for (int i = 0; i < 2; i++){
+            for (int j = 0; j < 8; j++){
+                particles.get(j+(i*8)).size = (float) (size*0.5);
+                particles.get(j+(i*8)).center.set((float) ( x - (size/4*Math.sin(j*(Math.PI/4)))) ,(float) (y+(size/4*Math.sin(j*(Math.PI/4)))));
+                particles.get(j+(i*8)).particleVel.set(gen.nextInt(12) - 6, gen.nextInt(12) - 8);
+            }
         }
-
-//        for (int i = 0; i < NUM_PARTICLES/4; i++){
-//            particles.get(i).size = (float) (size*0.25);
-//            for (int j = 0; j < NUM_PARTICLES/4; j++){
-//                particles.get(i).center = new PointF((float) ((x - size*pixelsPerMeter) + 0.125*size*(j+1)*pixelsPerMeter) ,(float) ((y - size*pixelsPerMeter) + 0.125*size*(j+1)*pixelsPerMeter));
-//            }
-//        }
     }
 
 
@@ -67,12 +79,37 @@ public class DeathAnimation {
             setParticles(x, y, size);
             initialized = true;
         } else {
-//            for (Circle particle : particles){
-//                x = gen.nextInt(6);
-//                y = gen.nextInt(6);
-//                particle.center.x += x;
-//                particle.center.y += y;
-//            }
+            for (Circle particle : particles){
+
+                if (particle.isActive){
+                    if (particle.center.y + particle.particleVel.y >= maxY){
+                        particle.center.y = maxY;
+                        particle.isActive = false;
+                        stopCounter++;
+                    } else {
+                        particle.particleVel.y += 1;
+                        particle.center.x += particle.particleVel.x;
+                        particle.center.y += particle.particleVel.y;
+                    }
+                }
+                if (stopCounter == 16 && !resting){
+                    particleStopTime = System.currentTimeMillis();
+                    resting = true;
+                } else if ((System.currentTimeMillis() >= particleStopTime + PARTICLE_REST_TIME) && resting){
+                    moveToOmnigon(particle,fps);
+                }
+            }
+        }
+    }
+
+
+    private void moveToOmnigon(Circle particle, long fps){
+        if (particle.center.y > (maxY - 3*pixelsPerMeter) && rising){
+            particle.center.y += 2*((maxY - 3.1*pixelsPerMeter) - particle.center.y)/fps;
+        } else {
+            rising = false;
+            particle.center.x += (omniGonPos.x - particle.center.x)/fps;
+            particle.center.y += (omniGonPos.y - particle.center.y)/fps;
         }
     }
 

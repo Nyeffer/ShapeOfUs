@@ -90,13 +90,6 @@ public class Enemy_Triangle extends Triangle{
 
     private void updateSize(){setSize ((float) (health * 0.05));}
 
-
-
-    }
-
-    private void updateSize(){setSize ((float) (health * 0.05));}
-
-
     public void takeDamage(float damage){
         health -= damage;
     }
