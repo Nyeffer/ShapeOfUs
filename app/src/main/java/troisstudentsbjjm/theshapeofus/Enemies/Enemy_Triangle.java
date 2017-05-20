@@ -26,7 +26,7 @@ public class Enemy_Triangle extends Triangle{
 
     private float angleD = 0;           //angular velocity in degrees per second
 
-    private boolean isDead;
+    public boolean isDead;
     private boolean facingRight = true;
 
 
@@ -101,7 +101,9 @@ public class Enemy_Triangle extends Triangle{
 
 
 
+
     private void updateSize(){setSize ((float) (health * 0.05));}
+
 
 
     public void takeDamage(float damage){

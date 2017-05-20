@@ -15,29 +15,31 @@ import troisstudentsbjjm.theshapeofus.Primatives.Square;
  */
 
 public class Square_Tower extends Square {
-    private int health;
+    private int health = 80;
     private int pixelsPerMeter;
+
     private int height;
     private int width;
     public int counter = 1;
     public boolean isAdjustmentDone;
     private Square_Tower squareTower;
 
-    public Square_Tower(int x, int y, int health, int pixelsPerMeter) {
-        this.health = health;
+
+
+    public Square_Tower(int x, int y, int pixelsPerMeter) {
         location.set(x,y);
-        updateSize();
+        size = 1;
         this.pixelsPerMeter = pixelsPerMeter;
         setHitBox(x,y,pixelsPerMeter);
         isAdjustmentDone = false;
     }
 
-    private void updateSize(){setSize ((int) (75*0.025));}
 
-    public void update(Enemy_Circle Enemy) {
 
-            if(hitBox.contains(Enemy.getCollisionPoint().x,Enemy.getCollisionPoint().y)) {
-                Log.d("ST", Enemy.location + " ");
+    public void update(Enemy_Circle Enemy, long fps) {
+            if(hitBox.contains(Enemy.getCollisionPoint().x + 1,Enemy.getCollisionPoint().y)) {
+                Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
+
                 Enemy.setIsBlocked(true);
                 Enemy.setSquareTower(getSquare_Tower());
 
@@ -53,6 +55,29 @@ public class Square_Tower extends Square {
 //                    isAdjustmentDone = true;
 //                }
             }
+    }
+
+
+    public void update(Enemy_Square Enemy, long fps) {
+        if (Enemy.facingRight){
+            if (!Enemy.rolling && !Enemy.isBlocked){
+                if ((Enemy.hitBox.right + Enemy.velocity.x) >= hitBox.left){
+                    Enemy.location.x += (hitBox.left - Enemy.hitBox.right);
+                    Enemy.velocity.x = 0;
+                    if (Enemy.location.y == Enemy.spawnPoint.y){
+                        Enemy.isBlocked = true;
+                    }
+                }
+            } else if (Enemy.rolling && !Enemy.isBlocked){
+                if ((Enemy.hitBox.right + Enemy.size*pixelsPerMeter) >= hitBox.left){
+                    Enemy.rolling = false;
+                }
+            } else  if (Enemy.isBlocked && Enemy.attacking){
+                health -= Enemy.damage;
+                Enemy.attacking = false;
+                Log.d("enemy attacking", "Square tower health: " + health);
+            }
+        }
     }
 
 
