@@ -21,6 +21,7 @@ public class Square_Tower extends Square {
     private int width;
     public int counter = 1;
     public boolean isAdjustmentDone;
+    private Square_Tower squareTower;
 
     public Square_Tower(int x, int y, int health, int pixelsPerMeter) {
         this.health = health;
@@ -38,6 +39,7 @@ public class Square_Tower extends Square {
             if(hitBox.contains(Enemy.getCollisionPoint().x,Enemy.getCollisionPoint().y)) {
                 Log.d("ST", Enemy.location + " ");
                 Enemy.setIsBlocked(true);
+                Enemy.setSquareTower(getSquare_Tower());
 
                 if(hitBox.contains(Enemy.getCollisionPoint().x,Enemy.getCollisionPoint().y)) {
                     Enemy.location.x = hitBox.left - (float)(Enemy.getHealth()*0.75);
@@ -64,4 +66,6 @@ public class Square_Tower extends Square {
     }
 
     public int setCounter(int counter) { this.counter = counter;  return counter; }
+
+    public Square_Tower getSquare_Tower() { return squareTower;    }
 }

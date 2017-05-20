@@ -187,7 +187,7 @@ public class GameView extends SurfaceView implements Runnable {
 
 
             // Enemies
-            E_Circle.draw(canvas,paint);
+            if(E_Circle.getIsDead() == false)   { E_Circle.draw(canvas,paint);  }
             if(E_Circle_1.getIsDead() == false)   { E_Circle_1.draw(canvas,paint);  }
 //            E_Square.draw(canvas,paint);
 

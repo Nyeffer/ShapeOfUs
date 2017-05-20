@@ -22,8 +22,8 @@ import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
 public class Enemy_Circle extends Circle {
     public PointF CollisionPoint;
     private float rotate;
-    private int damage,
-            health;
+    private int damage;
+    private int health, maxHealth;
     private float speed;
     private boolean isDead;
     float centerY, centerX,
@@ -34,11 +34,15 @@ public class Enemy_Circle extends Circle {
     int counter = 1;
     private int offset;
     Square_Tower squareTower;
+    private int countersTillDetonation;
+    private int currentCounter;
+
 
 
 
     public Enemy_Circle(int x, int y, int health, int pixelsPerMeter) {
         this.health = health;
+        maxHealth = health;
         updateSize();
         location.set(x, y);
         setHitBox(x,y,pixelsPerMeter);
@@ -51,6 +55,7 @@ public class Enemy_Circle extends Circle {
         CollisionPoint = new PointF(centerX,centerY);
         offset = health*6;
         squareTower = new Square_Tower(x, y, health, pixelsPerMeter);
+        damage = 100;
 
 
     }
@@ -80,11 +85,19 @@ public class Enemy_Circle extends Circle {
         if(counter == 1) {
             Enemy.destroy();
             setHealth(health + Enemy.getHealth());
+            maxHealth = maxHealth + Enemy.getHealth();
             updateSize();
             updateCenter();
             squareTower.setCounter(0);
             isBlocked = false;
             counter++;
+            currentCounter++;
+        }
+    }
+
+    public void Detonate(int countersTillDetonation) {
+        if(countersTillDetonation == currentCounter) {
+            
         }
     }
 
@@ -133,7 +146,9 @@ public class Enemy_Circle extends Circle {
     public void setHealth(int health) { this.health = health;   }
     public void setIsBlocked(boolean isBlocked) {   this.isBlocked = isBlocked; }
     public void setIsDead(boolean isDead) { this.isDead = isDead;   }
-    public void setCollisionPoint(PointF collisionPoint) { this.CollisionPoint = collisionPoint;    }
+    public void setCollisionPoint(PointF collisionPoint) { this.CollisionPoint = collisionPoint;}
+    public void setCountersTillDetonation(int countersTillDetonation) { this.countersTillDetonation = countersTillDetonation;   }
+    public void setSquareTower(Square_Tower squareTower) { this.squareTower = squareTower;  }
 
     public void destroy(){  setIsDead(true);    }
     public void takeDamage(float damage){
