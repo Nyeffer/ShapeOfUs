@@ -155,8 +155,8 @@ public class GameView extends SurfaceView implements Runnable {
             sumfps = 0;
         }
 
-        E_Square.update(vp.pixelsPerMeter,fps);
-        E_Square2.update(vp.pixelsPerMeter,fps);
+        E_Square.update(E_Square2,vp.pixelsPerMeter,fps);
+        E_Square2.update(E_Square,vp.pixelsPerMeter,fps);
         E_Triangle.update(vp.pixelsPerMeter,fps,gravity);
 
 

@@ -43,14 +43,15 @@ public class Enemy_Square extends Square{
     public boolean rolling;                            // the shape is either rolling or jumping
     public boolean facingRight = true;
     public boolean isBlocked = false;                  //if not blocked...move, if blocked... attack.
-    public boolean attacking = false;                  // used to monitor attack speed
+    public boolean attacking;                          // used to monitor attack speed
 
-    private int damage;                                 //TODO
+    public float damage;                                //TODO
     private int pixelsPerMeter;                         //temporary
 
     private final long TIME_BETWEEN_JUMPS = 500;
-    private final long TIME_BETWEEN_ATTACKS = 1000;
+    private final long TIME_BETWEEN_ATTACKS = 2000;
     private long jumpStop = 0;
+    private long attackTime = 0;
 
 
     public Enemy_Square(int x,int y, int health, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
@@ -142,9 +143,13 @@ public class Enemy_Square extends Square{
         updateSize();
         if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + jumpStop){
             if (tempYpos <= location.y){
-                velocity.y = (float) (MAX_JUMP_VELOCITY/size);
+                velocity.y = (float) (MAX_JUMP_VELOCITY/2*size);
                 location.y = tempYpos;
                 jumpStop = System.currentTimeMillis();
+                if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + attackTime){
+                    attacking = true;
+                    attackTime = System.currentTimeMillis();
+                }
             }
             if (location.y + velocity.y/fps >= tempYpos){
                 location.y = tempYpos;
@@ -187,8 +192,10 @@ public class Enemy_Square extends Square{
     public void updateSize(){
         if (health * 0.025 >= 0.5){
             setSize ((float) (health * 0.025));
+            damage = health/10;
         } else {
             setSize((float) 0.5);
+            damage = 1;
         }
     }
 

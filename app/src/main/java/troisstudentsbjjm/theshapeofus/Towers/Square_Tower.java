@@ -15,10 +15,9 @@ import troisstudentsbjjm.theshapeofus.Primatives.Square;
  */
 
 public class Square_Tower extends Square {
-    private int health = 40;
+    private int health = 80;
     private int pixelsPerMeter;
-    private int height;
-    private int width;
+
 
     public Square_Tower(int x, int y, int pixelsPerMeter) {
         location.set(x,y);
@@ -50,6 +49,10 @@ public class Square_Tower extends Square {
                 if ((Enemy.hitBox.right + Enemy.size*pixelsPerMeter) >= hitBox.left){
                     Enemy.rolling = false;
                 }
+            } else  if (Enemy.isBlocked && Enemy.attacking){
+                health -= Enemy.damage;
+                Enemy.attacking = false;
+                Log.d("enemy attacking", "Square tower health: " + health);
             }
         }
     }

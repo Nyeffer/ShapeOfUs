@@ -76,7 +76,6 @@ public class Triangle_Tower {
             }
         }  else {
             if (hitbox.contains(Enemy.pivot.x,Enemy.pivot.y) || hitbox.contains(Enemy.center.x, Enemy.center.y)){
-                Log.d("Enemy health",Enemy.getHealth()+"");
                 Enemy.takeDamage(damage/fps);
                 if (Enemy.getHealth() <= 0) {
                     Enemy.destroy();
