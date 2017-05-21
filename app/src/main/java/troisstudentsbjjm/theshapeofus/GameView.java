@@ -68,6 +68,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Enemy_Square E_Square;
     private Enemy_Square E_Square2;
     private Enemy_Circle E_Circle;
+    private Enemy_Circle E_Circle2;
 
     private Rect terrain;
 
@@ -102,7 +103,8 @@ public class GameView extends SurfaceView implements Runnable {
 
         E_Square = new Enemy_Square(-50,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));      //40 is the square's health for now
         E_Square2 = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
-        E_Circle = new Enemy_Circle(0, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
+        E_Circle = new Enemy_Circle(-100, (int)((screenHeight * 0.5)), 30, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
+        E_Circle2 = new Enemy_Circle(100, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
 
         E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 10, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
 
@@ -168,10 +170,12 @@ public class GameView extends SurfaceView implements Runnable {
 //        T_Square.update(E_Triangle, fps);
 //        T_Tower.update(E_Square, fps);
 
-        T_Tower.update(E_Circle, fps);
+//        T_Tower.update(E_Circle, fps);
 //        C_Tower.update(E_Circle,fps);
-//        S_Tower.update(E_Circle, fps);
-        E_Circle.update(vp.pixelsPerMeter, fps);
+        S_Tower.update(E_Circle, fps);
+        S_Tower.update(E_Circle2, fps);
+        E_Circle.update(E_Circle2, vp.pixelsPerMeter, fps);
+        E_Circle2.update(E_Circle, vp.pixelsPerMeter, fps);
 
 
     }
@@ -200,6 +204,7 @@ public class GameView extends SurfaceView implements Runnable {
             E_Square.draw(canvas,paint);
             E_Square2.draw(canvas,paint);
             E_Circle.draw(canvas,paint);
+            E_Circle2.draw(canvas,paint);
 
             E_Triangle.draw(canvas, paint);
 

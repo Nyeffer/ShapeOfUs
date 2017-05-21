@@ -30,7 +30,7 @@ public class Square_Tower extends Square {
         if (Enemy.facingRight && isActive){
             if (!Enemy.isBlocked){
                 if (((Enemy.center.x+0.5*size*pixelsPerMeter) + Enemy.velocityX/fps) >= hitBox.left){
-                    Enemy.location.x += (hitBox.left - (Enemy.location.x+(size*pixelsPerMeter)));
+                    Enemy.location.x += (hitBox.left - (Enemy.center.x+(0.5*Enemy.size*pixelsPerMeter)));
                     Enemy.isBlocked = true;
                     numBlocked++;
                 }
@@ -41,6 +41,14 @@ public class Square_Tower extends Square {
             } else if (Enemy.isBlocked && !Enemy.isDead && Enemy.readyToExplode){
                 health -= Enemy.damage;
                 Enemy.destroy();
+            } else {
+                if (Enemy.center.x + Enemy.radius*pixelsPerMeter > hitBox.left){
+                    if ( Enemy.location.x -(hitBox.left - Enemy.center.x + Enemy.radius*pixelsPerMeter)/fps < hitBox.left){
+                        Enemy.location.x = (hitBox.left - (Enemy.size*pixelsPerMeter));
+                    } else {
+                        Enemy.location.x -= (hitBox.left - Enemy.center.x + Enemy.radius*pixelsPerMeter)/fps;
+                    }
+                }
             }
         }
     }

@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
-import android.util.Size;
 
 import java.util.ArrayList;
 import troisstudentsbjjm.theshapeofus.DeathAnimation;
@@ -28,12 +27,14 @@ public class Enemy_Circle extends Circle {
 
     public float angleL = 0;                            //angle to rotate line on circle
     public float angleT = 30;                           //angle to rotate triangles on canvas
-    public float damage = 100;                          //based on size, bigger == tons of damage
+    public float damage;                                //based number of circles that have combined together
     public float health;                                //added in constructor
+    public float radius;                                //circle radius (size/2)
     public float velocityX;                             //movement on x axis
     private float healthPool = 0;                       //amount of health to add over time, so shape does not suddenly get bigger
 
     public boolean readyToExplode;                      //used to deal damage to tower
+    public boolean combined;                            //used to delay timer if circles are combining;
     public boolean facingRight;                         //coming from the left(facingRight) or the right(!facingRight)
     public boolean isBlocked;                           //if not blocked...move, if blocked... attack.
     public boolean isDead;                              //this will be used to initialize our death animation
@@ -52,7 +53,7 @@ public class Enemy_Circle extends Circle {
         location.set(x,y);
 
         initTriangles();
-        updateSize();
+        setSize();
 
         spawnPoint = new PointF(x,y);
         center = new PointF((float) (x + 0.5*size*pixelsPerMeter), (float) ((y + pixelsPerMeter) - 0.5*size*pixelsPerMeter));
@@ -67,9 +68,10 @@ public class Enemy_Circle extends Circle {
         isActive = true;
     }
 
-    public void update(int pixelsPerMeter, long fps) {
+    public void update(Enemy_Circle Enemy ,int pixelsPerMeter, long fps) {
+        combine(Enemy);
         updateCenter();
-        updateHealth(fps);
+        setHealth(fps);
         if (isDead && isActive){
             deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
         } else if (!isDead && !isBlocked && isActive){
@@ -84,7 +86,7 @@ public class Enemy_Circle extends Circle {
 
 
     public void draw(Canvas canvas, Paint paint) {
-        if (!isDead){
+        if (!isDead && isActive){
             paint.setColor(Color.argb(255, 255, 255, 255));
             canvas.drawCircle(center.x, center.y, (float)(size*0.5*pixelsPerMeter), paint);
             if (!isBlocked){
@@ -106,6 +108,29 @@ public class Enemy_Circle extends Circle {
             paths.get(i).lineTo(triangles.get(i).B.x, triangles.get(i).B.y);
             paths.get(i).lineTo(triangles.get(i).C.x, triangles.get(i).C.y);
             paths.get(i).close();
+        }
+    }
+
+
+    private void combine(Enemy_Circle Enemy){
+        if (Enemy != null){
+            if (!Enemy.isDead && Enemy.isActive && !isDead && isActive){
+                if (Enemy.center.x < center.x + 0.5*size*pixelsPerMeter && Enemy.center.x > center.x - 0.5*size*pixelsPerMeter){
+                    if (Enemy.health <= health){
+                        healthPool += Enemy.health;
+                        Enemy.health = 0;
+                        Enemy.isDead = true;
+                        Enemy.isActive = false;
+                        combined = true;
+                    } else if(Enemy.health > health){
+                        Enemy.healthPool += health;
+                        health = 0;
+                        isDead =  true;
+                        isActive = false;
+                        Enemy.combined = true;
+                    }
+                }
+            }
         }
     }
 
@@ -154,6 +179,10 @@ public class Enemy_Circle extends Circle {
         if (System.currentTimeMillis() >= tickStartTime + TIME_BETWEEN_TICKS){
             tickStartTime = System.currentTimeMillis();
             tickCounter += 1;
+            if (combined){
+                tickCounter = 0;
+                combined = false;
+            }
             if (tickCounter == 7){
                 readyToExplode = true;
             }
@@ -167,13 +196,13 @@ public class Enemy_Circle extends Circle {
     }
 
 
-    private void updateHealth(long fps){
+    private void setHealth(long fps){
         health += healthPool/fps;
         healthPool -= healthPool/fps;
         if (healthPool - healthPool/fps < 0){
             healthPool = 0;
         }
-        updateSize();
+        setSize();
     }
 
 
@@ -186,11 +215,25 @@ public class Enemy_Circle extends Circle {
     }
 
 
-    private void updateSize() {
+    private void setSize() {
         float tempSize;
         tempSize = (float) (health*0.025);
-        if (tempSize > size){
+        if (tempSize > size) {
             size = tempSize;
+            radius = (float) (size*0.5);
+        }
+        setDamage();
+    }
+
+
+    private void setDamage(){
+        if (damage < 20){
+            damage = 20;
+        } else if (damage > 40){
+            damage = 40;
+        }
+        if (combined){
+            damage += 10;
         }
     }
 
