@@ -111,7 +111,7 @@ public class Enemy_Square extends Square{
 
     private void combine(Enemy_Square Enemy){
         if (hitBox.contains(Enemy.center.x, Enemy.center.y)){
-            if (Enemy.health < health){
+            if (Enemy.health <= health){
                 healthPool += Enemy.health;
                 Enemy.health = 0;
                 Enemy.isActive = false;
