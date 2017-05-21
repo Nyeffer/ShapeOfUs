@@ -64,30 +64,20 @@ public class Triangle_Tower {
     }
 
 
-
-
-    public void update(Enemy_Square Enemy) {
-        if (hitbox.contains(Enemy.pivot.x, Enemy.pivot.y)) {
-            Enemy.takeDamage(damage);
-        }
-    }
-
-
     public void update(Enemy_Square Enemy, long fps){
 
         if (Enemy.angleD > 60){
             if (hitbox.contains(Enemy.pivot.x+pixelsPerMeter,Enemy.pivot.y) || hitbox.contains(Enemy.center.x+pixelsPerMeter, Enemy.center.y)){
                 Enemy.takeDamage(damage/fps);
 
-                if (Enemy.getHealth() <= 0) {
+                if (Enemy.health <= 0) {
                     Enemy.destroy();
                 }
-                Enemy.updateSize();
             }
         }  else {
             if (hitbox.contains(Enemy.pivot.x,Enemy.pivot.y) || hitbox.contains(Enemy.center.x, Enemy.center.y)){
                 Enemy.takeDamage(damage/fps);
-                if (Enemy.getHealth() <= 0) {
+                if (Enemy.health <= 0) {
                     Enemy.destroy();
                 }
                 Enemy.updateSize();
@@ -100,7 +90,7 @@ public class Triangle_Tower {
 
         if (hitbox.contains(Enemy.A.x,Enemy.A.y) || hitbox.contains(Enemy.B.x, Enemy.B.y)){
             Enemy.takeDamage(damage/fps);
-            if (Enemy.getHealth() <= 0){
+            if (Enemy.health <= 0){
 //                Enemy.destroy();
             }
         }

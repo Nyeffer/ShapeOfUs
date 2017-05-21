@@ -90,7 +90,6 @@ public class Enemy_Circle extends Circle {
             maxHealth = maxHealth + Enemy.health;
             updateSize();
             updateCenter();
-            squareTower.setCounter(0);
             isBlocked = false;
             counter++;
             currentCounter++;

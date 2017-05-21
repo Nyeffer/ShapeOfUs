@@ -9,7 +9,7 @@ import troisstudentsbjjm.theshapeofus.Primatives.Square;
 
 public class Enemy_Square extends Square{
 
-    public DeathAnimation deathAnimation;
+    private DeathAnimation deathAnimation;              //when it goes to heaven
 
     public PointF center;                               //bottom center point
     public PointF pivot;                                //position used to rotate square on canvas
@@ -20,8 +20,8 @@ public class Enemy_Square extends Square{
 
     public float angleD = 0;                            //angle to rotate square on canvas
     public float damage;                                //based on size, bigger == tons of damage
+    public float health;                                //added in constructor
     private float angularVelocity;                      //angular velocity in degrees per second
-    private float health;                               //added in constructor
     private float healthPool = 0;                       //amount of health to add over time, so shape does not suddenly get bigger
     private final float GRAVITY = -10;                  //this will be in meters per second per second
     private final float MAX_JUMP_VELOCITY = -200;       //how fast the shape jumps
@@ -53,7 +53,7 @@ public class Enemy_Square extends Square{
         spawnPoint = new PointF(x,y);
         center = new PointF((float) (hitBox.left+0.5*size), hitBox.bottom);
 
-        deathAnimation = new DeathAnimation(pixelsPerMeter, location.y + pixelsPerMeter, omniGonPosX, omniGonPosY);
+        deathAnimation = new DeathAnimation(pixelsPerMeter, location.y + pixelsPerMeter, omniGonPosX, omniGonPosY, 2);
         deathAnimation.setParticles(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size);
 
         isBlocked = false;

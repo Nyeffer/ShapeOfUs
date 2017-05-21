@@ -86,7 +86,7 @@ public class Circle_Tower {
         AccentXpos = circleAccent.center.x;
     }
 
-    //for shooting at Squares
+
     public void update(Enemy_Square Enemy, long fps){
         updateCircleSize(fps);
         rotateAccent(fps);
@@ -110,7 +110,7 @@ public class Circle_Tower {
 
         if ( System.currentTimeMillis() > (fireTime + 1000/bulletSpeed) && bulletFired || Enemy.hitBox.contains(bullet.center.x,bullet.center.y)){
             Enemy.takeDamage(damage);
-            if (Enemy.getHealth() <= 0) {
+            if (Enemy.health <= 0) {
                 Enemy.destroy();
             }
             bullet.center.set(circle.center.x,circle.center.y);
@@ -128,7 +128,6 @@ public class Circle_Tower {
     }
 
 
-    //for shooting at Circles
     public void update(Enemy_Circle Enemy, long fps){
         updateCircleSize(fps);
         rotateAccent(fps);
@@ -160,7 +159,6 @@ public class Circle_Tower {
     }
 
 
-    //for shooting at Triangles
     public void update(Enemy_Triangle Enemy, long fps){
         updateCircleSize(fps);
         rotateAccent(fps);
@@ -174,7 +172,7 @@ public class Circle_Tower {
 
         if ( System.currentTimeMillis() > (fireTime + 1000/bulletSpeed) && bulletFired){
             Enemy.takeDamage(damage);
-            if (Enemy.getHealth() <= 0) {
+            if (Enemy.health <= 0) {
                 Enemy.destroy();
             }
             bullet.center.set(circle.center.x,circle.center.y);
