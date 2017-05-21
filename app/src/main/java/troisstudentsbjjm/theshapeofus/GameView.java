@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import java.util.ArrayList;
+
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
@@ -58,21 +60,23 @@ public class GameView extends SurfaceView implements Runnable {
 
 
     // Towers
-    private Square_Tower T_Square;
+    private Square_Tower S_Tower;
+    private Triangle_Tower T_Tower;
+    private Circle_Tower C_Tower;
 
     // Enemies
     private Enemy_Square E_Square;
     private Enemy_Square E_Square2;
     private Enemy_Circle E_Circle;
+
     private Enemy_Circle E_Circle_1;
     private Enemy_Circle E_Circle_2;
+
 
     private Rect terrain;
 
 
     private Enemy_Triangle E_Triangle;
-    private Triangle_Tower T_Tower;
-    private Circle_Tower C_Tower;
 
 
 
@@ -93,21 +97,27 @@ public class GameView extends SurfaceView implements Runnable {
 
 
         T_Tower =  new Triangle_Tower((int)(screenWidth*0.5), (int)(screenHeight*0.5), vp.pixelsPerMeter);
-        C_Tower = new Circle_Tower(1000,(float) (screenHeight*0.5),vp.pixelsPerMeter);
+
         T_Square = new Square_Tower(800,(int) ((screenHeight*0.5)), vp.pixelsPerMeter);
+
+        C_Tower = new Circle_Tower(500,(float) (screenHeight*0.5),vp.pixelsPerMeter);
+        S_Tower = new Square_Tower(700,(int) ((screenHeight*0.5)), vp.pixelsPerMeter);
+
 
 
 
         // Enemies
 
-        E_Square = new Enemy_Square(-50,(int)((screenHeight*0.5)), 80, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));      //40 is the square's health for now
+        E_Square = new Enemy_Square(-50,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));      //40 is the square's health for now
         E_Square2 = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
-        E_Circle = new Enemy_Circle(400, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
+
         E_Circle_1 = new Enemy_Circle(200, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
         E_Circle_2 = new Enemy_Circle(100, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter);
 
+        E_Circle = new Enemy_Circle(0, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
 
-        E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 10, vp.pixelsPerMeter);
+
+        E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 10, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
 
         running = true;
     }
@@ -162,23 +172,21 @@ public class GameView extends SurfaceView implements Runnable {
             sumfps = 0;
         }
 
-        E_Square.update(E_Square2,vp.pixelsPerMeter,fps);
-        E_Square2.update(E_Square,vp.pixelsPerMeter,fps);
-        E_Triangle.update(vp.pixelsPerMeter,fps,gravity);
+//        E_Square.update(E_Square2,vp.pixelsPerMeter,fps);
+//        E_Square2.update(E_Square,vp.pixelsPerMeter,fps);
+//        E_Triangle.update(vp.pixelsPerMeter,fps,gravity);
+
+//        S_Tower.update(E_Square, fps);
+//        S_Tower.update(E_Square2, fps);
+//        T_Square.update(E_Triangle, fps);
+//        T_Tower.update(E_Square, fps);
 
 
-
-        T_Square.update(E_Square, fps);
-        T_Tower.update(E_Square, fps);
-        T_Tower.update(E_Square2, fps);
-//        C_Tower.update(E_Square2,fps);
-//        C_Tower.update(E_Square,fps);
+        T_Tower.update(E_Circle, fps);
+//        C_Tower.update(E_Circle,fps);
+//        S_Tower.update(E_Circle, fps);
         E_Circle.update(vp.pixelsPerMeter, fps);
-        E_Circle_1.update(vp.pixelsPerMeter, fps);
-        E_Circle_2.update(vp.pixelsPerMeter, fps);
-        E_Circle.isCollided(E_Circle_1);
-        E_Circle.isCollided(E_Circle_2);
-        T_Square.update(E_Circle, fps);
+
 
     }
 
@@ -196,18 +204,18 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawRect(terrain,paint);
 
             // Towers
-            T_Square.draw(canvas,paint);
+            S_Tower.draw(canvas,paint);
             T_Tower.draw(canvas, paint);
             C_Tower.draw(canvas, paint);
 
 
             // Enemies
 
-//            E_Square.draw(canvas,paint);
-//            E_Square2.draw(canvas,paint);
+
+            E_Square.draw(canvas,paint);
+            E_Square2.draw(canvas,paint);
             E_Circle.draw(canvas,paint);
-//            if(!E_Circle_1.isDead) {    E_Circle_1.draw(canvas,paint); }
-//            if(!E_Circle_2.isDead) {    E_Circle_2.draw(canvas,paint);  }
+
             E_Triangle.draw(canvas, paint);
 
 

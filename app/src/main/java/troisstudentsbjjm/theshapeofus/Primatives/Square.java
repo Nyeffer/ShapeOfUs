@@ -21,7 +21,7 @@ public class Square extends GameObject {
     public void setHitBox(float x, float y, int pixelsPerMeter){
         hitBox.left = x;
         hitBox.right = hitBox.left + size*pixelsPerMeter;
-        hitBox.bottom = y + pixelsPerMeter;
+        hitBox.bottom = y + (float) pixelsPerMeter;
         hitBox.top = hitBox.bottom - size*pixelsPerMeter;
     }
 }

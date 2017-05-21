@@ -20,12 +20,13 @@ import troisstudentsbjjm.theshapeofus.Primatives.Square;
 public class DeathAnimation {
 
     //create Array of objects to be moved and animated upon enemy death
-    public int explosiveForce = 1;
+
     public ArrayList<Circle> particles;
 
     public PointF omniGonPos;
 
     private final int NUM_PARTICLES = 16;
+    public int explosiveForce;
     private int pixelsPerMeter;
     private int stopCounter = 0;
     float maxY;
@@ -37,12 +38,10 @@ public class DeathAnimation {
     private boolean resting;
     private boolean rising = true;
 
-    char particlesType;
-
     Random gen = new Random();
 
-
-    public DeathAnimation(int pixelsPerMeter, float maxY, float omniGonPosX, float omniGonPosY){
+    public DeathAnimation(int pixelsPerMeter, float maxY, float omniGonPosX, float omniGonPosY, int explosiveForce){
+        this.explosiveForce = explosiveForce;
         this.pixelsPerMeter = pixelsPerMeter;
         this.maxY = maxY;
         particles = new ArrayList<>(NUM_PARTICLES);
@@ -68,7 +67,7 @@ public class DeathAnimation {
             for (int j = 0; j < 8; j++){
                 particles.get(j+(i*8)).size = (float) (size*0.5);
                 particles.get(j+(i*8)).center.set((float) ( x - (size/4*Math.sin(j*(Math.PI/4)))) ,(float) (y+(size/4*Math.sin(j*(Math.PI/4)))));
-                particles.get(j+(i*8)).particleVel.set(gen.nextInt(12) - 6, gen.nextInt(12) - 8);
+                particles.get(j+(i*8)).particleVel.set(gen.nextInt(12*explosiveForce) - 6*explosiveForce, gen.nextInt(12*explosiveForce) - 8*explosiveForce);
             }
         }
     }
