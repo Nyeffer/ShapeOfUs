@@ -56,7 +56,7 @@ public class Enemy_Circle extends Circle {
         rolling = true;
         CollisionPoint = new PointF(centerX,centerY);
         offset = health*6;
-        squareTower = new Square_Tower(x, y, health, pixelsPerMeter);
+        squareTower = new Square_Tower(x,y, pixelsPerMeter);
         damage = 100;
 
 
@@ -64,6 +64,7 @@ public class Enemy_Circle extends Circle {
 
     public void update(int pixelsPerMeter, long fps) {
         if (rolling) {
+            Log.d("EC", isBlocked + " ");
             if(isBlocked)   {
                 location.x += 0;
             } else {
@@ -76,9 +77,9 @@ public class Enemy_Circle extends Circle {
     }
 
     public void isCollided(Enemy_Circle Enemy) {
-        if(hitBox.contains(Enemy.getCollisionPoint().x - offset, Enemy.getCollisionPoint().y)) {
+        if(hitBox.contains(Enemy.getCollisionPoint().x - health*5, Enemy.getCollisionPoint().y)) {
             BuildUp(Enemy);
-            Log.d("EC", squareTower.counter + " ");
+//            Log.d("EC", squareTower.counter + " ");
         }
     }
 
@@ -90,16 +91,19 @@ public class Enemy_Circle extends Circle {
             maxHealth = maxHealth + Enemy.getHealth();
             updateSize();
             updateCenter();
-            squareTower.setCounter(0);
+//            squareTower.setCounter(0);
             isBlocked = false;
             counter++;
             currentCounter++;
+            Detonate(3);
         }
     }
 
     public void Detonate(int countersTillDetonation) {
         if(countersTillDetonation == currentCounter) {
-            
+            if(location.y == health) {
+                location.y++;
+            }
         }
     }
 
@@ -144,7 +148,7 @@ public class Enemy_Circle extends Circle {
 
     // Setter
     public void setSpeed(float speed) { this.speed = speed;  }
-    public void setHealth(float health) { this.health = health;   }
+    public void setHealth(float health) { this.health = (int)(health);   }
     public void setIsBlocked(boolean isBlocked) {   this.isBlocked = isBlocked; }
     public void setIsDead(boolean isDead) { this.isDead = isDead;   }
     public void setCollisionPoint(PointF collisionPoint) { this.CollisionPoint = collisionPoint;}
@@ -155,6 +159,7 @@ public class Enemy_Circle extends Circle {
     public void takeDamage(float damage){
         health -= damage;
     }
+    public int getHealth() { return health;    }
     public boolean getIsDead() { return isDead;   }
     public boolean getIsBlocked() { return isBlocked;   }
 
