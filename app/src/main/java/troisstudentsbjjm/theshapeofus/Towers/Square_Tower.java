@@ -12,7 +12,6 @@ public class Square_Tower extends Square {
     private int health = 80;
     private int pixelsPerMeter;
 
-    public int counter = 1;
     public int numBlocked = 0;
     public boolean isAdjustmentDone;
 
@@ -27,23 +26,34 @@ public class Square_Tower extends Square {
 
 
     public void update(Enemy_Circle Enemy, long fps) {
-            if(hitBox.contains(Enemy.getCollisionPoint().x + 1,Enemy.getCollisionPoint().y)) {
-                Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
-
-                Enemy.setIsBlocked(true);
-
-                if(hitBox.contains(Enemy.getCollisionPoint().x,Enemy.getCollisionPoint().y)) {
-//                    Enemy.location.x = hitBox.left - (float)(Enemy.getHealth()*0.75);
-
+        checkTowerHealth(Enemy);
+        if (Enemy.facingRight && isActive){
+            if (!Enemy.isBlocked){
+                if (((Enemy.center.x+0.5*size*pixelsPerMeter) + Enemy.velocityX/fps) >= hitBox.left){
+                    Enemy.location.x += (hitBox.left - (Enemy.location.x+(size*pixelsPerMeter)));
+                    Enemy.isBlocked = true;
+                    numBlocked++;
                 }
-//                if (counter <= Enemy.getHealth()/4 && isAdjustmentDone == false) {// To prevent Enemy_Circle to penetrate Square_Tower
-//                    Log.d("ST", counter + " ");
-//                    Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
-//                    counter++;
-//                } if(counter >= Enemy.getHealth()/4) {
-//                    isAdjustmentDone = true;
-//                }
+            } else  if (Enemy.isBlocked && Enemy.isDead && !Enemy.readyToExplode){
+                health -= Enemy.damage*0.5;
+                Enemy.isBlocked = false;
+                numBlocked--;
+            } else if (Enemy.isBlocked && !Enemy.isDead && Enemy.readyToExplode){
+                health -= Enemy.damage;
+                Enemy.destroy();
             }
+        }
+    }
+
+
+    private void checkTowerHealth(Enemy_Circle Enemy){
+        if (health <= 0){
+            destroyTower();
+            if (numBlocked > 0 && Enemy.isBlocked){
+                Enemy.isBlocked = false;
+                numBlocked--;
+            }
+        }
     }
 
 
@@ -75,11 +85,10 @@ public class Square_Tower extends Square {
 
     private void checkTowerHealth(Enemy_Square Enemy){
         if (health <= 0){
-            if (numBlocked > 0){
+            destroyTower();
+            if (numBlocked > 0 && Enemy.isBlocked){
                 Enemy.isBlocked = false;
                 numBlocked--;
-            } else {
-                destroyTower();
             }
         }
     }
@@ -106,11 +115,10 @@ public class Square_Tower extends Square {
 
     private void checkTowerHealth(Enemy_Triangle Enemy){
         if (health <= 0){
-            if (numBlocked > 0){
+            destroyTower();
+            if (numBlocked > 0 && Enemy.isBlocked){
                 Enemy.isBlocked = false;
                 numBlocked--;
-            } else {
-                destroyTower();
             }
         }
     }

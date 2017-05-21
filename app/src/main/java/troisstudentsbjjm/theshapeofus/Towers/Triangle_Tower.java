@@ -99,7 +99,7 @@ public class Triangle_Tower {
 
     public void update(Enemy_Circle Enemy, long fps){
 
-        if (hitbox.contains(Enemy.location.x, Enemy.location.y)){
+        if (hitbox.left < Enemy.center.x+Enemy.size*0.5*pixelsPerMeter && hitbox.right > Enemy.center.x-Enemy.size*0.5*pixelsPerMeter){
             Enemy.takeDamage(damage/fps);
             if (Enemy.health <= 0) {
                 Enemy.destroy();

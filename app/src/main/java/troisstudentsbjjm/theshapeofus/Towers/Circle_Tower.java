@@ -29,7 +29,7 @@ public class Circle_Tower {
 
     private int pixelsPerMeter;
     private int range = 15;
-    private int damage = 5;
+    private int damage = 20;
     private int bulletSpeed = 10;
     private final int CIRCLE_MAX_SIZE = 2;
     private float velocity = 0;
@@ -131,7 +131,7 @@ public class Circle_Tower {
     public void update(Enemy_Circle Enemy, long fps){
         updateCircleSize(fps);
         rotateAccent(fps);
-        if (targetingRange.contains(Enemy.hitBox)){
+        if (targetingRange.contains(Enemy.center.x,Enemy.center.y)){
             fire(Enemy, fps);
         }
     }
