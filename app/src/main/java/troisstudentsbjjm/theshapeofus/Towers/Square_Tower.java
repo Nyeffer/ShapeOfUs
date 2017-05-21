@@ -18,9 +18,8 @@ public class Square_Tower extends Square {
     private int health = 80;
     private int pixelsPerMeter;
 
-    private int height;
-    private int width;
     public int counter = 1;
+    public int numBlocked = 0;
     public boolean isAdjustmentDone;
     private Square_Tower squareTower;
 
@@ -32,6 +31,7 @@ public class Square_Tower extends Square {
         this.pixelsPerMeter = pixelsPerMeter;
         setHitBox(x,y,pixelsPerMeter);
         isAdjustmentDone = false;
+        isActive = true;
     }
 
 
@@ -59,13 +59,24 @@ public class Square_Tower extends Square {
 
 
     public void update(Enemy_Square Enemy, long fps) {
-        if (Enemy.facingRight){
+        if (health <= 0){
+            if (numBlocked > 0){
+                Enemy.isBlocked = false;
+                numBlocked--;
+            } else {
+                destroyTower();
+            }
+        }
+        if (Enemy.facingRight && isActive){
             if (!Enemy.rolling && !Enemy.isBlocked){
                 if ((Enemy.hitBox.right + Enemy.velocity.x) >= hitBox.left){
                     Enemy.location.x += (hitBox.left - Enemy.hitBox.right);
                     Enemy.velocity.x = 0;
-                    if (Enemy.location.y == Enemy.spawnPoint.y){
+                    if (Enemy.location.y + Enemy.velocity.y/fps >= Enemy.spawnPoint.y){
+                        Enemy.location.y = Enemy.spawnPoint.y;
                         Enemy.isBlocked = true;
+                        numBlocked++;
+                        Enemy.velocity.y = 0;
                     }
                 }
             } else if (Enemy.rolling && !Enemy.isBlocked){
@@ -75,15 +86,21 @@ public class Square_Tower extends Square {
             } else  if (Enemy.isBlocked && Enemy.attacking){
                 health -= Enemy.damage;
                 Enemy.attacking = false;
-                Log.d("enemy attacking", "Square tower health: " + health);
             }
         }
     }
 
 
+    private void destroyTower(){
+        isActive = false;
+    }
+
+
     public void draw(Canvas canvas, Paint paint){
-        paint.setColor(Color.argb(255,255,255,255));
-        canvas.drawRect(hitBox,paint);
+        if (isActive){
+            paint.setColor(Color.argb(255,255,255,255));
+            canvas.drawRect(hitBox,paint);
+        }
     }
 
     public void setIsAdjust(boolean isAdjustmentDone) {

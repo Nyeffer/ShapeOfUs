@@ -1,113 +1,90 @@
 package troisstudentsbjjm.theshapeofus.Enemies;
 
-
-
-
-
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-
-
-
 import android.graphics.PointF;
-import android.util.Log;
-
-import java.util.Random;
-
 import troisstudentsbjjm.theshapeofus.DeathAnimation;
 import troisstudentsbjjm.theshapeofus.Primatives.Square;
-
-/**
- * Created by Jeffherson on 2017-05-15.
- */
 
 public class Enemy_Square extends Square{
 
     public DeathAnimation deathAnimation;
 
-    public PointF velocity;
-    public PointF pivot;
-    public PointF center;
-    public PointF spawnPoint;
+    public PointF center;                               //bottom center point
+    public PointF pivot;                                //position used to rotate square on canvas
+    public PointF spawnPoint;                           //reference to original position
+    public PointF velocity;                             //velocity in meters/second
+
+    private int pixelsPerMeter;                         //temporary (hopefully)
 
     public float angleD = 0;                            //angle to rotate square on canvas
-    private float angularVelocity;                      //angular velocity in degrees per second we will divide it by fps to get degrees to rotate per frame
-    private final float MAX_JUMP_VELOCITY = -200;
-    private int tempYpos;
+    public float damage;                                //based on size, bigger == tons of damage
+    private float angularVelocity;                      //angular velocity in degrees per second
     private float health;                               //added in constructor
+    private float healthPool = 0;                       //amount of health to add over time, so shape does not suddenly get bigger
+    private final float GRAVITY = -10;                  //this will be in meters per second per second
+    private final float MAX_JUMP_VELOCITY = -200;       //how fast the shape jumps
 
-    private final float GRAVITY = -10;                   //this will be in meters per second per second we will multiply by pixelspermeter to get pixels per second per second
+    public boolean attacking;                           //used to deal damage to tower
+    public boolean facingRight;                         //coming from the left(facingRight) or the right(!facingRight)
+    public boolean isBlocked;                           //if not blocked...move, if blocked... attack.
+    public boolean isDead;                              //this will be used to initialize our death animation
+    public boolean rolling;                             //the shape is either rolling or jumping
 
-    public boolean isDead = false;                     //this will be used to initialize our death animation and to remove the object
-    public boolean rolling;                            // the shape is either rolling or jumping
-    public boolean facingRight = true;
-    public boolean isBlocked = false;                  //if not blocked...move, if blocked... attack.
-    public boolean attacking;                          // used to monitor attack speed
-
-    public float damage;                                //TODO
-    private int pixelsPerMeter;                         //temporary
-
-    private final long TIME_BETWEEN_JUMPS = 500;
-    private final long TIME_BETWEEN_ATTACKS = 2000;
-    private long jumpStop = 0;
-    private long attackTime = 0;
+    private long jumpStop = 0;                          //used as timer to implement TIME_BETWEEN_JUMPS
+    private long attackTime = 0;                        //used as timer to implement TIME_BETWEEN_ATTACKS
+    private final long TIME_BETWEEN_ATTACKS = 2000;     //self explanatory == 2seconds
+    private final long TIME_BETWEEN_JUMPS = 500;        //self explanatory == 0.5seconds
 
 
     public Enemy_Square(int x,int y, int health, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
-
         this.health = health;
-        updateSize();
+        this.pixelsPerMeter = pixelsPerMeter;
+
         location.set(x,y);
 
+        updateSize();
         setHitBox(x,y,pixelsPerMeter);
-        center = new PointF((float) (hitBox.left+0.5*size), hitBox.bottom);
+        setRolling();
+
         pivot = new PointF();
         velocity = new PointF();
         spawnPoint = new PointF(x,y);
-        isDead = false;
-        this.pixelsPerMeter = pixelsPerMeter;
+        center = new PointF((float) (hitBox.left+0.5*size), hitBox.bottom);
+
         deathAnimation = new DeathAnimation(pixelsPerMeter, location.y + pixelsPerMeter, omniGonPosX, omniGonPosY);
         deathAnimation.setParticles(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size);
+
         isBlocked = false;
-        velocity.set(2,MAX_JUMP_VELOCITY);
-        tempYpos = (int)location.y;
-        jumpStop = 0;
-        setRolling();
+        isDead = false;
+        isActive = true;
+        attacking = true;
+        facingRight = true;
     }
 
 
     public void update(Enemy_Square Enemy, int pixelsPerMeter, long fps) {
+        combine(Enemy);
+        updateHealth(fps);
+        center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
         if (isDead && isActive){
-            deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);        //passing in the center point of the shape
+            deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
         } else if (!isDead && !isBlocked && isActive){
-            combine(Enemy);
             if (rolling){
                 angularVelocity = 60;
                 roll(pixelsPerMeter,fps);
             } else {
                 jump(pixelsPerMeter,fps);
             }
-            setHitBox(location.x,location.y,pixelsPerMeter);
         } else if (!isDead && isBlocked){
             attackAnimation(pixelsPerMeter,fps);
+        } else if (isDead && !isActive){
+            reset();
         }
-//        else if (isDead && !isActive){
-//            location.set(spawnPoint.x,spawnPoint.y);
-//            setHitBox(spawnPoint.x,spawnPoint.y,pixelsPerMeter);
-//            center = new PointF((float) (hitBox.left+0.5*size), hitBox.bottom);
-//            pivot = new PointF();
-//            velocity = new PointF();
-//            isDead = false;
-//            this.pixelsPerMeter = pixelsPerMeter;
-//            isBlocked = false;
-//            tempYpos = (int)location.y;
-//            jumpStop = 0;
-//            setRolling();
-//        }
     }
 
-    // increments the angle and moves the square if necessary
+
     private void roll(int pixelsPerMeter, long fps){
         if (facingRight){
             if (angleD >= 87){
@@ -134,7 +111,15 @@ public class Enemy_Square extends Square{
 
     private void combine(Enemy_Square Enemy){
         if (hitBox.contains(Enemy.center.x, Enemy.center.y)){
-
+            if (Enemy.health < health){
+                healthPool += Enemy.health;
+                Enemy.health = 0;
+                Enemy.isActive = false;
+            } else if(Enemy.health > health){
+                Enemy.healthPool += health;
+                health = 0;
+                isActive = false;
+            }
         }
     }
 
@@ -142,41 +127,43 @@ public class Enemy_Square extends Square{
     private void attackAnimation(int pixelsPerMeter, long fps){
         updateSize();
         if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + jumpStop){
-            if (tempYpos <= location.y){
-                velocity.y = (float) (MAX_JUMP_VELOCITY/2*size);
-                location.y = tempYpos;
+            if (spawnPoint.y <= location.y){
+                velocity.y = MAX_JUMP_VELOCITY*size;
+                location.y = spawnPoint.y;
                 jumpStop = System.currentTimeMillis();
                 if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + attackTime){
                     attacking = true;
                     attackTime = System.currentTimeMillis();
                 }
             }
-            if (location.y + velocity.y/fps >= tempYpos){
-                location.y = tempYpos;
+            if (location.y + velocity.y/fps >= spawnPoint.y){
+                location.y = spawnPoint.y;
+                setPivot();
+                setRolling();
             } else {
                 location.y += (int)(velocity.y/fps);
-                velocity.y -= (GRAVITY*5);
+                velocity.y -= GRAVITY*2;
             }
+            location.x += velocity.x;
             center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
         }
     }
 
 
-    private void respawn(){
+    private void reset(){
 
     }
 
 
     private void jump(int pixelsPerMeter, long fps){
-        updateSize();
         if (System.currentTimeMillis() >= TIME_BETWEEN_JUMPS + jumpStop){
-            if (tempYpos <= location.y){
-                velocity.y = MAX_JUMP_VELOCITY;
-                location.y = tempYpos;
+            if (spawnPoint.y <= location.y){
+                velocity.set(2,MAX_JUMP_VELOCITY*size);
+                location.y = spawnPoint.y;
                 jumpStop = System.currentTimeMillis();
             }
-            if (location.y + velocity.y/fps >= tempYpos){
-                location.y = tempYpos;
+            if (location.y + velocity.y/fps >= spawnPoint.y){
+                location.y = spawnPoint.y;
                 setPivot();
                 setRolling();
             } else {
@@ -184,24 +171,46 @@ public class Enemy_Square extends Square{
                 velocity.y -= GRAVITY;
             }
             location.x += velocity.x;
-            center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
         }
     }
 
-    //shows relationship between health and size.
+
     public void updateSize(){
-        if (health * 0.025 >= 0.5){
-            setSize ((float) (health * 0.025));
-            damage = health/10;
+        if (!isBlocked){
+            if (health * 0.025 >= 0.5){
+                size = ((float) (health * 0.025));
+                damage = health/10;
+                if (size > 2){
+                    size = 2;
+                }
+            } else {
+                setSize((float) 0.5);
+                damage = 1;
+            }
         } else {
-            setSize((float) 0.5);
-            damage = 1;
+            if (hitBox.right - (hitBox.left -1) <= (health * 0.025)*pixelsPerMeter && hitBox.right - (hitBox.left -1) <= 4*pixelsPerMeter){
+                location.x--;
+                size += 0.02;
+            } else if (hitBox.right - (hitBox.left +1) >= (health * 0.025)*pixelsPerMeter && hitBox.right - (hitBox.left +1) >= 0.5*pixelsPerMeter){
+                location.x++;
+                size -= 0.02;
+            }
         }
+    }
+
+
+    private void updateHealth(long fps){
+        health += healthPool/fps;
+        healthPool -= healthPool/fps;
+        if (healthPool - healthPool/fps < 0){
+            healthPool = 0;
+        }
+        updateSize();
+        setHitBox(location.x,location.y,pixelsPerMeter);
     }
 
 
     public void setPivot(){
-        //sets the pivot point for the canvas rotate function, if the angle is less than 0, the pivot is bottom left, if it is greater than 0, the pivot is bottom right
         if (angleD < 0){
             pivot.set(hitBox.left, hitBox.bottom);
         } else {
@@ -209,27 +218,24 @@ public class Enemy_Square extends Square{
         }
     }
 
-    // moves rect over by a factor of its size
+
     public void Move(int pixelsPerMeter){
         if (facingRight){
             location.x += size*pixelsPerMeter;
-            updateSize();
-            setHitBox(location.x,location.y,pixelsPerMeter);
-            center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
-            setRolling();
+
         } else {
             location.x -= size*pixelsPerMeter;
-            updateSize();
-            setHitBox(location.x,location.y,pixelsPerMeter);
-            center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
-            setRolling();
+
         }
+        updateSize();
+        setHitBox(location.x,location.y,pixelsPerMeter);
+        setRolling();
     }
 
-    // set color to white, rotate canvas, draw rect, save the orientation, return the rest of the canvas to normal.
+
     public void draw(Canvas canvas, Paint paint){
         paint.setColor(Color.argb(255,255,255,255));
-        if (!isDead && isVisible){
+        if (!isDead && isActive){
             if (rolling){
                 canvas.save();
                 canvas.rotate(angleD,pivot.x,pivot.y);
@@ -263,5 +269,4 @@ public class Enemy_Square extends Square{
     public void takeDamage(float damage){
         health -= damage;
     }
-    public float getHealth() { return health; }
 }

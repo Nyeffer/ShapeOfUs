@@ -29,7 +29,7 @@ public class Circle_Tower {
 
     private int pixelsPerMeter;
     private int range = 15;
-    private int damage = 30;
+    private int damage = 5;
     private int bulletSpeed = 10;
     private final int CIRCLE_MAX_SIZE = 2;
     private float velocity = 0;
@@ -67,7 +67,7 @@ public class Circle_Tower {
         circleAccent2.center = new PointF();
         bullet = new Circle();
         bullet.center = new PointF();
-        targetingRange = new RectF((float) (x + 0.5*pixelsPerMeter) - range*pixelsPerMeter, y-pixelsPerMeter, (float) (x + 0.5*pixelsPerMeter) + range*pixelsPerMeter, y+pixelsPerMeter);
+        targetingRange = new RectF((float) (x + 0.5*pixelsPerMeter) - range*pixelsPerMeter, y-2*pixelsPerMeter, (float) (x + 0.5*pixelsPerMeter) + range*pixelsPerMeter, y+2*pixelsPerMeter);
         initShapes(pixelsPerMeter);
     }
 
@@ -90,8 +90,18 @@ public class Circle_Tower {
     public void update(Enemy_Square Enemy, long fps){
         updateCircleSize(fps);
         rotateAccent(fps);
-        if (targetingRange.contains(Enemy.hitBox) && !Enemy.isDead && Enemy.isActive){
-            fire(Enemy, fps);
+        if (!Enemy.rolling){
+            if (targetingRange.contains(Enemy.center.x,Enemy.center.y) && !Enemy.isDead){
+                fire(Enemy, fps);
+            }
+        } else {
+            if (targetingRange.contains(Enemy.center.x,Enemy.center.y) && !Enemy.isDead){
+                fire(Enemy, fps);
+            } else if (Enemy.angleD >= 45){
+                if (targetingRange.contains(Enemy.location.x + Enemy.size*pixelsPerMeter,Enemy.center.y) && !Enemy.isDead) {
+                    fire(Enemy, fps);
+                }
+            }
         }
     }
 
