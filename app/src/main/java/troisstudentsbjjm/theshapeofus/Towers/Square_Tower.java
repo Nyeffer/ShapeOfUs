@@ -26,6 +26,12 @@ public class Square_Tower extends Square {
 
 
     public void update(Enemy_Circle Enemy, long fps) {
+
+            if(hitBox.contains(Enemy.getCollisionPoint().x + 1,Enemy.getCollisionPoint().y)) {
+                Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
+                Enemy.setIsBlocked(true);
+                Enemy.setSquareTower(getSquare_Tower());
+
         checkTowerHealth(Enemy);
         if (Enemy.facingRight && isActive){
             if (!Enemy.isBlocked){
@@ -46,12 +52,24 @@ public class Square_Tower extends Square {
     }
 
 
+
+
+                }
+                if (counter <= Enemy.getHealth()/4 && isAdjustmentDone == false) {// To prevent Enemy_Circle to penetrate Square_Tower
+                    Log.d("ST", counter + " ");
+                    Enemy.location.x += hitBox.left - Enemy.getCollisionPoint().x;
+                    counter++;
+                } if(counter >= Enemy.getHealth()/4) {
+                    isAdjustmentDone = true;
+                }
+
     private void checkTowerHealth(Enemy_Circle Enemy){
         if (health <= 0){
             destroyTower();
             if (numBlocked > 0 && Enemy.isBlocked){
                 Enemy.isBlocked = false;
                 numBlocked--;
+
             }
         }
     }
@@ -111,6 +129,8 @@ public class Square_Tower extends Square {
             Enemy.destroy();
         }
     }
+
+    public void setCounter(int counter) { this.counter = counter;   }
 
 
     private void checkTowerHealth(Enemy_Triangle Enemy){

@@ -46,6 +46,14 @@ public class Enemy_Circle extends Circle {
         this.health = health;
         this.pixelsPerMeter = pixelsPerMeter;
 
+        isBlocked = false;
+        rolling = true;
+        CollisionPoint = new PointF(centerX,centerY);
+        offset = health*6;
+        squareTower = new Square_Tower(x,y, pixelsPerMeter);
+        damage = 100;
+
+
         triangles = new ArrayList<>();
         paths = new ArrayList<>();
 
@@ -68,6 +76,12 @@ public class Enemy_Circle extends Circle {
     }
 
     public void update(int pixelsPerMeter, long fps) {
+
+        if (rolling) {
+            Log.d("EC", isBlocked + " ");
+            if(isBlocked)   {
+                location.x += 0;
+
         updateCenter();
         updateHealth(fps);
         if (isDead && isActive){
@@ -89,6 +103,7 @@ public class Enemy_Circle extends Circle {
             canvas.drawCircle(center.x, center.y, (float)(size*0.5*pixelsPerMeter), paint);
             if (!isBlocked){
                 drawLine(canvas,paint);
+
             } else {
                 drawLine(canvas,paint);
                 drawTriangles(canvas,paint);
@@ -110,6 +125,12 @@ public class Enemy_Circle extends Circle {
     }
 
 
+    public void isCollided(Enemy_Circle Enemy) {
+        if(hitBox.contains(Enemy.getCollisionPoint().x - health*5, Enemy.getCollisionPoint().y)) {
+            BuildUp(Enemy);
+//            Log.d("EC", squareTower.counter + " ");
+
+
     private void drawTriangles(Canvas canvas, Paint paint){
         setPaths();
         paint.setColor(Color.argb(150, 0, 0, 0));
@@ -118,9 +139,32 @@ public class Enemy_Circle extends Circle {
             canvas.rotate(angleL+(angleT*(2*i+1)),center.x,center.y);
             canvas.drawPath(paths.get(i),paint);
             canvas.restore();
+
         }
     }
 
+
+
+    public void BuildUp(Enemy_Circle Enemy) {
+        if(counter == 1) {
+            Enemy.destroy();
+            setHealth(health + Enemy.getHealth());
+            maxHealth = maxHealth + Enemy.getHealth();
+            updateSize();
+            updateCenter();
+//            squareTower.setCounter(0);
+            isBlocked = false;
+            counter++;
+            currentCounter++;
+            Detonate(3);
+        }
+    }
+
+    public void Detonate(int countersTillDetonation) {
+        if(countersTillDetonation == currentCounter) {
+            if(location.y == health) {
+                location.y++;
+            }
 
     private void drawLine(Canvas canvas, Paint paint){
         paint.setColor(Color.argb(255, 0, 0, 0));
@@ -145,6 +189,7 @@ public class Enemy_Circle extends Circle {
             triangle.C.set(center.x,center.y);
             triangle.A.set((float) (center.x - 0.5*triangle.size*pixelsPerMeter), center.y + triangle.size*pixelsPerMeter);
             triangle.B.set((float) (center.x + 0.5*triangle.size*pixelsPerMeter), triangle.A.y);
+
         }
     }
 
@@ -210,9 +255,24 @@ public class Enemy_Circle extends Circle {
     }
 
 
+    // Setter
+    public void setSpeed(float speed) { this.speed = speed;  }
+    public void setHealth(float health) { this.health = (int)(health);   }
+    public void setIsBlocked(boolean isBlocked) {   this.isBlocked = isBlocked; }
+    public void setIsDead(boolean isDead) { this.isDead = isDead;   }
+    public void setCollisionPoint(PointF collisionPoint) { this.CollisionPoint = collisionPoint;}
+    public void setCountersTillDetonation(int countersTillDetonation) { this.countersTillDetonation = countersTillDetonation;   }
+    public void setSquareTower(Square_Tower squareTower) { this.squareTower = squareTower;  }
+
+
     public void takeDamage(float damage){
         health -= damage;
     }
+
+    public int getHealth() { return health;    }
+    public boolean getIsDead() { return isDead;   }
+    public boolean getIsBlocked() { return isBlocked;   }
+
 
 
     public void destroy(){
