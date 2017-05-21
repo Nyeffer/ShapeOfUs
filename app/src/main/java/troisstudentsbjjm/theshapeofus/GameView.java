@@ -94,8 +94,11 @@ public class GameView extends SurfaceView implements Runnable {
 
 
         T_Tower =  new Triangle_Tower((int)(screenWidth*0.5), (int)(screenHeight*0.5), vp.pixelsPerMeter);
+
+
         C_Tower = new Circle_Tower(500,(float) (screenHeight*0.5),vp.pixelsPerMeter);
         S_Tower = new Square_Tower(700,(int) ((screenHeight*0.5)), vp.pixelsPerMeter);
+
 
 
 
@@ -103,8 +106,11 @@ public class GameView extends SurfaceView implements Runnable {
 
         E_Square = new Enemy_Square(-50,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));      //40 is the square's health for now
         E_Square2 = new Enemy_Square(vp.pixelsPerMeter,(int)((screenHeight*0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
+
         E_Circle = new Enemy_Circle(-100, (int)((screenHeight * 0.5)), 30, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
         E_Circle2 = new Enemy_Circle(100, (int)((screenHeight * 0.5)), 40, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
+
+
 
         E_Triangle = new Enemy_Triangle(0, (int)((screenHeight * 0.5)), 10, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
 
@@ -170,7 +176,9 @@ public class GameView extends SurfaceView implements Runnable {
 //        T_Square.update(E_Triangle, fps);
 //        T_Tower.update(E_Square, fps);
 
+
 //        T_Tower.update(E_Circle, fps);
+
 //        C_Tower.update(E_Circle,fps);
         S_Tower.update(E_Circle, fps);
         S_Tower.update(E_Circle2, fps);
@@ -200,6 +208,7 @@ public class GameView extends SurfaceView implements Runnable {
 
 
             // Enemies
+
 
             E_Square.draw(canvas,paint);
             E_Square2.draw(canvas,paint);

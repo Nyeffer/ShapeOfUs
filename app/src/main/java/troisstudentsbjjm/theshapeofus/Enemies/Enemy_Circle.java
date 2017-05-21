@@ -47,6 +47,10 @@ public class Enemy_Circle extends Circle {
         this.health = health;
         this.pixelsPerMeter = pixelsPerMeter;
 
+        isBlocked = false;
+        damage = 100;
+
+
         triangles = new ArrayList<>();
         paths = new ArrayList<>();
 
@@ -68,8 +72,10 @@ public class Enemy_Circle extends Circle {
         isActive = true;
     }
 
+
     public void update(Enemy_Circle Enemy ,int pixelsPerMeter, long fps) {
         combine(Enemy);
+
         updateCenter();
         setHealth(fps);
         if (isDead && isActive){
@@ -91,6 +97,7 @@ public class Enemy_Circle extends Circle {
             canvas.drawCircle(center.x, center.y, (float)(size*0.5*pixelsPerMeter), paint);
             if (!isBlocked){
                 drawLine(canvas,paint);
+
             } else {
                 drawLine(canvas,paint);
                 drawTriangles(canvas,paint);
@@ -110,6 +117,7 @@ public class Enemy_Circle extends Circle {
             paths.get(i).close();
         }
     }
+
 
 
     private void combine(Enemy_Circle Enemy){
@@ -135,6 +143,7 @@ public class Enemy_Circle extends Circle {
     }
 
 
+
     private void drawTriangles(Canvas canvas, Paint paint){
         setPaths();
         paint.setColor(Color.argb(150, 0, 0, 0));
@@ -143,6 +152,7 @@ public class Enemy_Circle extends Circle {
             canvas.rotate(angleL+(angleT*(2*i+1)),center.x,center.y);
             canvas.drawPath(paths.get(i),paint);
             canvas.restore();
+
         }
     }
 
@@ -170,6 +180,7 @@ public class Enemy_Circle extends Circle {
             triangle.C.set(center.x,center.y);
             triangle.A.set((float) (center.x - 0.5*triangle.size*pixelsPerMeter), center.y + triangle.size*pixelsPerMeter);
             triangle.B.set((float) (center.x + 0.5*triangle.size*pixelsPerMeter), triangle.A.y);
+
         }
     }
 
@@ -252,11 +263,9 @@ public class Enemy_Circle extends Circle {
 
     }
 
-
     public void takeDamage(float damage){
         health -= damage;
     }
-
 
     public void destroy(){
         isDead = true;

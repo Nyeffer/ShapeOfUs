@@ -26,6 +26,7 @@ public class Square_Tower extends Square {
 
 
     public void update(Enemy_Circle Enemy, long fps) {
+
         checkTowerHealth(Enemy);
         if (Enemy.facingRight && isActive){
             if (!Enemy.isBlocked){
@@ -60,6 +61,7 @@ public class Square_Tower extends Square {
             if (numBlocked > 0 && Enemy.isBlocked){
                 Enemy.isBlocked = false;
                 numBlocked--;
+
             }
         }
     }
