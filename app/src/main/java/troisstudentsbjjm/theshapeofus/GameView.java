@@ -92,7 +92,7 @@ public class GameView extends SurfaceView implements Runnable {
         vp = new Viewport(screenWidth,screenHeight);
         terrain = new Rect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight);
 
-        wave1 = new Wave(-50,(int)((screenHeight*0.5)), 1, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5),30,2);
+        wave1 = new Wave(-50,(int)((screenHeight*0.5)), 1, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5),7,3);
         // Towers
 
 

@@ -31,8 +31,8 @@ public class Circle_Tower {
 
     private int pixelsPerMeter;
     private int range = 10;
-    private int damage = 40;
-    private int bulletSpeed = 1;
+    private int damage = 1000;
+    private int bulletSpeed = 5;
     private final int CIRCLE_MAX_SIZE = 2;
     private float velocity = 0;
     private float sizeFactor = 0;
@@ -115,7 +115,7 @@ public class Circle_Tower {
 
     private void fire(Enemy_Square Enemy, long fps){
 
-        if (Enemy.hitBox.contains(bullet.center.x, bullet.center.y)) {
+        if ((Enemy.hitBox.contains(bullet.center.x, bullet.center.y) || System.currentTimeMillis() >= fireTime + 1000/bulletSpeed)&& bulletFired ) {
             Enemy.takeDamage(damage);
             if (Enemy.health <= 0) {
                 Enemy.destroy();
@@ -123,8 +123,8 @@ public class Circle_Tower {
             bullet.center.set(circle.center.x, circle.center.y);
             bulletFired = false;
         } else if (bulletFired) {
-            bullet.center.x -= ((distance.x * bulletSpeed + Enemy.size * pixelsPerMeter) / fps);
-            bullet.center.y -= ((distance.y * bulletSpeed + 0.5 * Enemy.size * pixelsPerMeter) / fps);
+            bullet.center.x -= ((distance.x * bulletSpeed) / fps);
+            bullet.center.y -= ((distance.y * bulletSpeed) / fps);
         } else if (readyToFire && !Enemy.isDead) {
             if (System.currentTimeMillis() >= fireTime + fireRate) {
 
@@ -132,9 +132,12 @@ public class Circle_Tower {
                 charging = true;
                 readyToFire = false;
                 fireTime = System.currentTimeMillis();
-                distance.x = bullet.center.x - Enemy.center.x;
+                distance.x = bullet.center.x - (Enemy.center.x + Enemy.velocity.x*fps);
                 distance.y = bullet.center.y - (float) (Enemy.center.y - 0.5 * Enemy.size * pixelsPerMeter);
             }
+        } else if (System.currentTimeMillis() >= fireTime + fireRate){
+            bulletFired = false;
+            readyToFire = true;
         }
     }
 
@@ -152,7 +155,7 @@ public class Circle_Tower {
 
     private void fire(Enemy_Circle Enemy, long fps){
 
-            if (System.currentTimeMillis() > (fireTime + 1000 / bulletSpeed) && bulletFired) {
+            if ((bullet.center.x <= (Enemy.center.x+ Enemy.radius*pixelsPerMeter) && bullet.center.x >= (Enemy.center.x - Enemy.radius*pixelsPerMeter) && bullet.center.y >= (Enemy.center.y - Enemy.radius*pixelsPerMeter)||System.currentTimeMillis() >= fireTime + 1000/bulletSpeed) && bulletFired) {
                 Enemy.takeDamage(damage);
                 if (Enemy.health <= 0) {
                     Enemy.destroy();
@@ -160,17 +163,20 @@ public class Circle_Tower {
                 bullet.center.set(circle.center.x, circle.center.y);
                 bulletFired = false;
             } else if (bulletFired) {
-                bullet.center.x -= ((distance.x * bulletSpeed + Enemy.size * pixelsPerMeter) / fps);
-                bullet.center.y -= ((distance.y * bulletSpeed + 0.5 * Enemy.size * pixelsPerMeter) / fps);
+                bullet.center.x -= ((distance.x * bulletSpeed) / fps);
+                bullet.center.y -= ((distance.y * bulletSpeed) / fps);
             } else if (readyToFire && !Enemy.isDead) {
                 if (System.currentTimeMillis() >= fireTime + fireRate) {
                     bulletFired = true;
                     charging = true;
                     readyToFire = false;
                     fireTime = System.currentTimeMillis();
-                    distance.x = bullet.center.x - Enemy.center.x;
+                    distance.x = bullet.center.x - (Enemy.center.x+ Enemy.velocityX);
                     distance.y = bullet.center.y - Enemy.center.y;
                 }
+            } else if (System.currentTimeMillis() >= fireTime + fireRate){
+                bulletFired = false;
+                readyToFire = true;
             }
 
     }
@@ -189,7 +195,7 @@ public class Circle_Tower {
 
     private void fire(Enemy_Triangle Enemy, long fps){
 
-        if (System.currentTimeMillis() > (fireTime + 1000 / bulletSpeed) && bulletFired) {
+        if (bulletFired && (System.currentTimeMillis() >= fireTime + 1000/bulletSpeed || Enemy.contains((int)bullet.center.x,(int)bullet.center.y))) {
             Enemy.takeDamage(damage);
             if (Enemy.health <= 0) {
                 Enemy.destroy();
@@ -212,52 +218,25 @@ public class Circle_Tower {
     }
 
 
-//    private void updateCircleSize(long fps){
-//
-//        circleShrinkRate = (float) ((CIRCLE_MAX_SIZE - CIRCLE_MIN_SIZE)/SHRINK_TIME);
-//        circleGrowRate = (float) ((CIRCLE_MAX_SIZE - CIRCLE_MIN_SIZE)/GROW_TIME);
-//
-//        if (!readyToFire && charging) {
-//
-//            if (circle.size <= CIRCLE_MIN_SIZE) {
-//                readyToFire = true;
-//                charging = false;
-//                circle.size = CIRCLE_MIN_SIZE;
-//                sizeFactor = 0;
-//            }
-//        } else if (!readyToFire && !charging) {
-//            if (circle.size <= CIRCLE_MAX_SIZE) {
-//                sizeFactor = circleGrowRate;            //this should take 800 miliseconds
-//            } else {
-//                charging = true;                        //this should take 2200 milliseconds
-//                sizeFactor = -circleShrinkRate;
-//            }
-//        }
-//        circle.size += sizeFactor / fps;
-//    }
-
-
     private void updateCircleSize(long fps){
 
-        circleShrinkRate = (float) ((CIRCLE_MAX_SIZE - CIRCLE_MIN_SIZE));
-        circleGrowRate = (float) ((CIRCLE_MAX_SIZE - CIRCLE_MIN_SIZE));
+        circleShrinkRate = (float) ((CIRCLE_MAX_SIZE - CIRCLE_MIN_SIZE)/(3*SHRINK_TIME));                   // multiply by three because this is updated 3 times per frame
+        circleGrowRate = (float) ((CIRCLE_MAX_SIZE - CIRCLE_MIN_SIZE)/(3*GROW_TIME));                       // same here, inefficient, but will do for now
 
         if (!readyToFire){
             if (System.currentTimeMillis() <= fireTime + TIME_TO_GROW){
-                if (System.currentTimeMillis() >= animationTimer + fps*0.5){
                     animationTimer = System.currentTimeMillis();
                     if (circle.size < CIRCLE_MAX_SIZE){
                         circle.size += circleGrowRate/fps;
                     }
-                }
+
             } else if (System.currentTimeMillis() <= fireTime + TIME_TO_GROW + TIME_TO_SHRINK){
-                if (System.currentTimeMillis() >= animationTimer + fps*0.5){
                     animationTimer = System.currentTimeMillis();
                     circle.size -= circleShrinkRate/fps;
                     if (circle.size <= CIRCLE_MIN_SIZE) {
                         circle.size = CIRCLE_MIN_SIZE;
                     }
-                }
+
             } else if (System.currentTimeMillis() >= fireTime + TIME_TO_GROW + TIME_TO_SHRINK){
                 readyToFire = true;
             }

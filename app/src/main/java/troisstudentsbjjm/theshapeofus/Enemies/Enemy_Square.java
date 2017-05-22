@@ -28,6 +28,7 @@ public class Enemy_Square extends Square{
     private final float MAX_JUMP_VELOCITY = -200;       //how fast the shape jumps
 
     public boolean attacking;                           //used to deal damage to tower
+    public boolean hit;                                 //used to take damage
     public boolean facingRight;                         //coming from the left(facingRight) or the right(!facingRight)
     public boolean isBlocked;                           //if not blocked...move, if blocked... attack.
     public boolean isDead;                              //this will be used to initialize our death animation
@@ -148,6 +149,7 @@ public class Enemy_Square extends Square{
             location.x += velocity.x;
             center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
         }
+        setHitBox(location.x,location.y,pixelsPerMeter);
     }
 
 
