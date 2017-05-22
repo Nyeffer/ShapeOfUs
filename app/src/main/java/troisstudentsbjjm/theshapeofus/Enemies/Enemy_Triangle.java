@@ -29,8 +29,7 @@ public class Enemy_Triangle extends Triangle{
 
     public float angleD = 0;                            //angle to rotate on canvas
     public float damage = 20;                           //kamikaze, after dealing damage triangle will die
-    public float health;                                //added in constructor
-    private float angularVelocity;                      //angular velocity in degrees per second
+    public float health = 10;                           //added in constructor
     private final float GRAVITY = -10;                  //this will be in meters per second per second
     private final float MAX_JUMP_VELOCITY = -200;       //how fast the shape jumps
 
@@ -41,14 +40,13 @@ public class Enemy_Triangle extends Triangle{
     public boolean isDead;                              //this will be used to initialize our death animation
 
     private long jumpStop = 0;                          //used as timer to implement TIME_BETWEEN_JUMPS
-    private long attackTime = 0;                        //used as timer to implement TIME_TO_ROTATE
     private final long TIME_BETWEEN_JUMPS = 250;        //self explanatory == 0.5seconds
     private final double TIME_TO_ROTATE = 0.4;          //how long it will take triangle to rotate
 
 
-    public Enemy_Triangle(int x,int y, int health, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
-        this.health = health;
+    public Enemy_Triangle(int x,int y, double healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
         this.pixelsPerMeter = pixelsPerMeter;
+        this.health *= healthFactor;
 
         size = (float) 0.5;
 
@@ -65,23 +63,23 @@ public class Enemy_Triangle extends Triangle{
         isBlocked = false;
         inPositionToAttack = false;
         isDead = false;
-        isActive = true;
         attacking = false;
         facingRight = true;
     }
 
 
-    public void jump(int pixelsPerMeter, long fps) {
+    public void jump(long fps) {
         if (System.currentTimeMillis() >= TIME_BETWEEN_JUMPS + jumpStop){
-            if (spawnPoint.y <= location.y){
+            if (location.y >= spawnPoint.y){
                 location.y = spawnPoint.y;
                 jumpStop = System.currentTimeMillis();
                 velocity.y = MAX_JUMP_VELOCITY;
+                velocity.x = (float) 2.5;
             }
             if (location.y + velocity.y/fps >= spawnPoint.y){
                 location.y = spawnPoint.y;
             } else {
-                location.y += (int)(velocity.y/fps);
+                location.y += velocity.y/fps;
                 velocity.y -= GRAVITY;
             }
             location.x += velocity.x;
@@ -89,17 +87,17 @@ public class Enemy_Triangle extends Triangle{
     }
 
 
-    public void update(int pixelsPerMeter, long fps, int gravity) {
-        setPoints(location.x,location.y,pixelsPerMeter);
-        setCenter();
-        if (isDead && isActive){
-            deathAnimation.update(center.x, center.y, size, fps);
-        } else if (!isDead && !isBlocked && isActive){
-            jump(pixelsPerMeter,fps);
-        } else if (!isDead && isBlocked){
-            attackAnimation(pixelsPerMeter,fps);
-        } else if (isDead && !isActive){
-            reset();
+    public void update(int pixelsPerMeter, long fps) {
+        if (isActive){
+            setPoints(location.x,location.y,pixelsPerMeter);
+            setCenter();
+            if (isDead){
+                deathAnimation.update(center.x, center.y, size, fps);
+            } else if (!isDead && !isBlocked && isActive){
+                jump(fps);
+            } else if (!isDead && isBlocked){
+                attackAnimation(pixelsPerMeter,fps);
+            }
         }
     }
 
@@ -118,9 +116,6 @@ public class Enemy_Triangle extends Triangle{
         }
     }
 
-
-    private void reset(){
-    }
 
     public void draw(Canvas canvas, Paint paint){
         if (isActive && !isDead){

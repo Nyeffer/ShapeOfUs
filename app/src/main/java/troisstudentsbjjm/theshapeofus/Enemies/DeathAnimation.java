@@ -48,7 +48,6 @@ public class DeathAnimation {
         initParticles();
         initialized = false;
         omniGonPos = new PointF(omniGonPosX,omniGonPosY);
-
     }
 
 
@@ -57,6 +56,7 @@ public class DeathAnimation {
             particles.add(i, new Circle());
             particles.get(i).center = new PointF();
             particles.get(i).particleVel = new PointF();
+            particles.get(i).isActive = true;
         }
     }
 

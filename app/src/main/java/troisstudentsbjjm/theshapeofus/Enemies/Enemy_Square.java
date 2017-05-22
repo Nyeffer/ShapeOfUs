@@ -21,7 +21,7 @@ public class Enemy_Square extends Square{
 
     public float angleD = 0;                            //angle to rotate square on canvas
     public float damage;                                //based on size, bigger == tons of damage
-    public float health;                                //added in constructor
+    public float health = 40;                           //added in constructor
     private float angularVelocity;                      //angular velocity in degrees per second
     private float healthPool = 0;                       //amount of health to add over time, so shape does not suddenly get bigger
     private final float GRAVITY = -10;                  //this will be in meters per second per second
@@ -39,9 +39,9 @@ public class Enemy_Square extends Square{
     private final long TIME_BETWEEN_JUMPS = 500;        //self explanatory == 0.5seconds
 
 
-    public Enemy_Square(int x,int y, int health, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
-        this.health = health;
+    public Enemy_Square(int x,int y, double healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
         this.pixelsPerMeter = pixelsPerMeter;
+        this.health *= healthFactor;
 
         location.set(x,y);
 
@@ -59,31 +59,30 @@ public class Enemy_Square extends Square{
 
         isBlocked = false;
         isDead = false;
-        isActive = true;
         attacking = true;
         facingRight = true;
     }
 
 
     public void update(Enemy_Square Enemy, int pixelsPerMeter, long fps) {
-        combine(Enemy);
-        setHealth(fps);
-        center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
-        if (isDead && isActive){
-            deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
-        } else if (!isDead && !isBlocked && isActive){
-            if (rolling){
-                angularVelocity = 60;
-                roll(pixelsPerMeter,fps);
-            } else {
-                jump(pixelsPerMeter,fps);
+        if (isActive){
+            combine(Enemy);
+            setHealth(fps);
+            center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
+            if (isDead){
+                deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
+            } else if (!isDead && !isBlocked && isActive){
+                if (rolling){
+                    angularVelocity = 60;
+                    roll(pixelsPerMeter,fps);
+                } else {
+                    jump(pixelsPerMeter,fps);
+                }
+            } else if (!isDead && isBlocked){
+                attackAnimation(pixelsPerMeter,fps);
             }
-        } else if (!isDead && isBlocked){
-            attackAnimation(pixelsPerMeter,fps);
-        } else if (isDead && !isActive){
-            reset();
+            setHealth(fps);
         }
-        setHealth(fps);
     }
 
 

@@ -29,7 +29,7 @@ public class Enemy_Circle extends Circle {
     public float angleL = 0;                            //angle to rotate line on circle
     public float angleT = 30;                           //angle to rotate triangles on canvas
     public float damage;                                //based number of circles that have combined together
-    public float health;                                //added in constructor
+    public float health = 30;                           //added in constructor
     public float radius;                                //circle radius (size/2)
     public float velocityX;                             //movement on x axis
     private float healthPool = 0;                       //amount of health to add over time, so shape does not suddenly get bigger
@@ -44,9 +44,9 @@ public class Enemy_Circle extends Circle {
     private final long TIME_BETWEEN_TICKS = 500;        //self explanatory == 0.5seconds
 
 
-    public Enemy_Circle(int x,int y, int health, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
-        this.health = health;
+    public Enemy_Circle(int x,int y, double healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
         this.pixelsPerMeter = pixelsPerMeter;
+        this.health *= healthFactor;
 
         isBlocked = false;
         damage = 100;
@@ -70,24 +70,24 @@ public class Enemy_Circle extends Circle {
 
         isBlocked = false;
         isDead = false;
-        isActive = true;
     }
 
 
     public void update(Enemy_Circle Enemy ,int pixelsPerMeter, long fps) {
-        combine(Enemy);
-
-        updateCenter();
-        setHealth(fps);
-        if (isDead && isActive){
-            deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
-        } else if (!isDead && !isBlocked && isActive){
-            setVelocityX();
-            roll(fps);
-        } else if (!isDead && isBlocked){
-            startTimer(pixelsPerMeter,fps);
-        } else if (isDead && !isActive){
-            reset();
+        if (isActive){
+            combine(Enemy);
+            updateCenter();
+            setHealth(fps);
+            if (isDead){
+                deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
+            } else if (!isDead && !isBlocked && isActive){
+                setVelocityX();
+                roll(fps);
+            } else if (!isDead && isBlocked){
+                startTimer(pixelsPerMeter,fps);
+            } else if (isDead && !isActive){
+                reset();
+            }
         }
     }
 

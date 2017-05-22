@@ -12,7 +12,7 @@ import android.graphics.PointF;
 public abstract class GameObject  {
 
     public float size;
-    public boolean isActive = true;
+    public boolean isActive;
     public PointF location = new PointF();
 }
 
