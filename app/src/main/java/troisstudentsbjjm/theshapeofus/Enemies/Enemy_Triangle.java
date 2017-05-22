@@ -59,6 +59,7 @@ public class Enemy_Triangle extends Triangle{
 
         deathAnimation = new DeathAnimation(pixelsPerMeter, location.y + pixelsPerMeter, omniGonPosX, omniGonPosY, 1);
         deathAnimation.setParticles(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), (float) (0.5*size));
+        deathAnimation.setColor(0,255,255);
 
         isBlocked = false;
         inPositionToAttack = false;
@@ -119,7 +120,7 @@ public class Enemy_Triangle extends Triangle{
 
     public void draw(Canvas canvas, Paint paint){
         if (isActive && !isDead){
-            paint.setColor(Color.argb(255,100,255,255));
+            paint.setColor(Color.argb(255,0,255,255));
             Path Triangle = new Path();
             Triangle.moveTo(A.x, A.y);
             Triangle.lineTo(B.x, B.y);

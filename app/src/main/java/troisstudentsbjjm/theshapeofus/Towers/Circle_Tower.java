@@ -31,11 +31,10 @@ public class Circle_Tower {
 
     private int pixelsPerMeter;
     private int range = 10;
-    private int damage = 1000;
+    private int damage = 10;
     private int bulletSpeed = 5;
     private final int CIRCLE_MAX_SIZE = 2;
     private float velocity = 0;
-    private float sizeFactor = 0;
     private final float CIRCLE_MIN_SIZE = (float) 0.2;
     private float circleGrowRate;
     private float circleShrinkRate;
@@ -47,7 +46,6 @@ public class Circle_Tower {
 
     private long fireTime;
     private long fireRate = 3000;
-    private long animationTimer;
     private final double GROW_TIME = 0.8;
     private final double SHRINK_TIME = 2.2;               //seconds
     private final long TIME_TO_GROW = 800;
@@ -225,14 +223,14 @@ public class Circle_Tower {
 
         if (!readyToFire){
             if (System.currentTimeMillis() <= fireTime + TIME_TO_GROW){
-                    animationTimer = System.currentTimeMillis();
                     if (circle.size < CIRCLE_MAX_SIZE){
+                        velocity -= (Math.PI/(60*2.75*fps));
                         circle.size += circleGrowRate/fps;
                     }
 
             } else if (System.currentTimeMillis() <= fireTime + TIME_TO_GROW + TIME_TO_SHRINK){
-                    animationTimer = System.currentTimeMillis();
                     circle.size -= circleShrinkRate/fps;
+                    velocity += (Math.PI/(60*fps));
                     if (circle.size <= CIRCLE_MIN_SIZE) {
                         circle.size = CIRCLE_MIN_SIZE;
                     }
@@ -247,24 +245,25 @@ public class Circle_Tower {
 
     private void rotateAccent(long fps){
 
-        velocity += (Math.PI/(60*fps));
+
         circleAccent.center.x = (float) (AccentXpos + (CIRCLE_MAX_SIZE*pixelsPerMeter*Math.sin(velocity/(0.1*circle.size))));
         circleAccent2.center.x = (float) (AccentXpos - (CIRCLE_MAX_SIZE*pixelsPerMeter*Math.sin(velocity/(0.1*circle.size))));
     }
 
 
     public void draw(Canvas canvas, Paint paint){
-
-            paint.setColor(Color.argb(255,255,255,255));
-            canvas.drawCircle(circle.center.x,circle.center.y,(float) (circle.size*0.5*pixelsPerMeter),paint);
-            Path Triangle = new Path();
-            Triangle.moveTo(triangle.A.x,triangle.A.y);
-            Triangle.lineTo(triangle.B.x,triangle.B.y);
-            Triangle.lineTo(triangle.C.x,triangle.C.y);
-            Triangle.close();
-            canvas.drawPath(Triangle,paint);
-            canvas.drawCircle(circleAccent.center.x,circleAccent.center.y,(float) (circleAccent.size*0.5*pixelsPerMeter),paint);
-            canvas.drawCircle(circleAccent2.center.x,circleAccent2.center.y,(float) (circleAccent2.size*0.5*pixelsPerMeter),paint);
+        paint.setColor(Color.argb(255,171,106,46));
+        Path Triangle = new Path();
+        Triangle.moveTo(triangle.A.x,triangle.A.y);
+        Triangle.lineTo(triangle.B.x,triangle.B.y);
+        Triangle.lineTo(triangle.C.x,triangle.C.y);
+        Triangle.close();
+        canvas.drawPath(Triangle,paint);
+        paint.setColor(Color.argb(255,255,255,(int)((255/CIRCLE_MAX_SIZE)*circle.size)));
+        canvas.drawCircle(circle.center.x,circle.center.y,(float) (circle.size*0.5*pixelsPerMeter),paint);
+        paint.setColor(Color.argb(255,255,255,255));
+        canvas.drawCircle(circleAccent.center.x,circleAccent.center.y,(float) (circleAccent.size*0.5*pixelsPerMeter),paint);
+        canvas.drawCircle(circleAccent2.center.x,circleAccent2.center.y,(float) (circleAccent2.size*0.5*pixelsPerMeter),paint);
         if (bulletFired){
             canvas.drawCircle(bullet.center.x,bullet.center.y,(float) (bullet.size*0.5*pixelsPerMeter),paint);
         }

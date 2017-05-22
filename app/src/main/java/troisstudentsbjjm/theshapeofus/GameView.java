@@ -183,7 +183,7 @@ public class GameView extends SurfaceView implements Runnable {
                 wave1.squares.get(i).update(wave1.squares.get(i + 1), vp.pixelsPerMeter, fps);
             }
             S_Tower.update(wave1.squares.get(i), fps);
-//            T_Tower.update(wave1.squares.get(i), fps);
+            T_Tower.update(wave1.squares.get(i), fps);
         }
         for (int i = 0; i < wave1.circles.size(); i++) {
             if (i + 1 == wave1.circles.size()) {
@@ -192,7 +192,7 @@ public class GameView extends SurfaceView implements Runnable {
                 wave1.circles.get(i).update(wave1.circles.get(i + 1), vp.pixelsPerMeter, fps);
             }
             S_Tower.update(wave1.circles.get(i), fps);
-//            T_Tower.update(wave1.circles.get(i), fps);
+            T_Tower.update(wave1.circles.get(i), fps);
         }
         for (int i = 0; i < wave1.triangles.size(); i++) {
 
@@ -202,7 +202,7 @@ public class GameView extends SurfaceView implements Runnable {
                 wave1.triangles.get(i).update(vp.pixelsPerMeter, fps);
             }
             S_Tower.update(wave1.triangles.get(i), fps);
-//            T_Tower.update(wave1.triangles.get(i), fps);
+            T_Tower.update(wave1.triangles.get(i), fps);
         }
 
         Log.d("Square tower","Square tower health:" + S_Tower.health);
@@ -235,6 +235,7 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setColor(Color.argb(255, 0, 0, 0));
             canvas.drawColor(Color.argb(255, 0, 0, 0));
             paint.setColor(Color.argb(255,255,255,255));
+
             paint.setTextSize(30);
             canvas.drawText("FPS:"+Avgfps,screenWidth/5,screenHeight/5,paint);
 
@@ -258,7 +259,7 @@ public class GameView extends SurfaceView implements Runnable {
 
             S_Tower.draw(canvas,paint);
 
-//            T_Tower.draw(canvas, paint);
+            T_Tower.draw(canvas, paint);
             C_Tower.draw(canvas, paint);
 //            E_Square.draw(canvas,paint);
 //            E_Square2.draw(canvas,paint);

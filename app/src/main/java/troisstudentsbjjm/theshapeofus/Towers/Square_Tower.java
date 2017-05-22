@@ -147,7 +147,7 @@ public class Square_Tower extends Square {
 
     public void draw(Canvas canvas, Paint paint){
         if (isActive){
-            paint.setColor(Color.argb(255,255,255,255));
+            paint.setColor(Color.argb(255,68,133,255));
             canvas.drawRect(hitBox,paint);
         }
     }

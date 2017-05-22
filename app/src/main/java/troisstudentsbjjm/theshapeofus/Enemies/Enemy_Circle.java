@@ -67,6 +67,7 @@ public class Enemy_Circle extends Circle {
 
         deathAnimation = new DeathAnimation(pixelsPerMeter, location.y + pixelsPerMeter, omniGonPosX, omniGonPosY, 3);
         deathAnimation.setParticles(center.x, center.y, size);
+        deathAnimation.setColor(255,0,0);
 
         isBlocked = false;
         isDead = false;
@@ -94,7 +95,7 @@ public class Enemy_Circle extends Circle {
 
     public void draw(Canvas canvas, Paint paint) {
         if (!isDead && isActive){
-            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setColor(Color.argb(255, 255, 0, 0));
             canvas.drawCircle(center.x, center.y, (float)(size*0.5*pixelsPerMeter), paint);
             if (!isBlocked){
                 drawLine(canvas,paint);

@@ -24,7 +24,7 @@ public class Triangle_Tower {
     public final int NUM_SPIKES = 4;
     public float spikeSize = (float) (0.25);
     public RectF hitbox;
-    private float damage = 600;
+    private float damage = 10;
     int pixelsPerMeter;
 
 
@@ -50,7 +50,7 @@ public class Triangle_Tower {
 
     public void draw(Canvas canvas, Paint paint){
 
-        paint.setColor(Color.argb(255,255,255,255));
+        paint.setColor(Color.argb(255,150,150,150));
 
         for (Triangle spike : spikes){
             Path Triangle = new Path();

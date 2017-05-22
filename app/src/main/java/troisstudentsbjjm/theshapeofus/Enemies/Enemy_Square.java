@@ -57,6 +57,7 @@ public class Enemy_Square extends Square{
 
         deathAnimation = new DeathAnimation(pixelsPerMeter, location.y + pixelsPerMeter, omniGonPosX, omniGonPosY, 2);
         deathAnimation.setParticles(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size);
+        deathAnimation.setColor(0,255,0);
 
         isBlocked = false;
         isDead = false;
@@ -225,7 +226,7 @@ public class Enemy_Square extends Square{
 
 
     public void draw(Canvas canvas, Paint paint){
-        paint.setColor(Color.argb(255,255,255,255));
+        paint.setColor(Color.argb(255,0,255,0));
         if (!isDead && isActive){
             if (rolling){
                 canvas.save();

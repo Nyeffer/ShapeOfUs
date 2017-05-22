@@ -29,6 +29,9 @@ public class DeathAnimation {
     public int explosiveForce;
     private int pixelsPerMeter;
     private int stopCounter = 0;
+    private int colorR;
+    private int colorG;
+    private int colorB;
     float maxY;
 
     private final long PARTICLE_REST_TIME = 3000;
@@ -102,6 +105,13 @@ public class DeathAnimation {
     }
 
 
+    public void setColor(int red, int green, int blue){
+        this.colorR = red;
+        this.colorG = green;
+        this.colorB = blue;
+    }
+
+
     private void moveToOmnigon(Circle particle, long fps){
         if (particle.center.y > (maxY - 3*pixelsPerMeter) && rising){
             particle.center.y += 2*((maxY - 3.1*pixelsPerMeter) - particle.center.y)/fps;
@@ -114,7 +124,7 @@ public class DeathAnimation {
 
 
     public void draw(Canvas canvas, Paint paint){
-        paint.setColor(Color.argb(255, 255, 255, 255));
+        paint.setColor(Color.argb(255, colorR, colorG, colorB));
         if (initialized){
             for (Circle particle : particles){
                 canvas.drawCircle(particle.center.x, particle.center.y, (float)(particle.size*0.5*pixelsPerMeter), paint);
