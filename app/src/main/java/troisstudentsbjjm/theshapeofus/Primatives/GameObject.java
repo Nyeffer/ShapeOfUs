@@ -9,9 +9,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 
+import troisstudentsbjjm.theshapeofus.Animation;
+
 public abstract class GameObject  {
 
     public float size;
+    private float height, width;
 
     public boolean isActive = true;
     public boolean isVisible = true;
@@ -28,6 +31,21 @@ public abstract class GameObject  {
 
     private boolean traversable = false;
 
+    // For animation
+    private Animation anim = null;
+    private boolean animated;
+    private int animFps;
+    private int animFrameCount;
+
+
+    public void setAnimated(Context context,int pixelsPerMeter, boolean animated) {
+        this.animated = animated;
+        this.anim = new Animation(context, getBitmapName(), getSize(), getSize(), animFps, animFrameCount, pixelsPerMeter);
+    }
+
+
+
+
     //boolean getters
     public boolean isMoves() {
         return moves;
@@ -35,6 +53,7 @@ public abstract class GameObject  {
     public boolean isTraversable() {
         return traversable;
     }
+    public boolean isAnimated() { return isAnimated();  }
     //getters
     public String getBitmapName() {return bitmapName;}
     public int getFacing() {
@@ -65,11 +84,17 @@ public abstract class GameObject  {
     public void setSize(float size) {
         this.size = size;
     }
+    public void setHeight(float height) {this.height = height;  }
+    public void setWidth(float width) { this.width = width; }
     public void setTraversable() {
         traversable = true;
     }
     public void setType(char type) {
         this.type = type;
     }
+    public void setAnimFps(int animFps) {   this.animFps = animFps; }
+    public void setAnimFrameCount(int animFrameCount) { this.animFrameCount = animFrameCount;   }
+
+
 }
 
