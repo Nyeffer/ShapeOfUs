@@ -7,7 +7,7 @@ import android.graphics.Path;
 import android.graphics.PointF;
 
 import java.util.ArrayList;
-import troisstudentsbjjm.theshapeofus.DeathAnimation;
+
 import troisstudentsbjjm.theshapeofus.Primatives.Circle;
 import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 
@@ -19,10 +19,11 @@ public class Enemy_Circle extends Circle {
     public ArrayList<Path> paths;                       //used for drawing triangles
 
     public PointF center;                               //bottom center point
-    public PointF spawnPoint;                           //reference to original position
+    public final PointF spawnPoint;                     //reference to original position
 
     private int pixelsPerMeter;                         //temporary (hopefully)
     private int tickCounter = 0;                        //counting ticks to detonation
+    public int value = 2;                               //how much money you get from killing it
     private final int NUM_TRIANGLES = 6;                //number of triangles
 
     public float angleL = 0;                            //angle to rotate line on circle

@@ -5,17 +5,12 @@ package troisstudentsbjjm.theshapeofus.Enemies;
 
 import android.graphics.Color;
 import android.graphics.Path;
-import android.graphics.Point;
 
 import android.graphics.PointF;
 
-import java.util.Random;
-
-import troisstudentsbjjm.theshapeofus.DeathAnimation;
 import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.util.Log;
 
 /**
  * Created by Jeffherson on 2017-05-15.
@@ -26,10 +21,11 @@ public class Enemy_Triangle extends Triangle{
     public DeathAnimation deathAnimation;               //when it goes to heaven
 
     public PointF center;                               //center point
-    public PointF spawnPoint;                           //reference to original position
     public PointF velocity;                             //velocity in meters/second
+    public final PointF spawnPoint;                     //reference to original position
 
     private int pixelsPerMeter;                         //temporary (hopefully)
+    public int value = 2;                               //how much money you get from killing it
 
     public float angleD = 0;                            //angle to rotate on canvas
     public float damage = 20;                           //kamikaze, after dealing damage triangle will die
@@ -123,11 +119,6 @@ public class Enemy_Triangle extends Triangle{
     }
 
 
-    private void jumpAndAttack(int pixelsPerMeter, long fps){
-
-    }
-
-
     private void reset(){
     }
 
@@ -153,26 +144,11 @@ public class Enemy_Triangle extends Triangle{
     }
 
 
-    private void setCenter(){
-        center.set((float) (A.x + 0.5*size*pixelsPerMeter), (float) (A.y + 0.33*size*pixelsPerMeter));
-    }
-
-
+    private void setCenter(){ center.set((float) (A.x + 0.5*size*pixelsPerMeter), (float) (A.y + 0.33*size*pixelsPerMeter)); }
     public void destroy(){
         isDead = true;
     }
     public void takeDamage(float damage){
         health -= damage;
     }
-
-    // Setter and Getter
-    public void setVelocity(PointF velocity) { this.velocity = velocity;   }
-    //public void setRotate(float rotate) { this.rotate = rotate; }
-    public void setDamage(int damage) { this.damage = damage;   }
-    public void setIsDead(boolean isDead) { this.isDead = isDead;   }
-
-
-    public PointF getVelocity() { return velocity;  }
-    //public float getRotate() {  return rotate;  }
-    public boolean getIsDead() { return isDead; }
 }

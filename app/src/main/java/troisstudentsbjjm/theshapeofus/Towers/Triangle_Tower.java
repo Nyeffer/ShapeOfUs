@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -25,7 +24,7 @@ public class Triangle_Tower {
     public final int NUM_SPIKES = 4;
     public float spikeSize = (float) (0.25);
     public RectF hitbox;
-    private float damage = 700;
+    private float damage = 30;
     int pixelsPerMeter;
 
 
@@ -80,7 +79,7 @@ public class Triangle_Tower {
                 if (Enemy.health <= 0) {
                     Enemy.destroy();
                 }
-                Enemy.updateSize();
+                Enemy.setSize();
             }
         }
     }

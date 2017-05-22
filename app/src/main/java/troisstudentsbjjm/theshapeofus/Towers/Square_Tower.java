@@ -70,7 +70,7 @@ public class Square_Tower extends Square {
     public void update(Enemy_Square Enemy, long fps) {
         checkTowerHealth(Enemy);
         if (Enemy.facingRight && isActive){
-            if (!Enemy.rolling && !Enemy.isBlocked){
+            if (!Enemy.rolling && !Enemy.isBlocked && Enemy.hitBox.bottom < location.y + pixelsPerMeter){
                 if ((Enemy.hitBox.right + Enemy.velocity.x) >= hitBox.left){
                     Enemy.location.x += (hitBox.left - Enemy.hitBox.right);
                     Enemy.velocity.x = 0;
@@ -88,6 +88,14 @@ public class Square_Tower extends Square {
             } else  if (Enemy.isBlocked && Enemy.attacking){
                 health -= Enemy.damage;
                 Enemy.attacking = false;
+            } else {
+                if (Enemy.hitBox.right > hitBox.left){
+                    if ( Enemy.location.x -(hitBox.left - Enemy.hitBox.right)/fps < hitBox.left){
+                        Enemy.location.x = (hitBox.left - (Enemy.size*pixelsPerMeter));
+                    } else {
+                        Enemy.location.x -= (hitBox.left - Enemy.hitBox.right)/fps;
+                    }
+                }
             }
         }
     }

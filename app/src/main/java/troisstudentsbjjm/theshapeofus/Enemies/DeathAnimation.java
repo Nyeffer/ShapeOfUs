@@ -1,4 +1,4 @@
-package troisstudentsbjjm.theshapeofus;
+package troisstudentsbjjm.theshapeofus.Enemies;
 
 import android.graphics.Canvas;
 import android.graphics.Color;

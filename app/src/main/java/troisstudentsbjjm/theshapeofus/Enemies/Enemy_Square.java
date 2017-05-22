@@ -4,7 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
-import troisstudentsbjjm.theshapeofus.DeathAnimation;
+
 import troisstudentsbjjm.theshapeofus.Primatives.Square;
 
 public class Enemy_Square extends Square{
@@ -13,10 +13,11 @@ public class Enemy_Square extends Square{
 
     public PointF center;                               //bottom center point
     public PointF pivot;                                //position used to rotate square on canvas
-    public PointF spawnPoint;                           //reference to original position
     public PointF velocity;                             //velocity in meters/second
+    public final PointF spawnPoint;                     //reference to original position
 
     private int pixelsPerMeter;                         //temporary (hopefully)
+    public int value = 2;                               //how much money you get from killing it
 
     public float angleD = 0;                            //angle to rotate square on canvas
     public float damage;                                //based on size, bigger == tons of damage
@@ -44,7 +45,7 @@ public class Enemy_Square extends Square{
 
         location.set(x,y);
 
-        updateSize();
+        setSize();
         setHitBox(x,y,pixelsPerMeter);
         setRolling();
 
@@ -66,7 +67,7 @@ public class Enemy_Square extends Square{
 
     public void update(Enemy_Square Enemy, int pixelsPerMeter, long fps) {
         combine(Enemy);
-        updateHealth(fps);
+        setHealth(fps);
         center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
         if (isDead && isActive){
             deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
@@ -82,6 +83,7 @@ public class Enemy_Square extends Square{
         } else if (isDead && !isActive){
             reset();
         }
+        setHealth(fps);
     }
 
 
@@ -110,25 +112,27 @@ public class Enemy_Square extends Square{
 
 
     private void combine(Enemy_Square Enemy){
-        if (hitBox.contains(Enemy.center.x, Enemy.center.y)){
-            if (Enemy.health <= health){
-                healthPool += Enemy.health;
-                Enemy.health = 0;
-                Enemy.isActive = false;
-            } else if(Enemy.health > health){
-                Enemy.healthPool += health;
-                health = 0;
-                isActive = false;
+        if (Enemy != null){
+            if (hitBox.contains(Enemy.center.x, Enemy.center.y)){
+                if (Enemy.health <= health){
+                    healthPool += Enemy.health;
+                    Enemy.health = 0;
+                    Enemy.isActive = false;
+                } else if(Enemy.health > health){
+                    Enemy.healthPool += health;
+                    health = 0;
+                    isActive = false;
+                }
             }
         }
     }
 
 
     private void attackAnimation(int pixelsPerMeter, long fps){
-        updateSize();
+        setSize();
         if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + jumpStop){
-            if (spawnPoint.y <= location.y){
-                velocity.y = MAX_JUMP_VELOCITY*size;
+            if (location.y >= spawnPoint.y){
+                velocity.y = (float) (MAX_JUMP_VELOCITY*0.5*size);
                 location.y = spawnPoint.y;
                 jumpStop = System.currentTimeMillis();
                 if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + attackTime){
@@ -138,10 +142,8 @@ public class Enemy_Square extends Square{
             }
             if (location.y + velocity.y/fps >= spawnPoint.y){
                 location.y = spawnPoint.y;
-                setPivot();
-                setRolling();
             } else {
-                location.y += (int)(velocity.y/fps);
+                location.y += velocity.y/fps;
                 velocity.y -= GRAVITY*2;
             }
             location.x += velocity.x;
@@ -159,7 +161,7 @@ public class Enemy_Square extends Square{
         if (System.currentTimeMillis() >= TIME_BETWEEN_JUMPS + jumpStop){
             if (spawnPoint.y <= location.y){
                 velocity.set(2,MAX_JUMP_VELOCITY*size);
-                location.y = spawnPoint.y;
+                location.y = spawnPoint.y + 2;
                 jumpStop = System.currentTimeMillis();
             }
             if (location.y + velocity.y/fps >= spawnPoint.y){
@@ -167,7 +169,7 @@ public class Enemy_Square extends Square{
                 setPivot();
                 setRolling();
             } else {
-                location.y += (int)(velocity.y/fps);
+                location.y += velocity.y/fps;
                 velocity.y -= GRAVITY;
             }
             location.x += velocity.x;
@@ -175,37 +177,27 @@ public class Enemy_Square extends Square{
     }
 
 
-    public void updateSize(){
-        if (!isBlocked){
-            if (health * 0.025 >= 0.5){
-                size = ((float) (health * 0.025));
-                damage = health/10;
-                if (size > 2){
-                    size = 2;
-                }
-            } else {
-                setSize((float) 0.5);
-                damage = 1;
+    public void setSize(){
+        if (health * 0.025 >= 0.5){
+            size = ((float) (health * 0.025));
+            damage = health/10;
+            if (size > 2){
+                size = 2;
             }
         } else {
-            if (hitBox.right - (hitBox.left -1) <= (health * 0.025)*pixelsPerMeter && hitBox.right - (hitBox.left -1) <= 4*pixelsPerMeter){
-                location.x--;
-                size += 0.02;
-            } else if (hitBox.right - (hitBox.left +1) >= (health * 0.025)*pixelsPerMeter && hitBox.right - (hitBox.left +1) >= 0.5*pixelsPerMeter){
-                location.x++;
-                size -= 0.02;
-            }
+            size = (float) 0.5;
+            damage = 1;
         }
     }
 
 
-    private void updateHealth(long fps){
+    private void setHealth(long fps){
         health += healthPool/fps;
         healthPool -= healthPool/fps;
         if (healthPool - healthPool/fps < 0){
             healthPool = 0;
         }
-        updateSize();
+        setSize();
         setHitBox(location.x,location.y,pixelsPerMeter);
     }
 
@@ -222,12 +214,10 @@ public class Enemy_Square extends Square{
     public void Move(int pixelsPerMeter){
         if (facingRight){
             location.x += size*pixelsPerMeter;
-
         } else {
             location.x -= size*pixelsPerMeter;
-
         }
-        updateSize();
+        setSize();
         setHitBox(location.x,location.y,pixelsPerMeter);
         setRolling();
     }
