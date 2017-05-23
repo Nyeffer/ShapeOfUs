@@ -36,6 +36,7 @@ public class Enemy_Square extends Square{
 
     private long jumpStop = 0;                          //used as timer to implement TIME_BETWEEN_JUMPS
     private long attackTime = 0;                        //used as timer to implement TIME_BETWEEN_ATTACKS
+    private long timeHit = 0;
     private final long TIME_BETWEEN_ATTACKS = 2000;     //self explanatory == 2seconds
     private final long TIME_BETWEEN_JUMPS = 500;        //self explanatory == 0.5seconds
 
@@ -83,7 +84,6 @@ public class Enemy_Square extends Square{
             } else if (!isDead && isBlocked){
                 attackAnimation(pixelsPerMeter,fps);
             }
-            setHealth(fps);
         }
     }
 
@@ -130,12 +130,12 @@ public class Enemy_Square extends Square{
 
 
     private void attackAnimation(int pixelsPerMeter, long fps){
-        setSize();
         if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + jumpStop){
             if (location.y >= spawnPoint.y){
                 velocity.y = (float) (MAX_JUMP_VELOCITY*0.5*size);
                 location.y = spawnPoint.y;
                 jumpStop = System.currentTimeMillis();
+                setRolling();
                 if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + attackTime){
                     attacking = true;
                     attackTime = System.currentTimeMillis();
@@ -150,7 +150,6 @@ public class Enemy_Square extends Square{
             location.x += velocity.x;
             center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
         }
-        setHitBox(location.x,location.y,pixelsPerMeter);
     }
 
 
@@ -161,9 +160,9 @@ public class Enemy_Square extends Square{
 
     private void jump(int pixelsPerMeter, long fps){
         if (System.currentTimeMillis() >= TIME_BETWEEN_JUMPS + jumpStop){
-            if (spawnPoint.y <= location.y){
-                velocity.set(2,MAX_JUMP_VELOCITY*size);
-                location.y = spawnPoint.y + 2;
+            if (spawnPoint.y == location.y){
+                velocity.set(3,MAX_JUMP_VELOCITY*size);
+                location.y = spawnPoint.y;
                 jumpStop = System.currentTimeMillis();
             }
             if (location.y + velocity.y/fps >= spawnPoint.y){
@@ -180,7 +179,7 @@ public class Enemy_Square extends Square{
 
 
     public void setSize(){
-        if (health * 0.025 >= 0.5){
+        if (health * 0.025 > 0.5){
             size = ((float) (health * 0.025));
             damage = health/10;
             if (size > 2){
@@ -199,6 +198,10 @@ public class Enemy_Square extends Square{
         if (healthPool - healthPool/fps < 0){
             healthPool = 0;
         }
+        if (health <= 0){
+            destroy();
+        }
+        checkIfDamaged();
         setSize();
         setHitBox(location.x,location.y,pixelsPerMeter);
     }
@@ -254,6 +257,17 @@ public class Enemy_Square extends Square{
             rolling = false;
         } else {
             rolling = true;
+        }
+    }
+
+
+    private void checkIfDamaged(){
+        if (hit){
+            timeHit = System.currentTimeMillis();
+            hit = false;
+        } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 500){
+            takeDamage(10);
+            timeHit = 0;
         }
     }
 

@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -31,7 +32,8 @@ public class Circle_Tower {
 
     private int pixelsPerMeter;
     private int range = 10;
-    private int damage = 10;
+    private int distToClosestEnemy;
+//    private int damage = 10;
     private int bulletSpeed = 5;
     private final int CIRCLE_MAX_SIZE = 2;
     private float velocity = 0;
@@ -72,6 +74,7 @@ public class Circle_Tower {
         bullet.center = new PointF();
         targetingRange = new RectF((float) (x + 0.5*pixelsPerMeter) - range*pixelsPerMeter, y-2*pixelsPerMeter, (float) (x + 0.5*pixelsPerMeter) + range*pixelsPerMeter, y+2*pixelsPerMeter);
         initShapes(pixelsPerMeter);
+        distToClosestEnemy = (range*pixelsPerMeter);
     }
 
 
@@ -94,6 +97,7 @@ public class Circle_Tower {
         updateCircleSize(fps);
         rotateAccent(fps);
         for (Enemy_Square Enemy : squares) {
+            setDistToClosestEnemy(Enemy.center.x);
             if (!Enemy.rolling) {
                 if (targetingRange.contains(Enemy.center.x, Enemy.center.y) && !Enemy.isDead) {
                     fire(Enemy, fps);
@@ -107,35 +111,30 @@ public class Circle_Tower {
                     }
                 }
             }
+
         }
     }
 
 
     private void fire(Enemy_Square Enemy, long fps){
 
-        if ((Enemy.hitBox.contains(bullet.center.x, bullet.center.y) || System.currentTimeMillis() >= fireTime + 1000/bulletSpeed)&& bulletFired ) {
-            Enemy.takeDamage(damage);
-            if (Enemy.health <= 0) {
-                Enemy.destroy();
-            }
-            bullet.center.set(circle.center.x, circle.center.y);
-            bulletFired = false;
-        } else if (bulletFired) {
-            bullet.center.x -= ((distance.x * bulletSpeed) / fps);
-            bullet.center.y -= ((distance.y * bulletSpeed) / fps);
-        } else if (readyToFire && !Enemy.isDead) {
-            if (System.currentTimeMillis() >= fireTime + fireRate) {
-
+        if (readyToFire) {
+            if (Math.abs(circle.center.x - Enemy.center.x) <= distToClosestEnemy) {
                 bulletFired = true;
+                Enemy.hit = true;
                 charging = true;
                 readyToFire = false;
                 fireTime = System.currentTimeMillis();
-                distance.x = bullet.center.x - (Enemy.center.x + Enemy.velocity.x*fps);
+                distance.x = bullet.center.x - (Enemy.center.x);
                 distance.y = bullet.center.y - (float) (Enemy.center.y - 0.5 * Enemy.size * pixelsPerMeter);
             }
-        } else if (System.currentTimeMillis() >= fireTime + fireRate){
-            bulletFired = false;
-            readyToFire = true;
+        } else if (bulletFired) {
+            bullet.center.x -= ((distance.x * bulletSpeed) / fps);
+            bullet.center.y -= ((distance.y * bulletSpeed) / fps);
+            if (System.currentTimeMillis() >= fireTime + 1000/bulletSpeed){
+                bulletFired = false;
+                bullet.center.set(circle.center.x, circle.center.y);
+            }
         }
     }
 
@@ -144,8 +143,11 @@ public class Circle_Tower {
         updateCircleSize(fps);
         rotateAccent(fps);
         for (Enemy_Circle Enemy : circles) {
-            if (targetingRange.contains(Enemy.center.x, Enemy.center.y)) {
-                fire(Enemy, fps);
+                if (targetingRange.contains(Enemy.center.x, Enemy.center.y) && !Enemy.isDead) {
+                    setDistToClosestEnemy(Enemy.center.x);
+                    if (Math.abs(circle.center.x - Enemy.center.x) <= distToClosestEnemy) {
+                    fire(Enemy, fps);
+                }
             }
         }
     }
@@ -153,30 +155,24 @@ public class Circle_Tower {
 
     private void fire(Enemy_Circle Enemy, long fps){
 
-            if ((bullet.center.x <= (Enemy.center.x+ Enemy.radius*pixelsPerMeter) && bullet.center.x >= (Enemy.center.x - Enemy.radius*pixelsPerMeter) && bullet.center.y >= (Enemy.center.y - Enemy.radius*pixelsPerMeter)||System.currentTimeMillis() >= fireTime + 1000/bulletSpeed) && bulletFired) {
-                Enemy.takeDamage(damage);
-                if (Enemy.health <= 0) {
-                    Enemy.destroy();
-                }
-                bullet.center.set(circle.center.x, circle.center.y);
-                bulletFired = false;
-            } else if (bulletFired) {
-                bullet.center.x -= ((distance.x * bulletSpeed) / fps);
-                bullet.center.y -= ((distance.y * bulletSpeed) / fps);
-            } else if (readyToFire && !Enemy.isDead) {
-                if (System.currentTimeMillis() >= fireTime + fireRate) {
-                    bulletFired = true;
-                    charging = true;
-                    readyToFire = false;
-                    fireTime = System.currentTimeMillis();
-                    distance.x = bullet.center.x - (Enemy.center.x+ Enemy.velocityX);
-                    distance.y = bullet.center.y - Enemy.center.y;
-                }
-            } else if (System.currentTimeMillis() >= fireTime + fireRate){
-                bulletFired = false;
-                readyToFire = true;
+        if (readyToFire) {
+            if (Math.abs(circle.center.x - Enemy.center.x) <= distToClosestEnemy) {
+                bulletFired = true;
+                Enemy.hit = true;
+                charging = true;
+                readyToFire = false;
+                fireTime = System.currentTimeMillis();
+                distance.x = bullet.center.x - Enemy.center.x;
+                distance.y = bullet.center.y - Enemy.center.y;
             }
-
+        } else if (bulletFired) {
+            bullet.center.x -= ((distance.x * bulletSpeed) / fps);
+            bullet.center.y -= ((distance.y * bulletSpeed) / fps);
+            if (System.currentTimeMillis() >= fireTime + 1000/bulletSpeed){
+                bulletFired = false;
+                bullet.center.set(circle.center.x, circle.center.y);
+            }
+        }
     }
 
 
@@ -185,7 +181,11 @@ public class Circle_Tower {
         rotateAccent(fps);
         for (Enemy_Triangle Enemy : triangles) {
             if (targetingRange.contains(Enemy.center.x, Enemy.center.y) && !Enemy.isDead) {
-                fire(Enemy, fps);
+                setDistToClosestEnemy(Enemy.center.x);
+                if (Math.abs(circle.center.x - Enemy.center.x) <= distToClosestEnemy) {
+                    fire(Enemy, fps);
+
+                }
             }
         }
     }
@@ -193,24 +193,22 @@ public class Circle_Tower {
 
     private void fire(Enemy_Triangle Enemy, long fps){
 
-        if (bulletFired && (System.currentTimeMillis() >= fireTime + 1000/bulletSpeed || Enemy.contains((int)bullet.center.x,(int)bullet.center.y))) {
-            Enemy.takeDamage(damage);
-            if (Enemy.health <= 0) {
-                Enemy.destroy();
-            }
-            bullet.center.set(circle.center.x, circle.center.y);
-            bulletFired = false;
-        } else if (bulletFired) {
-            bullet.center.x -= ((distance.x * bulletSpeed) / fps);
-            bullet.center.y -= ((distance.y * bulletSpeed) / fps);
-        } else if (readyToFire && !Enemy.isDead) {
-            if (System.currentTimeMillis() >= fireTime + fireRate){
+        if (readyToFire) {
+            if (Math.abs(circle.center.x - Enemy.center.x) <= distToClosestEnemy) {
                 bulletFired = true;
-                readyToFire = false;
+                Enemy.hit = true;
                 charging = true;
+                readyToFire = false;
                 fireTime = System.currentTimeMillis();
                 distance.x = bullet.center.x - Enemy.center.x;
                 distance.y = bullet.center.y - Enemy.center.y;
+            }
+        } else if (bulletFired) {
+            bullet.center.x -= (bulletSpeed*(distance.x / fps));
+            bullet.center.y -= (bulletSpeed*(distance.y / fps));
+            if (System.currentTimeMillis() >= fireTime + 1000/bulletSpeed){
+                bulletFired = false;
+                bullet.center.set(circle.center.x, circle.center.y);
             }
         }
     }
@@ -226,15 +224,17 @@ public class Circle_Tower {
                     if (circle.size < CIRCLE_MAX_SIZE){
                         velocity -= (Math.PI/(60*2.75*fps));
                         circle.size += circleGrowRate/fps;
+                    } else if (velocity > 0){
+                        velocity -= Math.PI/180;
+                    } else {
+                        velocity += Math.PI/180;
                     }
-
             } else if (System.currentTimeMillis() <= fireTime + TIME_TO_GROW + TIME_TO_SHRINK){
                     circle.size -= circleShrinkRate/fps;
                     velocity += (Math.PI/(60*fps));
                     if (circle.size <= CIRCLE_MIN_SIZE) {
                         circle.size = CIRCLE_MIN_SIZE;
                     }
-
             } else if (System.currentTimeMillis() >= fireTime + TIME_TO_GROW + TIME_TO_SHRINK){
                 readyToFire = true;
             }
@@ -242,17 +242,20 @@ public class Circle_Tower {
     }
 
 
-
     private void rotateAccent(long fps){
-
-
+        if (readyToFire && !bulletFired){
+            velocity += Math.PI/180;
+        }
         circleAccent.center.x = (float) (AccentXpos + (CIRCLE_MAX_SIZE*pixelsPerMeter*Math.sin(velocity/(0.1*circle.size))));
         circleAccent2.center.x = (float) (AccentXpos - (CIRCLE_MAX_SIZE*pixelsPerMeter*Math.sin(velocity/(0.1*circle.size))));
     }
 
 
     public void draw(Canvas canvas, Paint paint){
-        paint.setColor(Color.argb(255,171,106,46));
+        if (bulletFired){
+            canvas.drawCircle(bullet.center.x,bullet.center.y,(float) (bullet.size*0.5*pixelsPerMeter),paint);
+        }
+        paint.setColor(Color.argb(255,128,95,68));
         Path Triangle = new Path();
         Triangle.moveTo(triangle.A.x,triangle.A.y);
         Triangle.lineTo(triangle.B.x,triangle.B.y);
@@ -264,8 +267,14 @@ public class Circle_Tower {
         paint.setColor(Color.argb(255,255,255,255));
         canvas.drawCircle(circleAccent.center.x,circleAccent.center.y,(float) (circleAccent.size*0.5*pixelsPerMeter),paint);
         canvas.drawCircle(circleAccent2.center.x,circleAccent2.center.y,(float) (circleAccent2.size*0.5*pixelsPerMeter),paint);
-        if (bulletFired){
-            canvas.drawCircle(bullet.center.x,bullet.center.y,(float) (bullet.size*0.5*pixelsPerMeter),paint);
+
+    }
+
+
+    private void setDistToClosestEnemy(float x){
+        if ( Math.abs(circle.center.x - x) < distToClosestEnemy || System.currentTimeMillis() > fireTime + fireRate + 1000){
+            distToClosestEnemy = (int)Math.abs(circle.center.x - x) + 2;
+            Log.d("dist to enemy", "setDistToClosestEnemy: "+distToClosestEnemy);
         }
     }
 }

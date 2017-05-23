@@ -35,11 +35,14 @@ public class Enemy_Triangle extends Triangle{
 
     public boolean attacking;                           //used to deal damage to tower
     public boolean facingRight;                         //coming from the left(facingRight) or the right(!facingRight)
+    public boolean hit;
     public boolean inPositionToAttack;                  //self explanatory
     public boolean isBlocked;                           //if not blocked...move, if blocked... attack.
     public boolean isDead;                              //this will be used to initialize our death animation
 
     private long jumpStop = 0;                          //used as timer to implement TIME_BETWEEN_JUMPS
+    private long timeHit = 0;
+    private long attackTime = 0;
     private final long TIME_BETWEEN_JUMPS = 250;        //self explanatory == 0.5seconds
     private final double TIME_TO_ROTATE = 0.4;          //how long it will take triangle to rotate
 
@@ -71,7 +74,8 @@ public class Enemy_Triangle extends Triangle{
 
     public void jump(long fps) {
         if (System.currentTimeMillis() >= TIME_BETWEEN_JUMPS + jumpStop){
-            if (location.y >= spawnPoint.y){
+            angleD = 0;
+            if (location.y == spawnPoint.y){
                 location.y = spawnPoint.y;
                 jumpStop = System.currentTimeMillis();
                 velocity.y = MAX_JUMP_VELOCITY;
@@ -90,6 +94,7 @@ public class Enemy_Triangle extends Triangle{
 
     public void update(int pixelsPerMeter, long fps) {
         if (isActive){
+            checkIfDamaged();
             setPoints(location.x,location.y,pixelsPerMeter);
             setCenter();
             if (isDead){
@@ -109,11 +114,15 @@ public class Enemy_Triangle extends Triangle{
         } else if (angleD <= 135){
             angleD += 135/(TIME_TO_ROTATE*fps);
             if (angleD >= 135){
+                attackTime = System.currentTimeMillis();
                 attacking = true;
             }
         } else if (attacking){
             location.y += (8*pixelsPerMeter)/fps;
             location.x += (4*pixelsPerMeter)/fps;
+            if (System.currentTimeMillis() >= attackTime + 1000 && !isDead){
+                destroy();
+            }
         }
     }
 
@@ -136,6 +145,20 @@ public class Enemy_Triangle extends Triangle{
             }
         } else if (isDead && isActive){
             deathAnimation.draw(canvas, paint);
+        }
+    }
+
+
+    private void checkIfDamaged(){
+        if (hit){
+            timeHit = System.currentTimeMillis();
+            hit = false;
+        } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 500){
+            takeDamage(10);
+            timeHit = 0;
+        }
+        if (health <= 0){
+            destroy();
         }
     }
 

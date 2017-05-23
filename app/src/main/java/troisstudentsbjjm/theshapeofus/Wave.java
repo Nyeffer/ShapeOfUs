@@ -71,4 +71,9 @@ public class Wave {
             }
         }
     }
+
+
+    public void update(){
+
+    }
 }

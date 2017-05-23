@@ -37,9 +37,11 @@ public class Enemy_Circle extends Circle {
     public boolean readyToExplode;                      //used to deal damage to tower
     public boolean combined;                            //used to delay timer if circles are combining;
     public boolean facingRight;                         //coming from the left(facingRight) or the right(!facingRight)
+    public boolean hit;
     public boolean isBlocked;                           //if not blocked...move, if blocked... attack.
     public boolean isDead;                              //this will be used to initialize our death animation
 
+    private long timeHit = 0;
     private long tickStartTime = 0;                     //used as timer to implement TIME_BETWEEN_TICKS
     private final long TIME_BETWEEN_TICKS = 500;        //self explanatory == 0.5seconds
 
@@ -124,7 +126,7 @@ public class Enemy_Circle extends Circle {
 
     private void combine(Enemy_Circle Enemy){
         if (Enemy != null){
-            if (!Enemy.isDead && Enemy.isActive && !isDead && isActive){
+            if (!Enemy.isDead && Enemy.isActive && !isDead){
                 if (Enemy.center.x < center.x + 0.5*size*pixelsPerMeter && Enemy.center.x > center.x - 0.5*size*pixelsPerMeter){
                     if (Enemy.health <= health){
                         healthPool += Enemy.health;
@@ -198,6 +200,8 @@ public class Enemy_Circle extends Circle {
             }
             if (tickCounter == 7){
                 readyToExplode = true;
+            } else if (tickCounter > 7){
+                destroy();
             }
         }
     }
@@ -210,10 +214,14 @@ public class Enemy_Circle extends Circle {
 
 
     private void setHealth(long fps){
+        checkIfDamaged();
         health += healthPool/fps;
         healthPool -= healthPool/fps;
         if (healthPool - healthPool/fps < 0){
             healthPool = 0;
+        }
+        if (health <= 0){
+            destroy();
         }
         setSize();
     }
@@ -272,5 +280,16 @@ public class Enemy_Circle extends Circle {
     public void destroy(){
         isDead = true;
         velocityX = 0;
+    }
+
+
+    private void checkIfDamaged(){
+        if (hit){
+            timeHit = System.currentTimeMillis();
+            hit = false;
+        } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 500){
+            takeDamage(10);
+            timeHit = 0;
+        }
     }
 }

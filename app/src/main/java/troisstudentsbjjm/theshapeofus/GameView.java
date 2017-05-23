@@ -175,6 +175,9 @@ public class GameView extends SurfaceView implements Runnable {
         C_Tower.update_S(wave1.squares,fps);
         C_Tower.update_C(wave1.circles,fps);
         C_Tower.update_T(wave1.triangles,fps);
+        S_Tower.update_S(wave1.squares, fps);
+        S_Tower.update_C(wave1.circles, fps);
+        S_Tower.update_T(wave1.triangles, fps);
 
         for (int i = 0; i < wave1.squares.size(); i++) {
             if (i + 1 == wave1.squares.size()) {
@@ -182,7 +185,6 @@ public class GameView extends SurfaceView implements Runnable {
             } else {
                 wave1.squares.get(i).update(wave1.squares.get(i + 1), vp.pixelsPerMeter, fps);
             }
-            S_Tower.update(wave1.squares.get(i), fps);
             T_Tower.update(wave1.squares.get(i), fps);
         }
         for (int i = 0; i < wave1.circles.size(); i++) {
@@ -191,7 +193,6 @@ public class GameView extends SurfaceView implements Runnable {
             } else {
                 wave1.circles.get(i).update(wave1.circles.get(i + 1), vp.pixelsPerMeter, fps);
             }
-            S_Tower.update(wave1.circles.get(i), fps);
             T_Tower.update(wave1.circles.get(i), fps);
         }
         for (int i = 0; i < wave1.triangles.size(); i++) {
@@ -201,11 +202,9 @@ public class GameView extends SurfaceView implements Runnable {
             } else {
                 wave1.triangles.get(i).update(vp.pixelsPerMeter, fps);
             }
-            S_Tower.update(wave1.triangles.get(i), fps);
             T_Tower.update(wave1.triangles.get(i), fps);
         }
 
-        Log.d("Square tower","Square tower health:" + S_Tower.health);
 //        E_Square.update(E_Square2,vp.pixelsPerMeter,fps);
 //        E_Square2.update(E_Square,vp.pixelsPerMeter,fps);
 //        E_Triangle.update(vp.pixelsPerMeter,fps,gravity);
@@ -239,7 +238,6 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setTextSize(30);
             canvas.drawText("FPS:"+Avgfps,screenWidth/5,screenHeight/5,paint);
 
-            canvas.drawRect(terrain,paint);
 
             if (wave1.squares.size() != 0){
                 for (int i = 0; i < wave1.squares.size(); i++){
@@ -267,6 +265,8 @@ public class GameView extends SurfaceView implements Runnable {
 //            E_Circle2.draw(canvas,paint);
 //            E_Triangle.draw(canvas, paint);
 
+            paint.setColor(Color.argb(255,99,74,51));
+            canvas.drawRect(terrain,paint);
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
