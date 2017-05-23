@@ -51,8 +51,7 @@ public class Enemy_Circle extends Circle {
         this.health *= healthFactor;
 
         isBlocked = false;
-        damage = 100;
-
+        damage = 20;
 
         triangles = new ArrayList<>();
         paths = new ArrayList<>();
@@ -287,8 +286,8 @@ public class Enemy_Circle extends Circle {
         if (hit){
             timeHit = System.currentTimeMillis();
             hit = false;
-        } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 500){
-            takeDamage(10);
+        } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 200){
+            takeDamage(100);
             timeHit = 0;
         }
     }

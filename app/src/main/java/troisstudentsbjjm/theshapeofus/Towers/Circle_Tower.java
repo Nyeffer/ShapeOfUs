@@ -93,6 +93,13 @@ public class Circle_Tower {
     }
 
 
+    public void update(ArrayList<Enemy_Circle> C_Enemies, ArrayList<Enemy_Square> S_Enemies, ArrayList<Enemy_Triangle> T_Enemies, long fps){
+        update_C(C_Enemies, fps);
+        update_S(S_Enemies, fps);
+        update_T(T_Enemies, fps);
+    }
+
+
     public void update_S(ArrayList<Enemy_Square> squares, long fps){
         updateCircleSize(fps);
         rotateAccent(fps);
@@ -252,9 +259,7 @@ public class Circle_Tower {
 
 
     public void draw(Canvas canvas, Paint paint){
-        if (bulletFired){
-            canvas.drawCircle(bullet.center.x,bullet.center.y,(float) (bullet.size*0.5*pixelsPerMeter),paint);
-        }
+
         paint.setColor(Color.argb(255,128,95,68));
         Path Triangle = new Path();
         Triangle.moveTo(triangle.A.x,triangle.A.y);
@@ -267,14 +272,15 @@ public class Circle_Tower {
         paint.setColor(Color.argb(255,255,255,255));
         canvas.drawCircle(circleAccent.center.x,circleAccent.center.y,(float) (circleAccent.size*0.5*pixelsPerMeter),paint);
         canvas.drawCircle(circleAccent2.center.x,circleAccent2.center.y,(float) (circleAccent2.size*0.5*pixelsPerMeter),paint);
-
+        if (bulletFired){
+            canvas.drawCircle(bullet.center.x,bullet.center.y,(float) (bullet.size*0.5*pixelsPerMeter),paint);
+        }
     }
 
 
     private void setDistToClosestEnemy(float x){
         if ( Math.abs(circle.center.x - x) < distToClosestEnemy || System.currentTimeMillis() > fireTime + fireRate + 1000){
             distToClosestEnemy = (int)Math.abs(circle.center.x - x) + 2;
-            Log.d("dist to enemy", "setDistToClosestEnemy: "+distToClosestEnemy);
         }
     }
 }

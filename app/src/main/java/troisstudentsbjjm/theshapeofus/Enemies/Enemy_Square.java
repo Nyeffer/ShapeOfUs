@@ -265,8 +265,8 @@ public class Enemy_Square extends Square{
         if (hit){
             timeHit = System.currentTimeMillis();
             hit = false;
-        } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 500){
-            takeDamage(10);
+        } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 200){
+            takeDamage(100);
             timeHit = 0;
         }
     }

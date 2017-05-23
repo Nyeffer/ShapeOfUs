@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 
+import java.util.AbstractCollection;
 import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
@@ -28,8 +29,15 @@ public class Square_Tower extends Square {
     }
 
 
-    public void update_C(ArrayList<Enemy_Circle> Enemys, long fps) {
-        for (Enemy_Circle Enemy : Enemys){
+    public void update(ArrayList<Enemy_Circle> C_Enemies, ArrayList<Enemy_Square> S_Enemies, ArrayList<Enemy_Triangle> T_Enemies, long fps) {
+        update_C(C_Enemies,fps);
+        update_S(S_Enemies,fps);
+        update_T(T_Enemies,fps);
+    }
+
+
+    private void update_C(ArrayList<Enemy_Circle> C_Enemies, long fps) {
+        for (Enemy_Circle Enemy : C_Enemies){
             checkTowerHealth(Enemy);
             if (Enemy.facingRight && isActive){
                 if (!Enemy.isBlocked){
@@ -41,7 +49,6 @@ public class Square_Tower extends Square {
                 } else  if (Enemy.isBlocked && Enemy.isDead && !Enemy.readyToExplode){
                     health -= Enemy.damage*0.5;
                     Enemy.isBlocked = false;
-                    Enemy.isActive = false;
                 } else if (Enemy.isBlocked && !Enemy.isDead && Enemy.readyToExplode){
                     health -= Enemy.damage;
                     Enemy.destroy();
@@ -69,33 +76,33 @@ public class Square_Tower extends Square {
     }
 
 
-    public void update_S(ArrayList<Enemy_Square> Enemys, long fps) {
-        for (Enemy_Square Enemy : Enemys){
+    private void update_S(ArrayList<Enemy_Square> S_Enemies, long fps) {
+        for (Enemy_Square Enemy : S_Enemies) {
             checkTowerHealth(Enemy);
-            if (Enemy.facingRight && isActive){
-                if (!Enemy.rolling && !Enemy.isBlocked && Enemy.hitBox.bottom < location.y + pixelsPerMeter){
-                    if ((Enemy.hitBox.right + Enemy.velocity.x) >= hitBox.left){
+            if (Enemy.facingRight && isActive) {
+                if (!Enemy.rolling && !Enemy.isBlocked && Enemy.hitBox.bottom < location.y + pixelsPerMeter) {
+                    if ((Enemy.hitBox.right + Enemy.velocity.x) >= hitBox.left) {
                         Enemy.location.x += (hitBox.left - Enemy.hitBox.right);
                         Enemy.velocity.x = 0;
-                        if (Enemy.location.y + Enemy.velocity.y/fps >= Enemy.spawnPoint.y){
+                        if (Enemy.location.y + Enemy.velocity.y / fps >= Enemy.spawnPoint.y) {
                             Enemy.location.y = Enemy.spawnPoint.y;
                             Enemy.isBlocked = true;
                             Enemy.velocity.y = 0;
                         }
                     }
-                } else if (Enemy.rolling && !Enemy.isBlocked){
-                    if ((Enemy.hitBox.right + Enemy.size*pixelsPerMeter) >= hitBox.left){
+                } else if (Enemy.rolling && !Enemy.isBlocked) {
+                    if ((Enemy.hitBox.right + Enemy.size * pixelsPerMeter) >= hitBox.left) {
                         Enemy.rolling = false;
                     }
-                } else  if (Enemy.isBlocked && Enemy.attacking){
+                } else if (Enemy.isBlocked && Enemy.attacking) {
                     health -= Enemy.damage;
                     Enemy.attacking = false;
                 } else {
-                    if (Enemy.hitBox.right > hitBox.left){
-                        if ( Enemy.location.x -(hitBox.left - Enemy.hitBox.right)/fps < hitBox.left){
-                            Enemy.location.x = (hitBox.left - (Enemy.size*pixelsPerMeter));
+                    if (Enemy.hitBox.right > hitBox.left) {
+                        if (Enemy.location.x - (hitBox.left - Enemy.hitBox.right) / fps < hitBox.left) {
+                            Enemy.location.x = (hitBox.left - (Enemy.size * pixelsPerMeter));
                         } else {
-                            Enemy.location.x -= (hitBox.left - Enemy.hitBox.right)/fps;
+                            Enemy.location.x -= (hitBox.left - Enemy.hitBox.right) / fps;
                         }
                     }
                 }
@@ -114,8 +121,8 @@ public class Square_Tower extends Square {
     }
 
 
-    public void update_T(ArrayList<Enemy_Triangle> Enemys, long fps){
-        for (Enemy_Triangle Enemy : Enemys){
+    private void update_T(ArrayList<Enemy_Triangle> T_Enemies, long fps){
+        for (Enemy_Triangle Enemy : T_Enemies){
             checkTowerHealth(Enemy);
             if (Enemy.facingRight && isActive) {
                 if ((Enemy.A.x + pixelsPerMeter) >= hitBox.left && !Enemy.isBlocked) {

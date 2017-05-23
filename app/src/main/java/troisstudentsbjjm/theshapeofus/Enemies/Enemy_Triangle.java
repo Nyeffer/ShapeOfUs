@@ -28,7 +28,7 @@ public class Enemy_Triangle extends Triangle{
     public int value = 2;                               //how much money you get from killing it
 
     public float angleD = 0;                            //angle to rotate on canvas
-    public float damage = 20;                           //kamikaze, after dealing damage triangle will die
+    public float damage = 40;                           //kamikaze, after dealing damage triangle will die
     public float health = 10;                           //added in constructor
     private final float GRAVITY = -10;                  //this will be in meters per second per second
     private final float MAX_JUMP_VELOCITY = -200;       //how fast the shape jumps
@@ -153,8 +153,8 @@ public class Enemy_Triangle extends Triangle{
         if (hit){
             timeHit = System.currentTimeMillis();
             hit = false;
-        } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 500){
-            takeDamage(10);
+        } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 200){
+            takeDamage(100);
             timeHit = 0;
         }
         if (health <= 0){
