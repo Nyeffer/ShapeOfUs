@@ -22,11 +22,12 @@ public class Wave {
     private long timeBetweenEnemies;
     private long spawnTime;
 
+    public long waveCompletionTime;
     public boolean waveComplete;
 
     Random gen = new Random();
 
-    Wave(int xStartPosition, int yStartPosition, float healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY, int numEnemies, double timeBetweenEnemies){
+    public Wave(int xStartPosition, int yStartPosition, float healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY, int numEnemies, double timeBetweenEnemies){
         this.timeBetweenEnemies = (long)timeBetweenEnemies*1000;
         this.numEnemies = numEnemies;
 
@@ -71,6 +72,30 @@ public class Wave {
                 }
                 enemyCounter++;
             }
+        }
+    }
+
+
+    public void setWaveComplete(){
+        enemyCounter = 0;
+        for (Enemy_Square enemySquare : squares){
+            if (enemySquare.isDead){
+                enemyCounter++;
+            }
+        }
+        for (Enemy_Circle enemyCircle : circles){
+            if (enemyCircle.isDead){
+                enemyCounter++;
+            }
+        }
+        for (Enemy_Triangle enemyTriangle : triangles){
+            if (enemyTriangle.isDead){
+                enemyCounter++;
+            }
+        }
+        if (enemyCounter == numEnemies){
+            waveComplete = true;
+            waveCompletionTime = System.currentTimeMillis();
         }
     }
 
