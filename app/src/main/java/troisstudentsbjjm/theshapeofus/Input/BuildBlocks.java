@@ -16,9 +16,9 @@ public class BuildBlocks {
 
 
     private void setHitBlocks(int WorldStart, int WorldEnd, int groundPos, int pixelsPerMeter){
-        for(int i = 0; i < ((WorldEnd - WorldStart)/pixelsPerMeter); i++){
+        for(int i = 0; i < ((WorldEnd - WorldStart)/(pixelsPerMeter+8)); i++){
             hitBlocks.add(i, new Square());
-            hitBlocks.get(i).hitBox.set(pixelsPerMeter*i,groundPos - 2*pixelsPerMeter,pixelsPerMeter*i + pixelsPerMeter,groundPos);
+            hitBlocks.get(i).hitBox.set((pixelsPerMeter+4)*i,groundPos - 2*pixelsPerMeter,((pixelsPerMeter+4)*i) + (pixelsPerMeter+4),groundPos);
             hitBlocks.get(i).isActive = true;
             hitBlocks.get(i).location.set(hitBlocks.get(i).hitBox.left, groundPos - pixelsPerMeter);
         }
