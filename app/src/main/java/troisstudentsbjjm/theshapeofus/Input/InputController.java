@@ -10,4 +10,6 @@ public class InputController {
 
     public double mHorizontalFactor;
     public double mVerticalFactor;
+
+
 }

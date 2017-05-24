@@ -10,16 +10,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.ArrayList;
-
-import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
-import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
-import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
+import troisstudentsbjjm.theshapeofus.Enemies.WaveSpawner;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 
-
-import static android.R.attr.focusable;
-import static android.R.attr.gravity;
 
 import troisstudentsbjjm.theshapeofus.Towers.Circle_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
@@ -58,7 +51,9 @@ public class GameView extends SurfaceView implements Runnable {
     private Viewport vp;
     private InputController ic;
 
-    private Wave wave1;
+    private Wave wave;
+
+    private WaveSpawner spawner;
 
     private Square_Tower S_Tower;
     private Triangle_Tower T_Tower;
@@ -80,12 +75,12 @@ public class GameView extends SurfaceView implements Runnable {
         vp = new Viewport(screenWidth,screenHeight);
         terrain = new Rect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight);
 
-        wave1 = new Wave(-50,(int)((screenHeight*0.5)), 1, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5),7,3);
+//        wave = new Wave(-50,(int)((screenHeight*0.5)), 1, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5),7,3);
+        spawner = new WaveSpawner(-50,(int)((screenHeight*0.5)), vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
 
         T_Tower =  new Triangle_Tower(200, (int)(screenHeight*0.5), vp.pixelsPerMeter);
         C_Tower = new Circle_Tower(600,(float) (screenHeight*0.5),vp.pixelsPerMeter);
         S_Tower = new Square_Tower(700,(int) ((screenHeight*0.5)), vp.pixelsPerMeter);
-
 
         running = true;
     }
@@ -140,32 +135,31 @@ public class GameView extends SurfaceView implements Runnable {
             sumfps = 0;
         }
 
-        wave1.spawnEnemies();
+        spawner.update();
 
-        C_Tower.update(wave1.circles, wave1.squares, wave1.triangles, fps);
-        S_Tower.update(wave1.circles, wave1.squares, wave1.triangles, fps);
-        T_Tower.update(wave1.circles, wave1.squares, wave1.triangles, fps);
+        C_Tower.update(spawner.currentWave.circles, spawner.currentWave.squares, spawner.currentWave.triangles, fps);
+        S_Tower.update(spawner.currentWave.circles, spawner.currentWave.squares, spawner.currentWave.triangles, fps);
+        T_Tower.update(spawner.currentWave.circles, spawner.currentWave.squares, spawner.currentWave.triangles, fps);
 
-        for (int i = 0; i < wave1.squares.size(); i++) {
-            if (i + 1 == wave1.squares.size()) {
-                wave1.squares.get(i).update(wave1.squares.get(0), vp.pixelsPerMeter, fps);
+        for (int i = 0; i < spawner.currentWave.squares.size(); i++) {
+            if (i + 1 == spawner.currentWave.squares.size()) {
+                spawner.currentWave.squares.get(i).update(spawner.currentWave.squares.get(0), vp.pixelsPerMeter, fps);
             } else {
-                wave1.squares.get(i).update(wave1.squares.get(i + 1), vp.pixelsPerMeter, fps);
+                spawner.currentWave.squares.get(i).update(spawner.currentWave.squares.get(i + 1), vp.pixelsPerMeter, fps);
             }
         }
-        for (int i = 0; i < wave1.circles.size(); i++) {
-            if (i + 1 == wave1.circles.size()) {
-                wave1.circles.get(i).update(wave1.circles.get(0), vp.pixelsPerMeter, fps);
+        for (int i = 0; i < spawner.currentWave.circles.size(); i++) {
+            if (i + 1 == spawner.currentWave.circles.size()) {
+                spawner.currentWave.circles.get(i).update(spawner.currentWave.circles.get(0), vp.pixelsPerMeter, fps);
             } else {
-                wave1.circles.get(i).update(wave1.circles.get(i + 1), vp.pixelsPerMeter, fps);
+                spawner.currentWave.circles.get(i).update(spawner.currentWave.circles.get(i + 1), vp.pixelsPerMeter, fps);
             }
         }
-        for (int i = 0; i < wave1.triangles.size(); i++) {
-
-            if (i + 1 == wave1.triangles.size()) {
-                wave1.triangles.get(i).update(vp.pixelsPerMeter, fps);
+        for (int i = 0; i < spawner.currentWave.triangles.size(); i++) {
+            if (i + 1 == spawner.currentWave.triangles.size()) {
+                spawner.currentWave.triangles.get(i).update(vp.pixelsPerMeter, fps);
             } else {
-                wave1.triangles.get(i).update(vp.pixelsPerMeter, fps);
+                spawner.currentWave.triangles.get(i).update(vp.pixelsPerMeter, fps);
             }
         }
     }
@@ -181,23 +175,23 @@ public class GameView extends SurfaceView implements Runnable {
 
             paint.setTextSize(30);
             canvas.drawText("FPS:"+Avgfps,screenWidth/5,screenHeight/5,paint);
-
+            spawner.draw(canvas,paint);
             C_Tower.draw(canvas, paint);
             S_Tower.draw(canvas,paint);
 
-            if (wave1.squares.size() != 0){
-                for (int i = 0; i < wave1.squares.size(); i++){
-                    wave1.squares.get(i).draw(canvas,paint);
+            if (spawner.currentWave.squares.size() != 0){
+                for (int i = 0; i < spawner.currentWave.squares.size(); i++){
+                    spawner.currentWave.squares.get(i).draw(canvas,paint);
                 }
             }
-            if (wave1.triangles.size() != 0) {
-                for (int i = 0; i < wave1.triangles.size(); i++) {
-                    wave1.triangles.get(i).draw(canvas, paint);
+            if (spawner.currentWave.triangles.size() != 0) {
+                for (int i = 0; i < spawner.currentWave.triangles.size(); i++) {
+                    spawner.currentWave.triangles.get(i).draw(canvas, paint);
                 }
             }
-            if (wave1.circles.size() != 0) {
-                for (int i = 0; i < wave1.circles.size(); i++) {
-                    wave1.circles.get(i).draw(canvas, paint);
+            if (spawner.currentWave.circles.size() != 0) {
+                for (int i = 0; i < spawner.currentWave.circles.size(); i++) {
+                    spawner.currentWave.circles.get(i).draw(canvas, paint);
                 }
             }
 

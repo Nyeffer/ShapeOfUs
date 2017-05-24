@@ -1,6 +1,8 @@
 package troisstudentsbjjm.theshapeofus;
 
 
+import android.util.Log;
+
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Random;
@@ -16,7 +18,7 @@ public class Wave {
     public ArrayList<Enemy_Square> squares;             //holds all the squares
     public ArrayList<Enemy_Triangle> triangles;         //holds all the triangles
 
-    public int numEnemies;
+    public final int numEnemies;
     private int enemyCounter = 0;
 
     private long timeBetweenEnemies;
@@ -42,15 +44,15 @@ public class Wave {
 
 
     private void initArrays(int xStartPosition, int yStartPosition, float healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY, int numEnemies){
-        int numCircles = numEnemies/3;
+        int numCircles = (int)(numEnemies*0.5);
         for (int i = 0; i < numCircles; i++){
             circles.add(i,new Enemy_Circle(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
         }
-        int numSquares = numEnemies/2;
+        int numSquares = (int)((numEnemies-numCircles)*0.5);
         for (int i = 0; i < numSquares; i++){
             squares.add(i,new Enemy_Square(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
         }
-        int numTriangles = numEnemies-(numCircles+numSquares);
+        int numTriangles = numEnemies-(numCircles + numSquares);
         for (int i = 0; i < numTriangles; i++){
             triangles.add(i,new Enemy_Triangle(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
         }
@@ -93,9 +95,10 @@ public class Wave {
                 enemyCounter++;
             }
         }
-        if (enemyCounter == numEnemies){
+        if (enemyCounter == numEnemies && !waveComplete){
             waveComplete = true;
             waveCompletionTime = System.currentTimeMillis();
+
         }
     }
 
