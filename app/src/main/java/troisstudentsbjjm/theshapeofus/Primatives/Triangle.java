@@ -38,6 +38,11 @@ public class Triangle extends GameObject {
         }
     }
 
+    @Override
+    public void update(long fps, float gravity) {
+
+    }
+
     //area of triangle, half base times height
     private void setArea(){area =(float) (0.5*size*size);}
     public float getArea(){return area;}
