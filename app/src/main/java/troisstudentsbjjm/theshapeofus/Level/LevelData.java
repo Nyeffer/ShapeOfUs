@@ -25,6 +25,5 @@ public class LevelData {
     // s - square
     // t - triangle
     // c - circle
-
 }
 

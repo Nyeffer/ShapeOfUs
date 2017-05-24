@@ -10,6 +10,7 @@ import troisstudentsbjjm.theshapeofus.Level.LevelData;
 import troisstudentsbjjm.theshapeofus.Level.LevelOne;
 import troisstudentsbjjm.theshapeofus.LevelMaterials.WhiteTile;
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
+import troisstudentsbjjm.theshapeofus.Primatives.Square;
 
 /**
  * Created by mrber on 2017-05-15.
@@ -32,7 +33,6 @@ public class LevelManager {
     LevelData levelData;
     ArrayList<GameObject> gameObjects;
 
-    Bitmap[] bitmapsArray;
 
     public LevelManager(Context context, int pixelsPerMeter, int screenWidth, InputController ic, String level, float px, float py){
         this.level = level;
@@ -55,9 +55,6 @@ public class LevelManager {
         // setup game objects
         gameObjects = new ArrayList<>();
         bitmapsArray = new Bitmap[5]; // holds one of each type
-
-        loadMapData(context, pixelsPerMeter, px, py);
-        //loadBackgrounds(context, pixelsPerMeter, screenWidth);
     }
 
     public boolean isPlaying(){
@@ -66,119 +63,27 @@ public class LevelManager {
     }
 
 
-    public Bitmap getBitmap(char blockType){
-
-        int index;
-
-        switch (blockType){
-            case '.':
-                index = 0;
-                break;
-            case '1':
-                index = 1;
-                break;
-            case 'p':
-                index = 2;
-                break;
-            case 'b':
-                index = 3;
-                break;
-            case 's':
-                index = 4;
-                break;
-            case 't':
-                index = 5;
-                break;
-            case 'c':
-                index = 6;
-                break;
-            default:
-                index = 0;
-                break;
-        }
-
-        return bitmapsArray[index];
-    }
-
-    public int getBitmapIndex(char blockType){
-
-        int index;
-
-        switch (blockType){
-            case '.':
-                index = 0;
-                break;
-            case '1':
-                index = 1;
-                break;
-            case 'p':
-                index = 2;
-                break;
-            case 'b':
-                index = 3;
-                break;
-            case 's':
-                index = 4;
-                break;
-            case 't':
-                index = 5;
-                break;
-            case 'c':
-                index = 6;
-                break;
-            default:
-                index = 0;
-                break;
-        }
-
-        return index;
-    }
-
-
-
     private void loadMapData(Context context, int pixelsPerMeter, float px, float py){
 
         char c;
 
         int currentIndex = -1;
+        int teleportIndex = -1;
 
         mapHeight = levelData.terrain.size();
         mapWidth = levelData.terrain.get(0).length();
 
         for (int i = 0; i < levelData.terrain.size(); i++){
-
-            for (int j = 0; j < levelData.terrain.get(i).length(); j++) {
-
+            for (int j = 0; j < levelData.terrain.get(i).length(); j++){
                 c = levelData.terrain.get(i).charAt(j);
-
-                if (c != '.') {
-
+                if (c != '.'){
                     currentIndex++;
                     switch (c) {
                         case '1':
-                            // Add the floor tiles
-                            gameObjects.add(new WhiteTile(j, i, c));
+                            gameObjects.add(currentIndex, new Square());
+                            gameObjects.get(currentIndex).location.set(j,i);
+                            gameObjects.get(currentIndex).size = pixelsPerMeter;
                             break;
-                        /*case 'p':
-                            // Add the player's main base
-                            break;
-                        case 'b':
-                            // Add a blank tower
-                            break;
-                        case 's':
-                            // Add square (spawner perhaps)
-                            break;
-                        case 't':
-                            // Add triangle
-                            break;
-                        case 'c':
-                            // Add circle
-                            break;*/
-                    }
-
-                    // look to ensure that the indexed bitmap has already been loaded
-                    if (bitmapsArray[getBitmapIndex(c)] == null) {
-                        bitmapsArray[getBitmapIndex(c)] = gameObjects.get(currentIndex).prepareBitmap(context, gameObjects.get(currentIndex).getBitmapName(), pixelsPerMeter);
                     }
                 }
             }

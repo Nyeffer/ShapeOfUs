@@ -13,16 +13,13 @@ import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 public class Square extends GameObject {
 
-
-
     public RectF hitBox = new RectF();
 
-
-    public void setHitBox(int x, int y, int pixelsPerMeter){
+    protected void setHitBox(float x, float y, float pixelsPerMeter){
         hitBox.left = x;
-        hitBox.top = y;
         hitBox.right = hitBox.left + size*pixelsPerMeter;
-        hitBox.bottom = hitBox.top + size*pixelsPerMeter;
+        hitBox.bottom = y + pixelsPerMeter;
+        hitBox.top = hitBox.bottom - size*pixelsPerMeter;
     }
 
     @Override
