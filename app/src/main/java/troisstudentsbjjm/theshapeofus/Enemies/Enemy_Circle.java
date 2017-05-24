@@ -287,7 +287,7 @@ public class Enemy_Circle extends Circle {
             timeHit = System.currentTimeMillis();
             hit = false;
         } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 200){
-            takeDamage(100);
+            takeDamage(20);
             timeHit = 0;
         }
     }

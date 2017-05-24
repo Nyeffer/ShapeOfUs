@@ -127,7 +127,9 @@ public class DeathAnimation {
         paint.setColor(Color.argb(255, colorR, colorG, colorB));
         if (initialized){
             for (Circle particle : particles){
-                canvas.drawCircle(particle.center.x, particle.center.y, (float)(particle.size*0.5*pixelsPerMeter), paint);
+                if (particle.center.x < omniGonPos.x - 0.5*pixelsPerMeter || particle.center.x > omniGonPos.x + 0.5*pixelsPerMeter && rising) {
+                    canvas.drawCircle(particle.center.x, particle.center.y, (float) (particle.size * 0.5 * pixelsPerMeter), paint);
+                }
             }
         }
     }

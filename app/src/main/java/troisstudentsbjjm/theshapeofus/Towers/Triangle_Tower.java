@@ -24,7 +24,7 @@ public class Triangle_Tower {
     public final int NUM_SPIKES = 4;
     public float spikeSize = (float) (0.25);
     public RectF hitbox;
-    private float damage = 10;
+    private float damage = 3;
     int pixelsPerMeter;
 
 

@@ -181,7 +181,7 @@ public class Enemy_Square extends Square{
     public void setSize(){
         if (health * 0.025 > 0.5){
             size = ((float) (health * 0.025));
-            damage = health/10;
+            damage = (float) (health*0.2);
             if (size > 2){
                 size = 2;
             }
@@ -266,7 +266,7 @@ public class Enemy_Square extends Square{
             timeHit = System.currentTimeMillis();
             hit = false;
         } else if (timeHit != 0 && System.currentTimeMillis() >= timeHit + 200){
-            takeDamage(100);
+            takeDamage(20);
             timeHit = 0;
         }
     }
