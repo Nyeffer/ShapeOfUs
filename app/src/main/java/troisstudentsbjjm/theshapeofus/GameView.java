@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -57,6 +58,7 @@ public class GameView extends SurfaceView implements Runnable {
 
     private Viewport vp;
     private InputController ic;
+    private LevelManager lm;
 
     private Wave wave1;
 
@@ -79,13 +81,13 @@ public class GameView extends SurfaceView implements Runnable {
 
         vp = new Viewport(screenWidth,screenHeight);
 
-        terrain = new Rect(0,screenHeight/2+vp.getPixelsPerMeter(),screenWidth,screenHeight);
+        terrain = new Rect(0,screenHeight/2+vp.getPixelsPerMeterX(),screenWidth,screenHeight);
 
-        wave1 = new Wave(-50,(int)((screenHeight*0.5)), 1, vp.pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5),7,3);
+        wave1 = new Wave(-50,(int)((screenHeight*0.5)), 1, vp.getPixelsPerMeterX(), (int)(screenWidth*0.5), (int)(screenHeight*0.5),7,3);
 
-        T_Tower =  new Triangle_Tower(200, (int)(screenHeight*0.5), vp.pixelsPerMeter);
-        C_Tower = new Circle_Tower(600,(float) (screenHeight*0.5),vp.pixelsPerMeter);
-        S_Tower = new Square_Tower(700,(int) ((screenHeight*0.5)), vp.pixelsPerMeter);
+        T_Tower =  new Triangle_Tower(200, (int)(screenHeight*0.5), vp.getPixelsPerMeterX());
+        C_Tower = new Circle_Tower(600,(float) (screenHeight*0.5),vp.getPixelsPerMeterX());
+        S_Tower = new Square_Tower(700,(int) ((screenHeight*0.5)), vp.getPixelsPerMeterX());
 
         loadLevel("Level 1", 20, 22);
     }
@@ -158,24 +160,24 @@ public class GameView extends SurfaceView implements Runnable {
 
         for (int i = 0; i < wave1.squares.size(); i++) {
             if (i + 1 == wave1.squares.size()) {
-                wave1.squares.get(i).update(wave1.squares.get(0), vp.pixelsPerMeter, fps);
+                wave1.squares.get(i).update(wave1.squares.get(0), vp.getPixelsPerMeterX(), fps);
             } else {
-                wave1.squares.get(i).update(wave1.squares.get(i + 1), vp.pixelsPerMeter, fps);
+                wave1.squares.get(i).update(wave1.squares.get(i + 1), vp.getPixelsPerMeterX(), fps);
             }
         }
         for (int i = 0; i < wave1.circles.size(); i++) {
             if (i + 1 == wave1.circles.size()) {
-                wave1.circles.get(i).update(wave1.circles.get(0), vp.pixelsPerMeter, fps);
+                wave1.circles.get(i).update(wave1.circles.get(0), vp.getPixelsPerMeterX(), fps);
             } else {
-                wave1.circles.get(i).update(wave1.circles.get(i + 1), vp.pixelsPerMeter, fps);
+                wave1.circles.get(i).update(wave1.circles.get(i + 1), vp.getPixelsPerMeterX(), fps);
             }
         }
         for (int i = 0; i < wave1.triangles.size(); i++) {
 
             if (i + 1 == wave1.triangles.size()) {
-                wave1.triangles.get(i).update(vp.pixelsPerMeter, fps);
+                wave1.triangles.get(i).update(vp.getPixelsPerMeterX(), fps);
             } else {
-                wave1.triangles.get(i).update(vp.pixelsPerMeter, fps);
+                wave1.triangles.get(i).update(vp.getPixelsPerMeterX(), fps);
             }
         }
     }

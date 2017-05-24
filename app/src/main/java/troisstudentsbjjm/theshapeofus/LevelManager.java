@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Level.LevelData;
 import troisstudentsbjjm.theshapeofus.Level.LevelOne;
-import troisstudentsbjjm.theshapeofus.LevelMaterials.WhiteTile;
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 import troisstudentsbjjm.theshapeofus.Primatives.Square;
 
@@ -54,7 +53,6 @@ public class LevelManager {
 
         // setup game objects
         gameObjects = new ArrayList<>();
-        bitmapsArray = new Bitmap[5]; // holds one of each type
     }
 
     public boolean isPlaying(){
