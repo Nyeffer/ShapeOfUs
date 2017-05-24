@@ -1,16 +1,11 @@
 package troisstudentsbjjm.theshapeofus;
 
-
-import android.util.Log;
-
-import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Random;
 
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
-import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 public class Wave {
 

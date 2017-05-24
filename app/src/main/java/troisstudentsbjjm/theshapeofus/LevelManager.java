@@ -1,15 +1,12 @@
 package troisstudentsbjjm.theshapeofus;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 
 import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Level.LevelData;
-import troisstudentsbjjm.theshapeofus.Level.LevelOne;
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
-import troisstudentsbjjm.theshapeofus.Primatives.Square;
 
 /**
  * Created by mrber on 2017-05-15.
@@ -32,11 +29,9 @@ public class LevelManager {
 
 
     public LevelManager(Context context, int pixelsPerMeter, int screenWidth, InputController ic, String level, float px, float py){
-
     }
 
     public boolean isPlaying(){
-
         return playing;
     }
 

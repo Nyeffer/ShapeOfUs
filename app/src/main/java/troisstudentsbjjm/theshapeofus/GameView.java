@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -24,6 +23,7 @@ public class GameView extends SurfaceView implements Runnable {
     private volatile boolean running;
     private Thread gameThread = null;
     public boolean playing;
+    public boolean notEnoughResources;
 
     private Paint paint;
     private Canvas canvas;
@@ -72,6 +72,7 @@ public class GameView extends SurfaceView implements Runnable {
         terrain = new Rect(0,screenHeight/2+pixelsPerMeter,screenWidth,screenHeight);
 
         playing = true;
+        notEnoughResources = false;
         running = true;
 
         square_towers = new ArrayList<>();
@@ -176,10 +177,6 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawText("FPS:"+Avgfps,screenWidth/5,screenHeight/5,paint);
             spawner.draw(canvas,paint);
 
-
-            for (Square_Tower tower : square_towers) {
-                tower.draw(canvas, paint);
-            }
             for (Circle_Tower shooter : circle_towers){
                 shooter.draw(canvas,paint);
             }
@@ -198,6 +195,9 @@ public class GameView extends SurfaceView implements Runnable {
                     spawner.currentWave.circles.get(i).draw(canvas, paint);
                 }
             }
+            for (Square_Tower tower : square_towers) {
+                tower.draw(canvas, paint);
+            }
             for (Triangle_Tower spikes : triangle_towers){
                 spikes.draw(canvas,paint);
             }
@@ -208,7 +208,8 @@ public class GameView extends SurfaceView implements Runnable {
                 paint.setTextSize(24);
                 paint.setTextAlign(Paint.Align.LEFT);
                 paint.setColor(Color.argb(255, 255, 255, 255));
-                canvas.drawText("fps: " + fps, 10, 60, paint);
+
+                canvas.drawText("fps: " + fps, 10, 180, paint);
 
                 canvas.drawText("Center X: " + screenWidth/2, 10, 220, paint);
 
@@ -216,8 +217,15 @@ public class GameView extends SurfaceView implements Runnable {
 
             }
 
-            DrawPauseButton();
-            DrawUpgradeButton();
+            if(notEnoughResources) {
+                paint.setTextAlign(Paint.Align.CENTER);
+                paint.setColor(Color.argb(255, 255, 0, 0));
+
+                paint.setTextSize(120);
+                canvas.drawText("Insufficient Resources", (int) (screenWidth*0.5), (int)(screenHeight*0.5), paint);
+
+                notEnoughResources = false;
+            }
 
             if(!playing) {
                 paint.setTextAlign(Paint.Align.CENTER);
@@ -226,48 +234,9 @@ public class GameView extends SurfaceView implements Runnable {
                 paint.setTextSize(120);
                 canvas.drawText("Paused", (int) (screenWidth*0.5), (int)(screenHeight*0.5), paint);
             }
-            ic.drawButtons(canvas,paint);
+            ic.drawButtons(canvas, paint, this);
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
-    }
-
-    public void DrawPauseButton() {
-        // Draws the pause button
-        paint.setColor(Color.argb(80, 255, 255, 255));
-        Rect drawPause;
-        drawPause = ic.PauseButton();
-
-        RectF rp = new RectF(drawPause.left, drawPause.top, drawPause.right, drawPause.bottom);
-        canvas.drawRoundRect(rp, 15f, 15f, paint);
-
-        if(playing) {
-            paint.setColor(Color.argb(255, 255, 255, 255));
-            paint.setTextSize(64);
-            canvas.drawText("Pause", drawPause.left + 25, drawPause.bottom - 50, paint);
-        } else if(!playing) {
-            paint.setColor(Color.argb(255, 255, 255, 255));
-            paint.setTextSize(64);
-            canvas.drawText("Play", drawPause.left + 50, drawPause.bottom - 50, paint);
-        }
-    }
-
-    public void DrawUpgradeButton() {
-        // Draws the upgrade button
-        // determines whether the button is active or not
-        if(ic.isUpgradeTapped()) {
-            paint.setColor(Color.argb(180, 255, 255, 255));
-        } else if(!ic.isUpgradeTapped()) {
-            paint.setColor(Color.argb(80, 255, 255, 255));
-        }
-        Rect drawUpgrade;
-        drawUpgrade = ic.UpgradeButton();
-
-        RectF ru = new RectF(drawUpgrade.left, drawUpgrade.top, drawUpgrade.right, drawUpgrade.bottom);
-        canvas.drawRoundRect(ru, 15f, 15f, paint);
-
-        paint.setColor(Color.argb(255, 255, 255, 255));
-        paint.setTextSize(52);
-        canvas.drawText("Upgrade", drawUpgrade.left + 15, drawUpgrade.bottom - 55, paint);
     }
 }

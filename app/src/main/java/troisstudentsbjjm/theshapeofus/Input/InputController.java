@@ -4,13 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
+import android.graphics.RectF;
 import android.view.MotionEvent;
 import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.GameView;
-import troisstudentsbjjm.theshapeofus.LevelManager;
-import troisstudentsbjjm.theshapeofus.Primatives.Square;
 import troisstudentsbjjm.theshapeofus.Towers.Circle_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
@@ -35,6 +33,8 @@ public class InputController {
 
     private TowerMenu towerMenu;
     public BuildBlocks buildBlocks;
+
+    private int resources = 15;
 
     public InputController(int screenX, int screenY, int pixelsPerMeter) {
         this.pixelsPerMeter = pixelsPerMeter;
@@ -74,18 +74,30 @@ public class InputController {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN:
                     if (towerMenu.isActive){
-                        if (towerMenu.S_button.contains(x,y)){
+                        if (towerMenu.S_button.contains(x,y) && resources >= 4){
                             gv.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter, towerIndex));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
-                        } else if (towerMenu.T_button.contains(x,y)){
+                            subtractResources(4);
+                        } else if (towerMenu.S_button.contains(x,y) && resources < 4){
+                            towerMenu.isActive = false;
+                            gv.notEnoughResources = true;
+                        } else if (towerMenu.T_button.contains(x,y) && resources >= 2){
                             gv.triangle_towers.add(new Triangle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
-                        } else if (towerMenu.C_button.contains(x,y)){
+                            subtractResources(2);
+                        } else if (towerMenu.T_button.contains(x,y) && resources < 2){
+                            towerMenu.isActive = false;
+                            gv.notEnoughResources = true;
+                        } else if (towerMenu.C_button.contains(x,y) && resources >= 10){
                             gv.circle_towers.add(new Circle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
+                            subtractResources(10);
+                        } else if (towerMenu.C_button.contains(x,y) && resources < 10){
+                            towerMenu.isActive = false;
+                            gv.notEnoughResources = true;
                         } else {
                             towerMenu.isActive = false;
                         }
@@ -127,8 +139,11 @@ public class InputController {
     }
 
 
-    public void drawButtons(Canvas canvas, Paint paint){
+    public void drawButtons(Canvas canvas, Paint paint, GameView gv){
         towerMenu.draw(canvas,paint);
+        DrawPauseButton(canvas, paint, gv);
+        DrawUpgradeButton(canvas, paint);
+        DrawResourceText(canvas, paint);
     }
 
     public Rect UpgradeButton() {
@@ -139,6 +154,65 @@ public class InputController {
         return pauseButton;
     }
 
+    public void DrawPauseButton(Canvas canvas, Paint paint, GameView gv) {
+        // Draws the pause button
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.setColor(Color.argb(80, 255, 255, 255));
+        Rect drawPause;
+        drawPause = PauseButton();
+
+        RectF rp = new RectF(drawPause.left, drawPause.top, drawPause.right, drawPause.bottom);
+        canvas.drawRoundRect(rp, 15f, 15f, paint);
+
+        if(gv.playing) {
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setTextSize(64);
+            canvas.drawText("Pause", drawPause.left + 25, drawPause.bottom - 50, paint);
+        } else if(!gv.playing) {
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setTextSize(64);
+            canvas.drawText("Play", drawPause.left + 50, drawPause.bottom - 50, paint);
+        }
+    }
+
+    public void DrawUpgradeButton(Canvas canvas, Paint paint) {
+        // Draws the upgrade button
+        paint.setTextAlign(Paint.Align.LEFT);
+        // determines whether the button is active or not
+        if(isUpgradeTapped()) {
+            paint.setColor(Color.argb(180, 255, 255, 255));
+        } else if(!isUpgradeTapped()) {
+            paint.setColor(Color.argb(80, 255, 255, 255));
+        }
+        Rect drawUpgrade;
+        drawUpgrade = UpgradeButton();
+
+        RectF ru = new RectF(drawUpgrade.left, drawUpgrade.top, drawUpgrade.right, drawUpgrade.bottom);
+        canvas.drawRoundRect(ru, 15f, 15f, paint);
+
+        paint.setColor(Color.argb(255, 255, 255, 255));
+        paint.setTextSize(52);
+        canvas.drawText("Upgrade", drawUpgrade.left + 15, drawUpgrade.bottom - 55, paint);
+    }
+
+    public void DrawResourceText(Canvas canvas, Paint paint) {
+        paint.setTextSize(64);
+        paint.setTextAlign(Paint.Align.LEFT);
+        paint.setColor(Color.argb(255, 255, 0, 0));
+        canvas.drawText("Resources: " + getResources(), 52, 60, paint);
+    }
+
+    public int getResources() {
+        return resources;
+    }
+
+    public void addResources(int deadBodiesTaken) {
+        resources += deadBodiesTaken;
+    }
+
+    public void subtractResources(int deadBodiesRecycled) {
+        resources -= deadBodiesRecycled;
+    }
 
     public boolean isUpgradeTapped() {
         return upgradeTap;
