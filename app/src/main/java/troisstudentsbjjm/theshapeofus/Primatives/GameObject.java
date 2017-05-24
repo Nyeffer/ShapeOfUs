@@ -9,10 +9,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 
+import troisstudentsbjjm.theshapeofus.RectHitbox;
+import troisstudentsbjjm.theshapeofus.Vector2Point;
+
 public abstract class GameObject  {
 
     public float size;
     public boolean isActive;
     public PointF location = new PointF();
+
+    public void update(long fps, float gravity) {
+
+    }
 }
 
