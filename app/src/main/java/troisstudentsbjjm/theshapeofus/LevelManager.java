@@ -19,8 +19,6 @@ import troisstudentsbjjm.theshapeofus.Primatives.Square;
 
 public class LevelManager {
 
-    private String level;
-
     int mapWidth;
     int mapHeight;
 
@@ -34,25 +32,7 @@ public class LevelManager {
 
 
     public LevelManager(Context context, int pixelsPerMeter, int screenWidth, InputController ic, String level, float px, float py){
-        this.level = level;
 
-        switch(level) {
-            case "Level 1":
-                levelData = new LevelOne();
-                break;
-            case "LevelCity":
-                //levelData = new LevelCity();
-                break;
-            case "LevelForest":
-                //levelData = new LevelForest();
-                break;
-            case "LevelMountain":
-                //levelData = new LevelMountain();
-                break;
-        }
-
-        // setup game objects
-        gameObjects = new ArrayList<>();
     }
 
     public boolean isPlaying(){
@@ -61,42 +41,7 @@ public class LevelManager {
     }
 
 
-    private void loadMapData(Context context, int pixelsPerMeter, float px, float py){
-
-        char c;
-
-        int currentIndex = -1;
-        int teleportIndex = -1;
-
-        mapHeight = levelData.terrain.size();
-        mapWidth = levelData.terrain.get(0).length();
-
-        for (int i = 0; i < levelData.terrain.size(); i++){
-            for (int j = 0; j < levelData.terrain.get(i).length(); j++){
-                c = levelData.terrain.get(i).charAt(j);
-                if (c != '.'){
-                    currentIndex++;
-                    switch (c) {
-                        case '1':
-                            gameObjects.add(currentIndex, new Square());
-                            gameObjects.get(currentIndex).location.set(j,i);
-                            gameObjects.get(currentIndex).size = pixelsPerMeter;
-                            break;
-                    }
-                }
-            }
-        }
-    }
-
-
     public void switchPlayingStatus(){
         playing = !playing;
-
-        if (playing){
-            gravity = 6;
-        } else {
-            gravity = 0;
-
-        }
     }
 }

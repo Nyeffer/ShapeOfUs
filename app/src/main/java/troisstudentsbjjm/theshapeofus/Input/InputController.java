@@ -1,17 +1,18 @@
 package troisstudentsbjjm.theshapeofus.Input;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 import android.view.MotionEvent;
-
 import java.util.ArrayList;
 
+import troisstudentsbjjm.theshapeofus.GameView;
 import troisstudentsbjjm.theshapeofus.LevelManager;
-import troisstudentsbjjm.theshapeofus.Viewport;
+import troisstudentsbjjm.theshapeofus.Primatives.Square;
+import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
 
-/**
- * Created by mrber on 2017-05-15.
- * Edited by Braedon Jolie 2017-05-16.
- */
 
 //We can implement a joystick controller class down the line
 
@@ -22,16 +23,23 @@ public class InputController {
     public boolean upgradeTap;
     public boolean dragging;
 
+    private int pixelsPerMeter;
+    private int towerIndex;
+
+    private long timeTowerPlaced;
+
     Rect upgradeButton;
     Rect pauseButton;
 
-    public InputController(int screenX, int screenY) {
+    private TowerMenu towerMenu;
+    private BuildBlocks buildBlocks;
+
+    public InputController(int screenX, int screenY, int pixelsPerMeter) {
+        this.pixelsPerMeter = pixelsPerMeter;
         // Configure the player buttons
         int buttonWidth = screenX / 8;
         int buttonHeight = screenY / 7;
         int buttonPadding = screenX / 80;
-
-        // Note: Rect = left, top, right, bottom
 
         upgradeButton = new Rect(screenX - buttonPadding - buttonWidth,
                 buttonPadding + buttonHeight + buttonPadding,
@@ -43,74 +51,78 @@ public class InputController {
                 screenX - buttonPadding,
                 buttonPadding + buttonHeight);
 
+        buildBlocks = new BuildBlocks(0,screenX,screenY/2 + pixelsPerMeter,pixelsPerMeter);
+        towerMenu = new TowerMenu();
+
         upgradeTap = true;
     }
 
-    public void handleInput(MotionEvent motionEvent, LevelManager l, Viewport vp) {
+    public void handleInput(MotionEvent motionEvent, GameView gv) {
         int pointerCount = motionEvent.getPointerCount();
         float dX = 0;
         float dY = 0;
 
-        for(int i = 0; i < pointerCount; i++) {
+        for (int i = 0; i < pointerCount; i++) {
             int x = (int) motionEvent.getX(i);
             int y = (int) motionEvent.getY(i);
 
-            if(l.isPlaying()) {
-                switch(motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:
-                        if(pauseButton.contains(x, y)) {
-                            l.switchPlayingStatus();
-                        } else if(upgradeButton.contains(x, y)) {
-                            if(upgradeTap == true) {
-                                upgradeTap = false;
-                            } else if(upgradeTap == false) {
-                                upgradeTap = true;
+
+            switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+
+                case MotionEvent.ACTION_DOWN:
+                case MotionEvent.ACTION_POINTER_DOWN:
+                    if (towerMenu.isActive){
+                        if (towerMenu.S_button.contains(x,y)){
+                            gv.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
+                            towerMenu.isActive = false;
+                            buildBlocks.hitBlocks.get(towerIndex).isActive = false;
+                        } else if (towerMenu.T_button.contains(x,y)){
+                            Log.d("build Triangle", "handleInput: ");
+                        } else if (towerMenu.C_button.contains(x,y)){
+                            Log.d("build Circle", "handleInput: ");
+                        } else {
+                            towerMenu.isActive = false;
+                        }
+                    }
+                    if(pauseButton.contains(x, y)) {
+                        gv.playing = !gv.playing;
+                    } else if(upgradeButton.contains(x, y)) {
+                        if(upgradeTap) {
+                            upgradeTap = false;
+                        } else if(!upgradeTap) {
+                            upgradeTap = true;
+                        }
+                    }
+                    if (!towerMenu.isActive) {
+                        for (int j = 0; j < buildBlocks.hitBlocks.size(); j++) {
+                            if (buildBlocks.hitBlocks.get(j).hitBox.contains(x, y)) {
+                                if (buildBlocks.hitBlocks.get(j).isActive) {
+                                    towerMenu.moveAndDisplay(x, y);
+                                    towerIndex = j;
+                                }
                             }
-                        } //else {
-                            // pan the screen here
-                            //dX = vp.getViewportWorldCenterX() - motionEvent.getRawX();
-                            //dY = vp.getViewportWorldCenterY() - motionEvent.getRawY();
-                            // isTapping = true;
-                        //}
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        //vp.setWorldCenter(dX + motionEvent.getRawX(), dY + motionEvent.getRawY());
-                        if(motionEvent.getRawX() > 0) {
-                            vp.moveViewPortLeft(motionEvent.getRawX());
                         }
-                        if(motionEvent.getRawX() < 0) {
-                            vp.moveViewPortRight(vp.getScreenWidth(), motionEvent.getRawX());
-                        }
-                        if(motionEvent.getRawY() > 0) {
-                            vp.moveViewPortUp(motionEvent.getRawY());
-                        }
-                        if(motionEvent.getRawY() < 0) {
-                            vp.moveViewPortDown(vp.getScreenHeight(), motionEvent.getRawY());
-                        }
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        // isTapping = false;
-                        break;
-                } // End of switch
-            } else { // Not playing
-                // Move the viewport around to explore the map
-                switch(motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-                    case MotionEvent.ACTION_DOWN:
-                        if(pauseButton.contains(x, y)) {
-                            l.switchPlayingStatus();
-                        }
-                        break;
-                }
-            }
+                    }
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_POINTER_UP:
+
+                    break;
+            } // End of switch
         }
     }
 
+
     public ArrayList getButtons() {
-        // create an array of buttons for the draw method
         ArrayList<Rect> currentButtonList = new ArrayList<>();
         currentButtonList.add(upgradeButton);
         currentButtonList.add(pauseButton);
         return currentButtonList;
+    }
+
+
+    public void drawButtons(Canvas canvas, Paint paint){
+        towerMenu.draw(canvas,paint);
     }
 
     public Rect UpgradeButton() {

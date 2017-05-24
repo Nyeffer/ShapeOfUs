@@ -8,7 +8,7 @@ import android.graphics.Rect;
  */
 
 public class Viewport {
-    private Vector2Point currentViewportWorldCenter;
+
     private Rect convertedRect;
     public int pixelsPerMeter;
     private int screenXResolution;
@@ -32,12 +32,7 @@ public class Viewport {
         metersToShowY = 20;
 
         convertedRect = new Rect();
-        currentViewportWorldCenter = new Vector2Point();
-    }
 
-    public void setWorldCenter(float x, float y) {
-        currentViewportWorldCenter.x = x;
-        currentViewportWorldCenter.y = y;
     }
 
     public int getScreenWidth() {
@@ -48,38 +43,8 @@ public class Viewport {
         return screenYResolution;
     }
 
-
     public int getyCenter() {
         return screenCenterY;
-    }
-
-    public float getViewportWorldCenterY() {
-        return currentViewportWorldCenter.y;
-    }
-
-    public float getViewportWorldCenterX() {
-        return currentViewportWorldCenter.x;
-    }
-
-    public boolean clipObjects(float objX, float objY, float objWidth, float objHeight) {
-        boolean clipped = true;
-
-        if(objX - objWidth < currentViewportWorldCenter.x + (metersToShowX / 2)) {
-            if(objX + objWidth > currentViewportWorldCenter.x - (metersToShowX / 2)) {
-                if(objY - objHeight < currentViewportWorldCenter.y + (metersToShowY / 2)) {
-                    if(objY + objHeight > currentViewportWorldCenter.y - (metersToShowY / 2)) {
-                        clipped = false; // don't clip it, its on the screen!
-                    }
-                }
-            }
-        }
-
-        // for debugging
-        if(clipped) {
-            numClipped++;
-        }
-
-        return clipped;
     }
 
     public int getNumClipped() {
@@ -88,30 +53,5 @@ public class Viewport {
 
     public void resetNumClipped() {
         numClipped = 0;
-    }
-
-    // Material to move the viewport
-    public void moveViewPortRight(int maxWidth, float move) {
-        if(currentViewportWorldCenter.x < maxWidth - (metersToShowX/2) + 3) {
-            currentViewportWorldCenter.x += 1;
-        }
-    }
-
-    public void moveViewPortLeft(float move) {
-        if(currentViewportWorldCenter.x > (metersToShowX/2) - 3) {
-            currentViewportWorldCenter.x -= 1;
-        }
-    }
-
-    public void moveViewPortUp(float move) {
-        if(currentViewportWorldCenter.y < (metersToShowY/2) - 3) {
-            currentViewportWorldCenter.y -= 1;
-        }
-    }
-
-    public void moveViewPortDown(int maxHeight, float move) {
-        if(currentViewportWorldCenter.y < maxHeight - (metersToShowY/2) + 3) {
-            currentViewportWorldCenter.y += 1;
-        }
     }
 }
