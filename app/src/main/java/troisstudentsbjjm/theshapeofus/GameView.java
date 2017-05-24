@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -40,6 +41,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     private volatile boolean running;
     private Thread gameThread = null;
+
+    private boolean gameEnded;
 
     private Paint paint;
     private Canvas canvas;
@@ -88,6 +91,7 @@ public class GameView extends SurfaceView implements Runnable {
 
 
         running = true;
+
     }
 
 
