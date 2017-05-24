@@ -145,39 +145,41 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     private void update() {
-        counter++;
-        if (counter == 100) {
-            Avgfps = sumfps / counter;
-            counter = 0;
-            sumfps = 0;
-        }
-
-        wave1.spawnEnemies();
-
-        C_Tower.update(wave1.circles, wave1.squares, wave1.triangles, fps);
-        S_Tower.update(wave1.circles, wave1.squares, wave1.triangles, fps);
-        T_Tower.update(wave1.circles, wave1.squares, wave1.triangles, fps);
-
-        for (int i = 0; i < wave1.squares.size(); i++) {
-            if (i + 1 == wave1.squares.size()) {
-                wave1.squares.get(i).update(wave1.squares.get(0), vp.getPixelsPerMeterX(), fps);
-            } else {
-                wave1.squares.get(i).update(wave1.squares.get(i + 1), vp.getPixelsPerMeterX(), fps);
+        if(lm.isPlaying()) {
+            counter++;
+            if (counter == 100) {
+                Avgfps = sumfps / counter;
+                counter = 0;
+                sumfps = 0;
             }
-        }
-        for (int i = 0; i < wave1.circles.size(); i++) {
-            if (i + 1 == wave1.circles.size()) {
-                wave1.circles.get(i).update(wave1.circles.get(0), vp.getPixelsPerMeterX(), fps);
-            } else {
-                wave1.circles.get(i).update(wave1.circles.get(i + 1), vp.getPixelsPerMeterX(), fps);
-            }
-        }
-        for (int i = 0; i < wave1.triangles.size(); i++) {
 
-            if (i + 1 == wave1.triangles.size()) {
-                wave1.triangles.get(i).update(vp.getPixelsPerMeterX(), fps);
-            } else {
-                wave1.triangles.get(i).update(vp.getPixelsPerMeterX(), fps);
+            wave1.spawnEnemies();
+
+            C_Tower.update(wave1.circles, wave1.squares, wave1.triangles, fps);
+            S_Tower.update(wave1.circles, wave1.squares, wave1.triangles, fps);
+            T_Tower.update(wave1.circles, wave1.squares, wave1.triangles, fps);
+
+            for (int i = 0; i < wave1.squares.size(); i++) {
+                if (i + 1 == wave1.squares.size()) {
+                    wave1.squares.get(i).update(wave1.squares.get(0), vp.getPixelsPerMeterX(), fps);
+                } else {
+                    wave1.squares.get(i).update(wave1.squares.get(i + 1), vp.getPixelsPerMeterX(), fps);
+                }
+            }
+            for (int i = 0; i < wave1.circles.size(); i++) {
+                if (i + 1 == wave1.circles.size()) {
+                    wave1.circles.get(i).update(wave1.circles.get(0), vp.getPixelsPerMeterX(), fps);
+                } else {
+                    wave1.circles.get(i).update(wave1.circles.get(i + 1), vp.getPixelsPerMeterX(), fps);
+                }
+            }
+            for (int i = 0; i < wave1.triangles.size(); i++) {
+
+                if (i + 1 == wave1.triangles.size()) {
+                    wave1.triangles.get(i).update(vp.getPixelsPerMeterX(), fps);
+                } else {
+                    wave1.triangles.get(i).update(vp.getPixelsPerMeterX(), fps);
+                }
             }
         }
     }
@@ -193,7 +195,6 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setColor(Color.argb(255,255,255,255));
 
             paint.setTextSize(30);
-            canvas.drawText("FPS:"+Avgfps,screenWidth/5,screenHeight/5,paint);
 
             C_Tower.draw(canvas, paint);
             S_Tower.draw(canvas,paint);
