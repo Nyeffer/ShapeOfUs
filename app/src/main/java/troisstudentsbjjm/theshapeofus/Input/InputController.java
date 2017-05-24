@@ -1,16 +1,13 @@
 package troisstudentsbjjm.theshapeofus.Input;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.MotionEvent;
 import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.GameView;
-import troisstudentsbjjm.theshapeofus.LevelManager;
-import troisstudentsbjjm.theshapeofus.Primatives.Square;
+import troisstudentsbjjm.theshapeofus.Level.LevelManager;
 import troisstudentsbjjm.theshapeofus.Towers.Circle_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
@@ -59,7 +56,7 @@ public class InputController {
         upgradeTap = true;
     }
 
-    public void handleInput(MotionEvent motionEvent, GameView gv) {
+    public void handleInput(MotionEvent motionEvent, LevelManager lm, GameView gv) {
         int pointerCount = motionEvent.getPointerCount();
         float dX = 0;
         float dY = 0;
@@ -75,15 +72,15 @@ public class InputController {
                 case MotionEvent.ACTION_POINTER_DOWN:
                     if (towerMenu.isActive){
                         if (towerMenu.S_button.contains(x,y)){
-                            gv.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter, towerIndex));
+                            lm.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter, towerIndex));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                         } else if (towerMenu.T_button.contains(x,y)){
-                            gv.triangle_towers.add(new Triangle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
+                            lm.triangle_towers.add(new Triangle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                         } else if (towerMenu.C_button.contains(x,y)){
-                            gv.circle_towers.add(new Circle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
+                            lm.circle_towers.add(new Circle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                         } else {

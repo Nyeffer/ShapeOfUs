@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.Enemies.WaveSpawner;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
+import troisstudentsbjjm.theshapeofus.Level.LevelManager;
 import troisstudentsbjjm.theshapeofus.Towers.Circle_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
@@ -39,18 +40,11 @@ public class GameView extends SurfaceView implements Runnable {
     int screenWidth;
     int screenHeight;
     public int pixelsPerMeter;
-    int counter = 0;
+    int counter = 0;                    //for calculating fps
+    public int money = 0;
 
-    private Viewport vp;
-    private InputController ic;
     private LevelManager lm;
-
-    private WaveSpawner spawner;
-
-    public ArrayList<Square_Tower> square_towers;
-    public ArrayList<Triangle_Tower> triangle_towers;
-    public ArrayList<Circle_Tower> circle_towers;
-
+    private InputController ic;
     private Rect terrain;
 
     GameView(Context context, int screenWidth, int screenHeight){
@@ -66,17 +60,12 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
 
         ic = new InputController(screenWidth,screenHeight, pixelsPerMeter);
-
-        spawner = new WaveSpawner(-50,(int)((screenHeight*0.5)), pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
+        lm = new LevelManager(-50,(int)((screenHeight*0.5)), pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
 
         terrain = new Rect(0,screenHeight/2+pixelsPerMeter,screenWidth,screenHeight);
 
         playing = true;
         running = true;
-
-        square_towers = new ArrayList<>();
-        circle_towers = new ArrayList<>();
-        triangle_towers = new ArrayList<>();
     }
 
 
@@ -100,7 +89,7 @@ public class GameView extends SurfaceView implements Runnable {
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent){
 
-        ic.handleInput(motionEvent, this);
+        ic.handleInput(motionEvent, lm, this);
         return true;
     }
 
@@ -129,36 +118,7 @@ public class GameView extends SurfaceView implements Runnable {
                 counter = 0;
                 sumfps = 0;
             }
-            spawner.update();
-            for (Square_Tower blockade : square_towers) {
-                blockade.update(spawner.currentWave.circles, spawner.currentWave.squares, spawner.currentWave.triangles, fps);
-                if (!blockade.isActive && spawner.currentWave.waveComplete){
-                    ic.buildBlocks.hitBlocks.get(blockade.placementIndex).isActive = true;
-                }
-            }
-            for (Circle_Tower shooter : circle_towers){
-                shooter.update(spawner.currentWave.circles, spawner.currentWave.squares, spawner.currentWave.triangles, fps);
-            }
-            for (Triangle_Tower spikes : triangle_towers){
-                spikes.update(spawner.currentWave.circles, spawner.currentWave.squares, spawner.currentWave.triangles, fps);
-            }
-            for (int i = 0; i < spawner.currentWave.squares.size(); i++) {
-                if (i + 1 == spawner.currentWave.squares.size()) {
-                    spawner.currentWave.squares.get(i).update(spawner.currentWave.squares.get(0), pixelsPerMeter, fps);
-                } else {
-                    spawner.currentWave.squares.get(i).update(spawner.currentWave.squares.get(i + 1), pixelsPerMeter, fps);
-                }
-            }
-            for (int i = 0; i < spawner.currentWave.circles.size(); i++) {
-                if (i + 1 == spawner.currentWave.circles.size()) {
-                    spawner.currentWave.circles.get(i).update(spawner.currentWave.circles.get(0), pixelsPerMeter, fps);
-                } else {
-                    spawner.currentWave.circles.get(i).update(spawner.currentWave.circles.get(i + 1), pixelsPerMeter, fps);
-                }
-            }
-            for (int i = 0; i < spawner.currentWave.triangles.size(); i++) {
-                spawner.currentWave.triangles.get(i).update(pixelsPerMeter, fps);
-            }
+            lm.update(ic, fps);
         }
     }
 
@@ -170,54 +130,15 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setColor(Color.argb(255, 0, 0, 0));
             canvas.drawColor(Color.argb(255, 0, 0, 0));
 
-            paint.setColor(Color.argb(255,255,255,255));
+            lm.draw(canvas,paint);
 
-            paint.setTextSize(30);
-            canvas.drawText("FPS:"+Avgfps,screenWidth/5,screenHeight/5,paint);
-            spawner.draw(canvas,paint);
-
-
-            for (Square_Tower tower : square_towers) {
-                tower.draw(canvas, paint);
-            }
-            for (Circle_Tower shooter : circle_towers){
-                shooter.draw(canvas,paint);
-            }
-            if (spawner.currentWave.squares.size() != 0){
-                for (int i = 0; i < spawner.currentWave.squares.size(); i++){
-                    spawner.currentWave.squares.get(i).draw(canvas,paint);
-                }
-            }
-            if (spawner.currentWave.triangles.size() != 0) {
-                for (int i = 0; i < spawner.currentWave.triangles.size(); i++) {
-                    spawner.currentWave.triangles.get(i).draw(canvas, paint);
-                }
-            }
-            if (spawner.currentWave.circles.size() != 0) {
-                for (int i = 0; i < spawner.currentWave.circles.size(); i++) {
-                    spawner.currentWave.circles.get(i).draw(canvas, paint);
-                }
-            }
-            for (Triangle_Tower spikes : triangle_towers){
-                spikes.draw(canvas,paint);
-            }
             paint.setColor(Color.argb(255,99,74,51));
             canvas.drawRect(terrain,paint);
 
-            if(debugging) {
-                paint.setTextSize(24);
-                paint.setTextAlign(Paint.Align.LEFT);
-                paint.setColor(Color.argb(255, 255, 255, 255));
-                canvas.drawText("fps: " + fps, 10, 60, paint);
-
-                canvas.drawText("Center X: " + screenWidth/2, 10, 220, paint);
-
-                canvas.drawText("Center Y: " + screenHeight/2, 10, 260, paint);
-
-            }
-
             DrawPauseButton();
             DrawUpgradeButton();
+
+            ic.drawButtons(canvas,paint);
 
             if(!playing) {
                 paint.setTextAlign(Paint.Align.CENTER);
@@ -226,11 +147,14 @@ public class GameView extends SurfaceView implements Runnable {
                 paint.setTextSize(120);
                 canvas.drawText("Paused", (int) (screenWidth*0.5), (int)(screenHeight*0.5), paint);
             }
-            ic.drawButtons(canvas,paint);
-
+            if(debugging) {
+                paint.setTextSize(30);
+                canvas.drawText("FPS:"+Avgfps,screenWidth/5,screenHeight/5,paint);
+            }
             ourHolder.unlockCanvasAndPost(canvas);
         }
     }
+
 
     public void DrawPauseButton() {
         // Draws the pause button
@@ -251,6 +175,7 @@ public class GameView extends SurfaceView implements Runnable {
             canvas.drawText("Play", drawPause.left + 50, drawPause.bottom - 50, paint);
         }
     }
+
 
     public void DrawUpgradeButton() {
         // Draws the upgrade button
