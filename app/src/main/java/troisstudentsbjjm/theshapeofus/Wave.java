@@ -21,7 +21,7 @@ public class Wave {
     public final int numEnemies;
     private int enemyCounter = 0;
 
-    private long timeBetweenEnemies;
+    private double timeBetweenEnemies;
     private long spawnTime;
 
     public long waveCompletionTime;
@@ -44,11 +44,11 @@ public class Wave {
 
 
     private void initArrays(int xStartPosition, int yStartPosition, float healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY, int numEnemies){
-        int numCircles = (int)(numEnemies*0.5);
+        int numCircles = (int)(numEnemies*0.33);
         for (int i = 0; i < numCircles; i++){
             circles.add(i,new Enemy_Circle(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
         }
-        int numSquares = (int)((numEnemies-numCircles)*0.5);
+        int numSquares =(int)(numEnemies*0.33);
         for (int i = 0; i < numSquares; i++){
             squares.add(i,new Enemy_Square(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
         }

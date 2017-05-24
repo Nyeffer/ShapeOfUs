@@ -15,14 +15,16 @@ import troisstudentsbjjm.theshapeofus.Primatives.Square;
 public class Square_Tower extends Square {
     public float health = 80;
     private int pixelsPerMeter;
+    public int placementIndex;
 
     public int numBlocked = 0;
     public boolean isAdjustmentDone;
 
-    public Square_Tower(int x, int y, int pixelsPerMeter) {
+    public Square_Tower(int x, int y, int pixelsPerMeter, int towerIndex) {
         location.set(x,y);
         size = 1;
         this.pixelsPerMeter = pixelsPerMeter;
+        this.placementIndex = towerIndex;
         setHitBox(x,y,pixelsPerMeter);
         isAdjustmentDone = false;
         isActive = true;
@@ -30,9 +32,11 @@ public class Square_Tower extends Square {
 
 
     public void update(ArrayList<Enemy_Circle> C_Enemies, ArrayList<Enemy_Square> S_Enemies, ArrayList<Enemy_Triangle> T_Enemies, long fps) {
-        update_C(C_Enemies,fps);
-        update_S(S_Enemies,fps);
-        update_T(T_Enemies,fps);
+        if (isActive) {
+            update_C(C_Enemies, fps);
+            update_S(S_Enemies, fps);
+            update_T(T_Enemies, fps);
+        }
     }
 
 

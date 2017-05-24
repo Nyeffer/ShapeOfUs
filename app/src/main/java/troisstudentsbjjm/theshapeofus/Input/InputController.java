@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import troisstudentsbjjm.theshapeofus.GameView;
 import troisstudentsbjjm.theshapeofus.LevelManager;
 import troisstudentsbjjm.theshapeofus.Primatives.Square;
+import troisstudentsbjjm.theshapeofus.Towers.Circle_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
+import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
 
 
 //We can implement a joystick controller class down the line
@@ -32,7 +34,7 @@ public class InputController {
     Rect pauseButton;
 
     private TowerMenu towerMenu;
-    private BuildBlocks buildBlocks;
+    public BuildBlocks buildBlocks;
 
     public InputController(int screenX, int screenY, int pixelsPerMeter) {
         this.pixelsPerMeter = pixelsPerMeter;
@@ -73,13 +75,17 @@ public class InputController {
                 case MotionEvent.ACTION_POINTER_DOWN:
                     if (towerMenu.isActive){
                         if (towerMenu.S_button.contains(x,y)){
-                            gv.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
+                            gv.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter, towerIndex));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                         } else if (towerMenu.T_button.contains(x,y)){
-                            Log.d("build Triangle", "handleInput: ");
+                            gv.triangle_towers.add(new Triangle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
+                            towerMenu.isActive = false;
+                            buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                         } else if (towerMenu.C_button.contains(x,y)){
-                            Log.d("build Circle", "handleInput: ");
+                            gv.circle_towers.add(new Circle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
+                            towerMenu.isActive = false;
+                            buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                         } else {
                             towerMenu.isActive = false;
                         }

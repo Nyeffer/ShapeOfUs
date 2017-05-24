@@ -18,7 +18,8 @@ public class WaveSpawner extends GameObject{
     private int waveNumber = 1;
     private int countDown = 10;
     private int enemiesInWave = 3;
-    private int enemySpawnRate = 5;             // 5 seconds
+    private double enemySpawnRate = 5;             // 5 seconds
+    private final double MIN_SPAWN_RATE = 0.5;
     private int pixelsPerMeter;
     private int omniGonPosX;
     private int omniGonPosY;
@@ -42,7 +43,12 @@ public class WaveSpawner extends GameObject{
 
         if (nextWave == currentWave) {
             enemiesInWave += 1;
-            enemySpawnRate *= 0.8;
+            difficultyScale += 0.1;
+            if (enemySpawnRate < MIN_SPAWN_RATE){
+                enemySpawnRate = MIN_SPAWN_RATE;
+            } else {
+                enemySpawnRate *= 0.5;
+            }
             nextWave = new Wave((int) location.x, (int) location.y, difficultyScale, pixelsPerMeter, omniGonPosX, omniGonPosY, enemiesInWave, enemySpawnRate);
         }
         if (System.currentTimeMillis() >= timer + 1000 && currentWave.waveComplete){
