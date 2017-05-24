@@ -26,7 +26,6 @@ public class WhiteTile extends GameObject {
         setRectHitbox();
     }
 
-    @Override
     public void update(long fps, float gravity) {
         // Nothing because this is a floor tile
     }

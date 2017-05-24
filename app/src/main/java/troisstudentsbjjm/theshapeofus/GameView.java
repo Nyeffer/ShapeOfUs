@@ -56,11 +56,9 @@ public class GameView extends SurfaceView implements Runnable {
         ourHolder = getHolder();
 
         vp = new Viewport(screenWidth,screenHeight);
-        E_Square = new Enemy_Square(vp.getPixelsPerMeterX(),(int)((screenHeight*0.5)), 40, vp.getPixelsPerMeterY());      //40 is the square's health for now
+        //E_Square = new Enemy_Square(vp.getPixelsPerMeterX(),(int)((screenHeight*0.5)), 40, vp.getPixelsPerMeterY());      //40 is the square's health for now
 
-        running = true;
-
-        loadLevel("Level 1", 15, 30);
+        loadLevel("Level 1", 20, 22);
     }
 
     public void loadLevel(String level, float px, float py) {
@@ -116,9 +114,6 @@ public class GameView extends SurfaceView implements Runnable {
 
 
     private void update(){
-
-        E_Square.update(vp.getPixelsPerMeterX(),fps);
-
         for(GameObject go : lm.gameObjects) {
             if(go.isActive()) {
                 // Clip anything off-screen
@@ -167,6 +162,8 @@ public class GameView extends SurfaceView implements Runnable {
                     // Now draw() can ignore them
                 }
             }
+
+            //E_Square.update(vp.getPixelsPerMeterX(),fps);
         }
         if(lm.isPlaying()) {
             // Reset the players location as the center of the viewport
@@ -203,12 +200,12 @@ public class GameView extends SurfaceView implements Runnable {
             }
 
             // Draw the bullets
-            paint.setColor(Color.argb(255, 255, 255, 255));
+            /*paint.setColor(Color.argb(255, 255, 255, 255));
             for(int i = 0; i < 2; i++) { // TODO: get total tower bullets in use
                 // Pass in x and y coords as usual, then .25 and .05 for the bullet width and height
                 toScreen2d.set(vp.worldToScreen(0, 0, .25f, .05f)); // TODO: get bullets x and y to draw acordingly (replace the 0's)
                 canvas.drawRect(toScreen2d, paint);
-            }
+            }*/
 
             // Text for debugging
             if(debugging) {
@@ -223,13 +220,17 @@ public class GameView extends SurfaceView implements Runnable {
 
                 canvas.drawText("Gravity: " + lm.gravity, 10, 180, paint);
 
+                canvas.drawText("Center X: " + vp.getViewportWorldCenterX(), 10, 220, paint);
+
+                canvas.drawText("Center Y: " + vp.getViewportWorldCenterY(), 10, 260, paint);
+
                 // For reset the number of clipped objects per frame
                 vp.resetNumClipped();
             }// End if(debugging)
 
             // HUD Elements
             // Draw buttons
-            paint.setColor(Color.argb(80, 255, 255, 255));
+            /*paint.setColor(Color.argb(80, 255, 255, 255));
             //ArrayList<Rect> buttonsToDraw;
             //buttonsToDraw = ic.getButtons();
 
@@ -265,7 +266,10 @@ public class GameView extends SurfaceView implements Runnable {
 
             paint.setColor(Color.argb(255, 255, 255, 255));
             paint.setTextSize(52);
-            canvas.drawText("Upgrade", drawUpgrade.left + 15, drawUpgrade.bottom - 55, paint);
+            canvas.drawText("Upgrade", drawUpgrade.left + 15, drawUpgrade.bottom - 55, paint);*/
+
+            DrawPauseButton();
+            DrawUpgradeButton();
 
 
             //for(Rect rect : buttonsToDraw) {
@@ -285,9 +289,48 @@ public class GameView extends SurfaceView implements Runnable {
 
             //canvas.drawRect(0,screenHeight/2+vp.getPixelsPerMeterX(),screenWidth,screenHeight,paint);
 
-            E_Square.draw(canvas,paint);
+            //E_Square.draw(canvas,paint);
 
             ourHolder.unlockCanvasAndPost(canvas);
         }
+    }
+
+    public void DrawPauseButton() {
+        // Draws the pause button
+        paint.setColor(Color.argb(80, 255, 255, 255));
+        Rect drawPause;
+        drawPause = ic.PauseButton();
+
+        RectF rp = new RectF(drawPause.left, drawPause.top, drawPause.right, drawPause.bottom);
+        canvas.drawRoundRect(rp, 15f, 15f, paint);
+
+        if(lm.isPlaying()) {
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setTextSize(64);
+            canvas.drawText("Pause", drawPause.left + 25, drawPause.bottom - 50, paint);
+        } else if(!lm.isPlaying()) {
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setTextSize(64);
+            canvas.drawText("Play", drawPause.left + 50, drawPause.bottom - 50, paint);
+        }
+    }
+
+    public void DrawUpgradeButton() {
+        // Draws the upgrade button
+        // determines whether the button is active or not
+        if(ic.isUpgradeTapped() == true) {
+            paint.setColor(Color.argb(180, 255, 255, 255));
+        } else if(ic.isUpgradeTapped() == false) {
+            paint.setColor(Color.argb(80, 255, 255, 255));
+        }
+        Rect drawUpgrade;
+        drawUpgrade = ic.UpgradeButton();
+
+        RectF ru = new RectF(drawUpgrade.left, drawUpgrade.top, drawUpgrade.right, drawUpgrade.bottom);
+        canvas.drawRoundRect(ru, 15f, 15f, paint);
+
+        paint.setColor(Color.argb(255, 255, 255, 255));
+        paint.setTextSize(52);
+        canvas.drawText("Upgrade", drawUpgrade.left + 15, drawUpgrade.bottom - 55, paint);
     }
 }

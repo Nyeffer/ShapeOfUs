@@ -46,7 +46,7 @@ public abstract class GameObject  {
 
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resID);
 
-        bitmap = Bitmap.createScaledBitmap(bitmap, (int)(size * pixelsPerMetre), (int)(size * pixelsPerMetre), false);
+        bitmap = Bitmap.createScaledBitmap(bitmap, (int)(width * pixelsPerMetre), (int)(height * pixelsPerMetre), false);
 
         return bitmap;
     }

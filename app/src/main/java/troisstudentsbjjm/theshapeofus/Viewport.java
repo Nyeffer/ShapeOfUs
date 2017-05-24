@@ -110,28 +110,28 @@ public class Viewport {
         numClipped = 0;
     }
 
-    // Material to move the viewport, but this is only for small movements
+    // Material to move the viewport
     public void moveViewPortRight(int maxWidth, float move) {
         if(currentViewportWorldCenter.x < maxWidth - (metersToShowX/2) + 3) {
-            currentViewportWorldCenter.x += move;
+            currentViewportWorldCenter.x += 1;
         }
     }
 
     public void moveViewPortLeft(float move) {
         if(currentViewportWorldCenter.x > (metersToShowX/2) - 3) {
-            currentViewportWorldCenter.x -= move;
+            currentViewportWorldCenter.x -= 1;
         }
     }
 
     public void moveViewPortUp(float move) {
         if(currentViewportWorldCenter.y < (metersToShowY/2) - 3) {
-            currentViewportWorldCenter.y -= move;
+            currentViewportWorldCenter.y -= 1;
         }
     }
 
     public void moveViewPortDown(int maxHeight, float move) {
         if(currentViewportWorldCenter.y < maxHeight - (metersToShowY/2) + 3) {
-            currentViewportWorldCenter.y += move;
+            currentViewportWorldCenter.y += 1;
         }
     }
 }

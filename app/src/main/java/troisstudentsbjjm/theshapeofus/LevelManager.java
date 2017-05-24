@@ -26,7 +26,7 @@ public class LevelManager {
 
     int playerIndex;
 
-    private boolean playing;
+    private boolean playing = true;
     float gravity;
 
     LevelData levelData;
@@ -50,14 +50,11 @@ public class LevelManager {
             case "LevelMountain":
                 //levelData = new LevelMountain();
                 break;
-            default:
-                levelData = new LevelOne();
-                break;
         }
 
         // setup game objects
         gameObjects = new ArrayList<>();
-        bitmapsArray = new Bitmap[7]; // holds one of each type
+        bitmapsArray = new Bitmap[5]; // holds one of each type
 
         loadMapData(context, pixelsPerMeter, px, py);
         //loadBackgrounds(context, pixelsPerMeter, screenWidth);
@@ -150,11 +147,11 @@ public class LevelManager {
 
         for (int i = 0; i < levelData.terrain.size(); i++){
 
-            for (int j = 0; j < levelData.terrain.get(i).length(); j++){
+            for (int j = 0; j < levelData.terrain.get(i).length(); j++) {
 
                 c = levelData.terrain.get(i).charAt(j);
 
-                if (c != '.'){
+                if (c != '.') {
 
                     currentIndex++;
                     switch (c) {
@@ -162,7 +159,7 @@ public class LevelManager {
                             // Add the floor tiles
                             gameObjects.add(new WhiteTile(j, i, c));
                             break;
-                        case 'p':
+                        /*case 'p':
                             // Add the player's main base
                             break;
                         case 'b':
@@ -176,14 +173,14 @@ public class LevelManager {
                             break;
                         case 'c':
                             // Add circle
-                            break;
+                            break;*/
+                    }
+
+                    // look to ensure that the indexed bitmap has already been loaded
+                    if (bitmapsArray[getBitmapIndex(c)] == null) {
+                        bitmapsArray[getBitmapIndex(c)] = gameObjects.get(currentIndex).prepareBitmap(context, gameObjects.get(currentIndex).getBitmapName(), pixelsPerMeter);
                     }
                 }
-
-                // look to ensure that the indexed bitmap has already been loaded
-                //if(bitmapsArray[getBitmapIndex(c)] == null) {
-                //    bitmapsArray[getBitmapIndex(c)] = gameObjects.get(currentIndex).prepareBitmap(context, gameObjects.get(currentIndex).getBitmapName(), pixelsPerMeter);
-                //}
             }
         }
     }
