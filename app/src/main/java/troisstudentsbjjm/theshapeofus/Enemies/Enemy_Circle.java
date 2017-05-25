@@ -248,12 +248,12 @@ public class Enemy_Circle extends Circle {
 
     private void setDamage(){
         if (combined){
-            damage += 10;
+            damage += 20;
         }
-        if (damage < 20){
-            damage = 20;
-        } else if (damage > 40){
+        if (damage < 40){
             damage = 40;
+        } else if (damage > 80){
+            damage = 80;
         }
     }
 

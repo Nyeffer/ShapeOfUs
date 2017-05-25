@@ -30,7 +30,7 @@ public class Enemy_Triangle extends Triangle{
 
     public float angleD = 0;                            //angle to rotate on canvas
     public float angleToRotate = 135;
-    public float damage = 40;                           //kamikaze, after dealing damage triangle will die
+    public float damage = 20;                           //kamikaze, after dealing damage triangle will die
     public float health = 10;                           //added in constructor
     private final float GRAVITY = -10;                  //this will be in meters per second per second
     private final float MAX_JUMP_VELOCITY = -200;       //how fast the shape jumps
