@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">The Shape of Us</string>
+    <string name="upgrade_button">Upgrade</string>
 </resources>

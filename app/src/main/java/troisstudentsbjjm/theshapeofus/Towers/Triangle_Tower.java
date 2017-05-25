@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.RectF;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -25,7 +24,7 @@ public class Triangle_Tower {
     public final int NUM_SPIKES = 4;
     public float spikeSize = (float) (0.25);
     public RectF hitbox;
-    private float damage = 700;
+    private float damage = 3;
     int pixelsPerMeter;
 
 
@@ -51,7 +50,7 @@ public class Triangle_Tower {
 
     public void draw(Canvas canvas, Paint paint){
 
-        paint.setColor(Color.argb(255,255,255,255));
+        paint.setColor(Color.argb(255,150,150,150));
 
         for (Triangle spike : spikes){
             Path Triangle = new Path();
@@ -64,45 +63,54 @@ public class Triangle_Tower {
     }
 
 
-    public void update(Enemy_Square Enemy, long fps){
+    public void update(ArrayList<Enemy_Circle> C_Enemies, ArrayList<Enemy_Square> S_Enemies, ArrayList<Enemy_Triangle> T_enemies, long fps){
+        update_C(C_Enemies, fps);
+        update_S(S_Enemies, fps);
+        update_T(T_enemies, fps);
+    }
 
-        if (Enemy.angleD > 60){
-            if (hitbox.contains(Enemy.pivot.x+pixelsPerMeter,Enemy.pivot.y) || hitbox.contains(Enemy.center.x+pixelsPerMeter, Enemy.center.y)){
-                Enemy.takeDamage(damage/fps);
 
-                if (Enemy.health <= 0) {
-                    Enemy.destroy();
+    public void update_S(ArrayList<Enemy_Square> S_Enemies, long fps) {
+        for (Enemy_Square Enemy : S_Enemies) {
+            if (Enemy.angleD > 60) {
+                if (hitbox.contains(Enemy.pivot.x + pixelsPerMeter, Enemy.pivot.y) || hitbox.contains(Enemy.center.x + pixelsPerMeter, Enemy.center.y)) {
+                    Enemy.takeDamage(damage / fps);
+                    if (Enemy.health <= 0) {
+                        Enemy.destroy();
+                    }
                 }
-            }
-        }  else {
-            if (hitbox.contains(Enemy.pivot.x,Enemy.pivot.y) || hitbox.contains(Enemy.center.x, Enemy.center.y)){
-                Enemy.takeDamage(damage/fps);
-                if (Enemy.health <= 0) {
-                    Enemy.destroy();
+            } else {
+                if (hitbox.contains(Enemy.pivot.x, Enemy.pivot.y) || hitbox.contains(Enemy.center.x, Enemy.center.y)) {
+                    Enemy.takeDamage(damage / fps);
+                    if (Enemy.health <= 0) {
+                        Enemy.destroy();
+                    }
+                    Enemy.setSize();
                 }
-                Enemy.updateSize();
             }
         }
     }
 
 
-    public void update(Enemy_Triangle Enemy, long fps){
-
-        if (hitbox.contains(Enemy.A.x,Enemy.A.y) || hitbox.contains(Enemy.B.x, Enemy.B.y)){
-            Enemy.takeDamage(damage/fps);
-            if (Enemy.health <= 0){
-                Enemy.destroy();
+    public void update_T(ArrayList<Enemy_Triangle> T_Enemies, long fps) {
+        for (Enemy_Triangle Enemy : T_Enemies) {
+            if (hitbox.contains(Enemy.A.x, Enemy.A.y) || hitbox.contains(Enemy.B.x, Enemy.B.y)) {
+                Enemy.takeDamage(damage / fps);
+                if (Enemy.health <= 0) {
+                    Enemy.destroy();
+                }
             }
         }
     }
 
 
-    public void update(Enemy_Circle Enemy, long fps){
-
-        if (hitbox.left < Enemy.center.x+Enemy.size*0.5*pixelsPerMeter && hitbox.right > Enemy.center.x-Enemy.size*0.5*pixelsPerMeter){
-            Enemy.takeDamage(damage/fps);
-            if (Enemy.health <= 0) {
-                Enemy.destroy();
+    public void update_C(ArrayList<Enemy_Circle> C_Enemies, long fps) {
+        for (Enemy_Circle Enemy : C_Enemies) {
+            if (hitbox.left < Enemy.center.x + Enemy.size * 0.5 * pixelsPerMeter && hitbox.right > Enemy.center.x - Enemy.size * 0.5 * pixelsPerMeter) {
+                Enemy.takeDamage(damage / fps);
+                if (Enemy.health <= 0) {
+                    Enemy.destroy();
+                }
             }
         }
     }

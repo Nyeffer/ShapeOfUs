@@ -4,9 +4,6 @@ package troisstudentsbjjm.theshapeofus.Primatives;
  * Created by mrber on 2017-05-15.
  */
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 
 import troisstudentsbjjm.theshapeofus.Animation;
@@ -14,20 +11,13 @@ import troisstudentsbjjm.theshapeofus.Animation;
 public abstract class GameObject  {
 
     public float size;
-    private float height, width;
 
-    public boolean isActive = true;
-    public boolean isVisible = true;
-
-    private char type;
-
-    private String bitmapName;
+    public boolean isActive;
 
     public PointF location = new PointF();
 
-    private int facing;
+    public void update(long fps, float gravity) {
 
-    private boolean moves = false;
 
     private boolean traversable = false;
 
@@ -91,6 +81,7 @@ public abstract class GameObject  {
     }
     public void setType(char type) {
         this.type = type;
+
     }
     public void setAnimFps(int animFps) {   this.animFps = animFps; }
     public void setAnimFrameCount(int animFrameCount) { this.animFrameCount = animFrameCount;   }
