@@ -28,7 +28,7 @@ public class OmniGon extends Square{
 
     private Bitmap[] bitmaps;
 
-    public float health = 30;
+    public float health = 100;
 
     int bitmapIndex = 0;
     int pixelsPerMeter;
