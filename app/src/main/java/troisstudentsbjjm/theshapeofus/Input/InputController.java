@@ -67,7 +67,6 @@ public class InputController {
             int x = (int) motionEvent.getX(i);
             int y = (int) motionEvent.getY(i);
 
-
             switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
 
                 case MotionEvent.ACTION_DOWN:
@@ -76,29 +75,36 @@ public class InputController {
                         if (towerMenu.S_button.contains(x,y) && resources >= 4){
                             lm.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter, towerIndex));
                             towerMenu.isActive = false;
+                            upgradeTap = !upgradeTap;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                             subtractResources(4);
                         } else if (towerMenu.S_button.contains(x,y) && resources < 4){
                             towerMenu.isActive = false;
+                            upgradeTap = !upgradeTap;
                             gv.notEnoughResources = true;
                         } else if (towerMenu.T_button.contains(x,y) && resources >= 2){
                             lm.triangle_towers.add(new Triangle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
+                            upgradeTap = !upgradeTap;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                             subtractResources(2);
                         } else if (towerMenu.T_button.contains(x,y) && resources < 2){
                             towerMenu.isActive = false;
+                            upgradeTap = !upgradeTap;
                             gv.notEnoughResources = true;
                         } else if (towerMenu.C_button.contains(x,y) && resources >= 10){
                             lm.circle_towers.add(new Circle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
+                            upgradeTap = !upgradeTap;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                             subtractResources(10);
                         } else if (towerMenu.C_button.contains(x,y) && resources < 10){
                             towerMenu.isActive = false;
+                            upgradeTap = !upgradeTap;
                             gv.notEnoughResources = true;
                         } else {
                             towerMenu.isActive = false;
+                            upgradeTap = !upgradeTap;
                         }
                     }
                     if(pauseButton.contains(x, y)) {
@@ -110,7 +116,7 @@ public class InputController {
                             upgradeTap = true;
                         }
                     }
-                    if (!towerMenu.isActive) {
+                    if (!towerMenu.isActive && isUpgradeTapped()) {
                         for (int j = 0; j < buildBlocks.hitBlocks.size(); j++) {
                             if (buildBlocks.hitBlocks.get(j).hitBox.contains(x, y)) {
                                 if (buildBlocks.hitBlocks.get(j).isActive) {
@@ -129,14 +135,12 @@ public class InputController {
         }
     }
 
-
     public ArrayList getButtons() {
         ArrayList<Rect> currentButtonList = new ArrayList<>();
         currentButtonList.add(upgradeButton);
         currentButtonList.add(pauseButton);
         return currentButtonList;
     }
-
 
     public void drawButtons(Canvas canvas, Paint paint, GameView gv){
         towerMenu.draw(canvas,paint);
@@ -190,11 +194,10 @@ public class InputController {
         canvas.drawRoundRect(ru, 15f, 15f, paint);
 
         paint.setColor(Color.argb(255, 255, 255, 255));
-        paint.setTextSize(52);
-        canvas.drawText("Upgrade", drawUpgrade.left + 15, drawUpgrade.bottom - 55, paint);
+        paint.setTextSize(64);
+        canvas.drawText("Build", drawUpgrade.left + 35, drawUpgrade.bottom - 55, paint);
 
     }
-
 
     public void DrawResourceText(Canvas canvas, Paint paint) {
         paint.setTextSize(64);
