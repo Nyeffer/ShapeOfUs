@@ -34,18 +34,8 @@ public class OmniGon extends Square{
 
 
     OmniGon(Context context, float x, float y, int pixelsPerMeter) {
-//        AssetManager assetManager = context.getAssets();
-//        AssetFileDescriptor descriptor;
-//
-//        try {
-//
-//            descriptor = assetManager.openFd("omnigon.png");
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
         frames = new Rect[ANIMATION_FRAME_COUNT];
-
-
 
         Matrix flipper = new Matrix();
         size = 5;
@@ -67,30 +57,11 @@ public class OmniGon extends Square{
         bitmaps[7] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi8);
         bitmaps[8] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi9);
         bitmaps[9] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi10);
-        setHeight(HEIGHT);
-        setWidth(WIDTH);
 
-        setMoves(false);
-        setBitmapName(BITMAP_NAME);
-        setAnimFps(ANIMATION_FPS);
-        setAnimFrameCount(ANIMATION_FRAME_COUNT);
-        setBitmapName(BITMAP_NAME);
-        setAnimated(context, pixelsPerMeter, true);
         setHitBox(x,y,pixelsPerMeter);
 
     }
 
-    public Rect getRectToDraw(long deltaTime) {
-        return anim.getCurrentFrame(deltaTime);
-    }
-
-
-
-
-
-    public float getHeight() { return HEIGHT;}
-    public float getWidth() { return WIDTH; }
-    public int getAnimCount() { return ANIMATION_FRAME_COUNT;   }
 
     public void draw(Canvas canvas, Paint paint) {
         // clear the last frame
@@ -108,9 +79,5 @@ public class OmniGon extends Square{
                 bitmapIndex = 0;
             }
         }
-
-
-
     }
-
 }
