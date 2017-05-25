@@ -31,13 +31,7 @@ public class GameActivty extends Activity {
         setContentView(gameView);
     }
 
-    public boolean onKeyDown(int KeyCode, KeyEvent event) {
-        if (KeyCode == KeyEvent.KEYCODE_BACK) {
-            finish();
-            return true;
-        }
-        return true;
-    }
+
 
     @Override
     protected void onPause(){

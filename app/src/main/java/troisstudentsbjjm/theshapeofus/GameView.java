@@ -30,6 +30,7 @@ public class GameView extends SurfaceView implements Runnable {
     public boolean playing;
 
     private boolean gameEnded;
+    private GameOverActivity gameover;
 
     private Paint paint;
     private Canvas canvas;
@@ -125,6 +126,9 @@ public class GameView extends SurfaceView implements Runnable {
                 sumfps = 0;
             }
             lm.update(ic, fps);
+        }
+        if (gameEnded) {
+            setContentView(gameover);
         }
     }
 
