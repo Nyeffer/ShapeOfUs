@@ -25,6 +25,7 @@ public class GameView extends SurfaceView implements Runnable {
     public boolean notEnoughResources;
 
     private boolean gameEnded;
+    private GameOverActivity gameover;
 
     private Paint paint;
     private Canvas canvas;
@@ -130,6 +131,7 @@ public class GameView extends SurfaceView implements Runnable {
                 playing = false;
             }
         }
+        
     }
 
 
