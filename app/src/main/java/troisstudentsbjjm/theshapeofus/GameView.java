@@ -126,6 +126,9 @@ public class GameView extends SurfaceView implements Runnable {
             }
             lm.update(ic, fps);
         }
+
+
+
     }
 
 
