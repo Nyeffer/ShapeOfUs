@@ -23,7 +23,7 @@ public class LevelManager {
     public ArrayList<Triangle_Tower> triangle_towers;
     public ArrayList<Circle_Tower> circle_towers;
 
-    private WaveSpawner spawner;
+    public WaveSpawner spawner;
 
     public LevelManager (int xPos, int yPos, int pixelsPerMeter, int omniGonX, int omniGonY) {
         this.pixelsPerMeter = pixelsPerMeter;
@@ -56,6 +56,10 @@ public class LevelManager {
             } else {
                 spawner.currentWave.squares.get(i).update(spawner.currentWave.squares.get(i + 1), pixelsPerMeter, fps);
             }
+            if (spawner.currentWave.squares.get(i).isDead){
+                ic.addResources(spawner.currentWave.squares.get(i).value);
+                spawner.currentWave.squares.get(i).value = 0;
+            }
         }
         for (int i = 0; i < spawner.currentWave.circles.size(); i++) {
             if (i + 1 == spawner.currentWave.circles.size()) {
@@ -63,9 +67,17 @@ public class LevelManager {
             } else {
                 spawner.currentWave.circles.get(i).update(spawner.currentWave.circles.get(i + 1), pixelsPerMeter, fps);
             }
+            if (spawner.currentWave.circles.get(i).isDead) {
+                ic.addResources(spawner.currentWave.circles.get(i).value);
+                spawner.currentWave.circles.get(i).value = 0;
+            }
         }
         for (int i = 0; i < spawner.currentWave.triangles.size(); i++) {
             spawner.currentWave.triangles.get(i).update(pixelsPerMeter, fps);
+            if (spawner.currentWave.triangles.get(i).isDead) {
+                ic.addResources(spawner.currentWave.triangles.get(i).value);
+                spawner.currentWave.triangles.get(i).value = 0;
+            }
         }
     }
 

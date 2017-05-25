@@ -1,4 +1,4 @@
-package troisstudentsbjjm.theshapeofus;
+package troisstudentsbjjm.theshapeofus.Level;
 
 
 import android.util.Log;
@@ -10,6 +10,7 @@ import java.util.Random;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
+import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 public class Wave {
@@ -48,7 +49,7 @@ public class Wave {
         for (int i = 0; i < numCircles; i++){
             circles.add(i,new Enemy_Circle(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
         }
-        int numSquares =(int)(numEnemies*0.33);
+        int numSquares = (int)(numEnemies*0.33);
         for (int i = 0; i < numSquares; i++){
             squares.add(i,new Enemy_Square(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
         }

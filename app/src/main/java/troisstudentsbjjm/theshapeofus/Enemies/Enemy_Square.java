@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PointF;
 
+import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Primatives.Square;
 
 public class Enemy_Square extends Square{
@@ -17,7 +18,7 @@ public class Enemy_Square extends Square{
     public final PointF spawnPoint;                     //reference to original position
 
     private int pixelsPerMeter;                         //temporary (hopefully)
-    public int value = 2;                               //how much money you get from killing it
+    public int value = 3;                               //how much money you get from killing it
 
     public float angleD = 0;                            //angle to rotate square on canvas
     public float damage;                                //based on size, bigger == tons of damage
@@ -74,14 +75,14 @@ public class Enemy_Square extends Square{
             center.set((float) (hitBox.left+0.5*size), hitBox.bottom);
             if (isDead){
                 deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
-            } else if (!isDead && !isBlocked && isActive){
+            } else if (!isBlocked){
                 if (rolling){
                     angularVelocity = 60;
                     roll(pixelsPerMeter,fps);
                 } else {
                     jump(pixelsPerMeter,fps);
                 }
-            } else if (!isDead && isBlocked){
+            } else if (isBlocked){
                 attackAnimation(pixelsPerMeter,fps);
             }
         }
@@ -131,9 +132,8 @@ public class Enemy_Square extends Square{
 
     private void attackAnimation(int pixelsPerMeter, long fps){
         if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + jumpStop){
-            if (location.y >= spawnPoint.y){
-                velocity.y = (float) (MAX_JUMP_VELOCITY*0.5*size);
-                location.y = spawnPoint.y;
+            if (location.y == spawnPoint.y){
+                velocity.y = (MAX_JUMP_VELOCITY/size);
                 jumpStop = System.currentTimeMillis();
                 setRolling();
                 if (System.currentTimeMillis() >= TIME_BETWEEN_ATTACKS + attackTime){
@@ -162,7 +162,6 @@ public class Enemy_Square extends Square{
         if (System.currentTimeMillis() >= TIME_BETWEEN_JUMPS + jumpStop){
             if (spawnPoint.y == location.y){
                 velocity.set(3,MAX_JUMP_VELOCITY*size);
-                location.y = spawnPoint.y;
                 jumpStop = System.currentTimeMillis();
             }
             if (location.y + velocity.y/fps >= spawnPoint.y){

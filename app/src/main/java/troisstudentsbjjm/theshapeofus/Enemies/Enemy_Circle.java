@@ -8,6 +8,7 @@ import android.graphics.PointF;
 
 import java.util.ArrayList;
 
+import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Primatives.Circle;
 import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 
@@ -23,7 +24,7 @@ public class Enemy_Circle extends Circle {
 
     private int pixelsPerMeter;                         //temporary (hopefully)
     private int tickCounter = 0;                        //counting ticks to detonation
-    public int value = 2;                               //how much money you get from killing it
+    public int value = 10;                               //how much money you get from killing it
     private final int NUM_TRIANGLES = 6;                //number of triangles
 
     public float angleL = 0;                            //angle to rotate line on circle
@@ -46,7 +47,7 @@ public class Enemy_Circle extends Circle {
     private final long TIME_BETWEEN_TICKS = 500;        //self explanatory == 0.5seconds
 
 
-    public Enemy_Circle(int x,int y, double healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
+    public Enemy_Circle(int x, int y, double healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
         this.pixelsPerMeter = pixelsPerMeter;
         this.health *= healthFactor;
 
@@ -183,7 +184,6 @@ public class Enemy_Circle extends Circle {
             triangle.C.set(center.x,center.y);
             triangle.A.set((float) (center.x - 0.5*triangle.size*pixelsPerMeter), center.y + triangle.size*pixelsPerMeter);
             triangle.B.set((float) (center.x + 0.5*triangle.size*pixelsPerMeter), triangle.A.y);
-
         }
     }
 

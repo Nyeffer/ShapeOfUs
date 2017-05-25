@@ -8,6 +8,7 @@ import android.graphics.Path;
 
 import android.graphics.PointF;
 
+import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -25,9 +26,10 @@ public class Enemy_Triangle extends Triangle{
     public final PointF spawnPoint;                     //reference to original position
 
     private int pixelsPerMeter;                         //temporary (hopefully)
-    public int value = 2;                               //how much money you get from killing it
+    public int value = 5;                               //how much money you get from killing it
 
     public float angleD = 0;                            //angle to rotate on canvas
+    public float angleToRotate = 135;
     public float damage = 40;                           //kamikaze, after dealing damage triangle will die
     public float health = 10;                           //added in constructor
     private final float GRAVITY = -10;                  //this will be in meters per second per second
@@ -47,7 +49,7 @@ public class Enemy_Triangle extends Triangle{
     private final double TIME_TO_ROTATE = 0.4;          //how long it will take triangle to rotate
 
 
-    public Enemy_Triangle(int x,int y, double healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
+    public Enemy_Triangle(int x, int y, double healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
         this.pixelsPerMeter = pixelsPerMeter;
         this.health *= healthFactor;
 
@@ -111,9 +113,9 @@ public class Enemy_Triangle extends Triangle{
     private void attackAnimation(int pixelsPerMeter, long fps){
         if (location.y > spawnPoint.y - 2.5*pixelsPerMeter && !attacking){
             location.y += -6*pixelsPerMeter/fps;
-        } else if (angleD <= 135){
-            angleD += 135/(TIME_TO_ROTATE*fps);
-            if (angleD >= 135){
+        } else if (angleD <= angleToRotate){
+            angleD += angleToRotate/(TIME_TO_ROTATE*fps);
+            if (angleD >= angleToRotate){
                 attackTime = System.currentTimeMillis();
                 attacking = true;
             }

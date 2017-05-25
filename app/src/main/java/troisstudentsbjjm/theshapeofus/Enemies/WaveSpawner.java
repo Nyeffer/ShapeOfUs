@@ -3,9 +3,8 @@ package troisstudentsbjjm.theshapeofus.Enemies;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
-import troisstudentsbjjm.theshapeofus.Wave;
+import troisstudentsbjjm.theshapeofus.Level.Wave;
 
 public class WaveSpawner extends GameObject{
 

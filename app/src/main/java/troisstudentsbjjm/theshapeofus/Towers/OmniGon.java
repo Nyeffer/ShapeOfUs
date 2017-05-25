@@ -1,36 +1,85 @@
 package troisstudentsbjjm.theshapeofus.Towers;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PointF;
+import android.graphics.Rect;
+import android.opengl.Matrix;
+import android.util.Log;
 
-import java.util.AbstractCollection;
 import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
 import troisstudentsbjjm.theshapeofus.Primatives.Square;
+import troisstudentsbjjm.theshapeofus.R;
 
-public class Square_Tower extends Square {
-    public float health = 80;
-    private int pixelsPerMeter;
-    public int placementIndex;
+/**
+ * Created by Jeffherson on 2017-05-22.
+ */
 
-    public int numBlocked = 0;
+public class OmniGon extends Square{
+
+    private Bitmap[] bitmaps;
+    final int ANIMATION_FRAME_COUNT = 10;
+
+    public float health = 1000;
+    int bitmapIndex = 0;
+    int pixelsPerMeter;
+    final long TIME_BETWEEN_DRAWS = 100;
+    long drawTime;
+    public PointF omniGonCenter;
 
 
-    public Square_Tower(int x, int y, int pixelsPerMeter, int towerIndex) {
-        location.set(x,y);
-        size = 1;
+    public OmniGon(Context context, float x, float y, int pixelsPerMeter) {
         this.pixelsPerMeter = pixelsPerMeter;
-        this.placementIndex = towerIndex;
-        setHitBox(x,y,pixelsPerMeter);
+
+        location.set(x,y- 5*pixelsPerMeter);
+        hitBox.set((float) (x+0.7*pixelsPerMeter),location.y,x + 2*pixelsPerMeter,y + 5*pixelsPerMeter);
+        omniGonCenter = new PointF((float) (hitBox.left+(hitBox.right-hitBox.left)*0.5), (float) (hitBox.top + (hitBox.bottom- hitBox.top)*0.5)-pixelsPerMeter);
+        size = hitBox.right - hitBox.left;
         isActive = true;
+
+        bitmaps = new Bitmap[10];
+        bitmaps[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi1);
+        bitmaps[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi2);
+        bitmaps[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi3);
+        bitmaps[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi4);
+        bitmaps[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi5);
+        bitmaps[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi6);
+        bitmaps[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi7);
+        bitmaps[7] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi8);
+        bitmaps[8] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi9);
+        bitmaps[9] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi10);
+    }
+
+
+    public void draw(Canvas canvas, Paint paint) {
+        canvas.drawBitmap(bitmaps[bitmapIndex], location.x, location.y, paint);
+
+    }
+
+
+    private void updateBitmap(){
+        if(System.currentTimeMillis() >= drawTime + TIME_BETWEEN_DRAWS) {
+            drawTime = System.currentTimeMillis();
+            if(bitmapIndex < 9) {
+                bitmapIndex++;
+            } else {
+                bitmapIndex = 0;
+            }
+        }
     }
 
 
     public void update(ArrayList<Enemy_Circle> C_Enemies, ArrayList<Enemy_Square> S_Enemies, ArrayList<Enemy_Triangle> T_Enemies, long fps) {
+        Log.d("omniGon health", "checkTowerHealth: " + health);
+        updateBitmap();
         update_C(C_Enemies, fps);
         update_S(S_Enemies, fps);
         update_T(T_Enemies, fps);
@@ -41,12 +90,10 @@ public class Square_Tower extends Square {
         for (Enemy_Circle Enemy : C_Enemies) {
             checkTowerHealth(Enemy);
             if (isActive) {
-                if (Enemy.facingRight && isActive) {
                     if (!Enemy.isBlocked) {
-                        if (((Enemy.center.x + 0.5 * size * pixelsPerMeter) + Enemy.velocityX / fps) >= hitBox.left) {
+                        if (((Enemy.center.x + Enemy.radius * pixelsPerMeter) + (Enemy.velocityX / fps)) >= hitBox.left) {
                             Enemy.location.x += (hitBox.left - (Enemy.center.x + (0.5 * Enemy.size * pixelsPerMeter)));
                             Enemy.isBlocked = true;
-                            numBlocked++;
                         }
                     } else if (Enemy.isBlocked && Enemy.isDead && !Enemy.readyToExplode) {
                         health -= Enemy.damage * 0.5;
@@ -62,7 +109,7 @@ public class Square_Tower extends Square {
                                 Enemy.location.x -= (hitBox.left - Enemy.center.x + Enemy.radius * pixelsPerMeter) / fps;
                             }
                         }
-                    }
+
                 }
             }
         }
@@ -84,30 +131,14 @@ public class Square_Tower extends Square {
             checkTowerHealth(Enemy);
             if (isActive) {
                 if (Enemy.facingRight) {
-                    if (!Enemy.rolling && !Enemy.isBlocked && Enemy.hitBox.bottom < location.y + pixelsPerMeter) {
-                        if ((Enemy.hitBox.right + Enemy.velocity.x) >= hitBox.left) {
-                            Enemy.location.x += (hitBox.left - Enemy.hitBox.right);
-                            Enemy.velocity.x = 0;
-                            if (Enemy.location.y + Enemy.velocity.y / fps >= Enemy.spawnPoint.y) {
-                                Enemy.location.y = Enemy.spawnPoint.y;
-                                Enemy.isBlocked = true;
-                                Enemy.velocity.y = 0;
-                            }
+                    if (!Enemy.rolling) {
+                        if (Enemy.hitBox.right >= hitBox.left && !Enemy.isDead) {
+                            health -= Enemy.damage;
+                            Enemy.destroy();
                         }
-                    } else if (Enemy.rolling && !Enemy.isBlocked) {
+                    } else {
                         if ((Enemy.hitBox.right + Enemy.size * pixelsPerMeter) >= hitBox.left) {
                             Enemy.rolling = false;
-                        }
-                    } else if (Enemy.isBlocked && Enemy.attacking) {
-                        health -= Enemy.damage;
-                        Enemy.attacking = false;
-                    } else {
-                        if (Enemy.hitBox.right > hitBox.left && Enemy.hitBox.right < hitBox.right) {
-                            if (Enemy.location.x - (hitBox.left - Enemy.hitBox.right) / fps < hitBox.left) {
-                                Enemy.location.x = (hitBox.left - (Enemy.size * pixelsPerMeter));
-                            } else {
-                                Enemy.location.x -= (hitBox.left - Enemy.hitBox.right) / fps;
-                            }
                         }
                     }
                 }
@@ -119,9 +150,6 @@ public class Square_Tower extends Square {
     private void checkTowerHealth(Enemy_Square Enemy){
         if (health <= 0){
             destroyTower();
-            if (Enemy.isBlocked && !isActive && (Enemy.hitBox.right+0.5*pixelsPerMeter > hitBox.left && Enemy.hitBox.right+0.5*pixelsPerMeter < hitBox.right)){
-                Enemy.isBlocked = false;
-            }
         }
     }
 
@@ -134,7 +162,6 @@ public class Square_Tower extends Square {
                     if ((Enemy.A.x + pixelsPerMeter) >= hitBox.left && !Enemy.isBlocked && (Enemy.A.x + pixelsPerMeter) < hitBox.right) {
                         Enemy.location.x = (hitBox.left - pixelsPerMeter);
                         Enemy.velocity.x = 0;
-                        numBlocked++;
                         if (Enemy.location.y + Enemy.velocity.y / fps >= Enemy.spawnPoint.y) {
                             Enemy.location.y = Enemy.spawnPoint.y;
                             Enemy.isBlocked = true;
@@ -155,7 +182,7 @@ public class Square_Tower extends Square {
             destroyTower();
             if (Enemy.isBlocked && !isActive){
                 if ((Enemy.A.x + 1.5*pixelsPerMeter) >= hitBox.left && (Enemy.A.x + pixelsPerMeter) < hitBox.right)
-                Enemy.isBlocked = false;
+                    Enemy.isBlocked = false;
             }
         }
     }
@@ -163,13 +190,5 @@ public class Square_Tower extends Square {
 
     private void destroyTower(){
         isActive = false;
-    }
-
-
-    public void draw(Canvas canvas, Paint paint){
-        if (isActive){
-            paint.setColor(Color.argb(255,68,133,255));
-            canvas.drawRect(hitBox,paint);
-        }
     }
 }

@@ -6,8 +6,6 @@ package troisstudentsbjjm.theshapeofus.Primatives;
 
 import android.graphics.PointF;
 
-import troisstudentsbjjm.theshapeofus.Animation;
-
 public abstract class GameObject  {
 
     public float size;
