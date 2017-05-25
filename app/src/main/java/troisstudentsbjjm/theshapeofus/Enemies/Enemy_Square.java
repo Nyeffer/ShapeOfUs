@@ -18,7 +18,7 @@ public class Enemy_Square extends Square{
     public final PointF spawnPoint;                     //reference to original position
 
     private int pixelsPerMeter;                         //temporary (hopefully)
-    public int value = 3;                               //how much money you get from killing it
+    public int value = 1;                               //how much money you get from killing it
 
     public float angleD = 0;                            //angle to rotate square on canvas
     public float damage;                                //based on size, bigger == tons of damage

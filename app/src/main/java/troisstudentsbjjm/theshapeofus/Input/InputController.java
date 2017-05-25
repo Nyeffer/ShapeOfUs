@@ -18,14 +18,12 @@ import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
 //We can implement a joystick controller class down the line
 
 public class InputController {
-    // if we are going to have inputController keep track of tower tapping then isTapping will track if a tower has been tapped
-    // upgradeTap will determine whether the upgrade button is active or not.
-    public boolean isTapping;
+
     public boolean upgradeTap;
-    public boolean dragging;
 
     private int pixelsPerMeter;
     private int towerIndex;
+    private int resources = 15;
 
     private long timeTowerPlaced;
 
@@ -34,8 +32,6 @@ public class InputController {
 
     private TowerMenu towerMenu;
     public BuildBlocks buildBlocks;
-
-    private int resources = 15;
 
     public InputController(int screenX, int screenY, int pixelsPerMeter) {
         this.pixelsPerMeter = pixelsPerMeter;
@@ -73,30 +69,36 @@ public class InputController {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_POINTER_DOWN:
                     if (towerMenu.isActive){
-                        if (towerMenu.S_button.contains(x,y) && resources >= 4){
+                        if (towerMenu.S_button.contains(x,y) && resources >= 8){
                             lm.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter, towerIndex));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
-                            subtractResources(4);
-                        } else if (towerMenu.S_button.contains(x,y) && resources < 4){
+                            subtractResources(8);
+                            timeTowerPlaced = System.currentTimeMillis();
+                        } else if (towerMenu.S_button.contains(x,y) && resources < 8){
                             towerMenu.isActive = false;
                             gv.notEnoughResources = true;
-                        } else if (towerMenu.T_button.contains(x,y) && resources >= 2){
+                            timeTowerPlaced = System.currentTimeMillis();
+                        } else if (towerMenu.T_button.contains(x,y) && resources >= 5){
                             lm.triangle_towers.add(new Triangle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
-                            subtractResources(2);
-                        } else if (towerMenu.T_button.contains(x,y) && resources < 2){
+                            subtractResources(5);
+                            timeTowerPlaced = System.currentTimeMillis();
+                        } else if (towerMenu.T_button.contains(x,y) && resources < 5){
                             towerMenu.isActive = false;
                             gv.notEnoughResources = true;
-                        } else if (towerMenu.C_button.contains(x,y) && resources >= 10){
+                            timeTowerPlaced = System.currentTimeMillis();
+                        } else if (towerMenu.C_button.contains(x,y) && resources >= 15){
                             lm.circle_towers.add(new Circle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
-                            subtractResources(10);
-                        } else if (towerMenu.C_button.contains(x,y) && resources < 10){
+                            subtractResources(15);
+                            timeTowerPlaced = System.currentTimeMillis();
+                        } else if (towerMenu.C_button.contains(x,y) && resources < 15){
                             towerMenu.isActive = false;
                             gv.notEnoughResources = true;
+                            timeTowerPlaced = System.currentTimeMillis();
                         } else {
                             towerMenu.isActive = false;
                         }
@@ -110,7 +112,7 @@ public class InputController {
                             upgradeTap = true;
                         }
                     }
-                    if (!towerMenu.isActive) {
+                    if (!towerMenu.isActive && System.currentTimeMillis() > timeTowerPlaced + 1000) {
                         for (int j = 0; j < buildBlocks.hitBlocks.size(); j++) {
                             if (buildBlocks.hitBlocks.get(j).hitBox.contains(x, y)) {
                                 if (buildBlocks.hitBlocks.get(j).isActive) {

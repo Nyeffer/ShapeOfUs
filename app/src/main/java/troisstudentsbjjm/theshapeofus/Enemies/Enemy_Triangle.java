@@ -26,7 +26,7 @@ public class Enemy_Triangle extends Triangle{
     public final PointF spawnPoint;                     //reference to original position
 
     private int pixelsPerMeter;                         //temporary (hopefully)
-    public int value = 5;                               //how much money you get from killing it
+    public int value = 1;                               //how much money you get from killing it
 
     public float angleD = 0;                            //angle to rotate on canvas
     public float angleToRotate = 135;

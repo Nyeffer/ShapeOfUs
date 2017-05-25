@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,7 @@ public class Enemy_Circle extends Circle {
 
     private int pixelsPerMeter;                         //temporary (hopefully)
     private int tickCounter = 0;                        //counting ticks to detonation
-    public int value = 10;                               //how much money you get from killing it
+    public int value = 2;                               //how much money you get from killing it
     private final int NUM_TRIANGLES = 6;                //number of triangles
 
     public float angleL = 0;                            //angle to rotate line on circle
@@ -83,13 +84,11 @@ public class Enemy_Circle extends Circle {
             setHealth(fps);
             if (isDead){
                 deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
-            } else if (!isDead && !isBlocked && isActive){
+            } else if (!isBlocked && isActive){
                 setVelocityX();
                 roll(fps);
-            } else if (!isDead && isBlocked){
+            } else if (isBlocked){
                 startTimer(pixelsPerMeter,fps);
-            } else if (isDead && !isActive){
-                reset();
             }
         }
     }
@@ -193,6 +192,7 @@ public class Enemy_Circle extends Circle {
         if (System.currentTimeMillis() >= tickStartTime + TIME_BETWEEN_TICKS){
             tickStartTime = System.currentTimeMillis();
             tickCounter += 1;
+            Log.d("tickCounter", "startTimer: ");
             if (combined){
                 tickCounter = 0;
                 combined = false;

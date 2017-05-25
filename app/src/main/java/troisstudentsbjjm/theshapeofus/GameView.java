@@ -124,7 +124,11 @@ public class GameView extends SurfaceView implements Runnable {
                 sumfps = 0;
             }
             lm.update(ic, fps);
-            omniGon.update(lm.spawner.currentWave.circles,lm.spawner.currentWave.squares,lm.spawner.currentWave.triangles,fps);
+            if (omniGon.isActive) {
+                omniGon.update(lm.spawner.currentWave.circles, lm.spawner.currentWave.squares, lm.spawner.currentWave.triangles, fps);
+            } else {
+                playing = false;
+            }
         }
     }
 
@@ -155,12 +159,14 @@ public class GameView extends SurfaceView implements Runnable {
                 notEnoughResources = false;
             }
 
-            if(!playing) {
-                paint.setTextAlign(Paint.Align.CENTER);
-                paint.setColor(Color.argb(255, 255, 255, 255));
-
-                paint.setTextSize(120);
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setTextSize(120);
+            if(!playing && omniGon.isActive) {
                 canvas.drawText("Paused", (int) (screenWidth*0.5), (int)(screenHeight*0.5), paint);
+            } else if (!playing){
+                canvas.drawText("Game Over", (int) (screenWidth*0.5), (int)(screenHeight*0.5), paint);
+                canvas.drawText("Highest wave reached " + lm.spawner.waveNumber, (int) (screenWidth*0.5), (int)(screenHeight*0.7), paint);
             }
             if(debugging) {
                 paint.setTextSize(30);

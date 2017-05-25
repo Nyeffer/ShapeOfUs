@@ -13,6 +13,7 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
+import troisstudentsbjjm.theshapeofus.Enemies.DeathAnimation;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
@@ -26,15 +27,16 @@ import troisstudentsbjjm.theshapeofus.R;
 public class OmniGon extends Square{
 
     private Bitmap[] bitmaps;
-    final int ANIMATION_FRAME_COUNT = 10;
 
-    public float health = 1000;
+    public float health = 30;
+
     int bitmapIndex = 0;
     int pixelsPerMeter;
+
     final long TIME_BETWEEN_DRAWS = 100;
     long drawTime;
-    public PointF omniGonCenter;
 
+    public PointF omniGonCenter;
 
     public OmniGon(Context context, float x, float y, int pixelsPerMeter) {
         this.pixelsPerMeter = pixelsPerMeter;
@@ -45,6 +47,11 @@ public class OmniGon extends Square{
         size = hitBox.right - hitBox.left;
         isActive = true;
 
+        setBitmaps(context);
+    }
+
+
+    private void setBitmaps(Context context){
         bitmaps = new Bitmap[10];
         bitmaps[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi1);
         bitmaps[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.onmi2);
@@ -60,8 +67,11 @@ public class OmniGon extends Square{
 
 
     public void draw(Canvas canvas, Paint paint) {
-        canvas.drawBitmap(bitmaps[bitmapIndex], location.x, location.y, paint);
-
+        if (isActive){
+            canvas.drawBitmap(bitmaps[bitmapIndex], location.x, location.y, paint);
+            paint.setColor(Color.argb(255,255,255,255));
+            canvas.drawText("OmniGon Health: " + (int)health,hitBox.left - 2*pixelsPerMeter,hitBox.top-pixelsPerMeter,paint);
+        }
     }
 
 
@@ -78,7 +88,6 @@ public class OmniGon extends Square{
 
 
     public void update(ArrayList<Enemy_Circle> C_Enemies, ArrayList<Enemy_Square> S_Enemies, ArrayList<Enemy_Triangle> T_Enemies, long fps) {
-        Log.d("omniGon health", "checkTowerHealth: " + health);
         updateBitmap();
         update_C(C_Enemies, fps);
         update_S(S_Enemies, fps);
@@ -95,10 +104,10 @@ public class OmniGon extends Square{
                             Enemy.location.x += (hitBox.left - (Enemy.center.x + (0.5 * Enemy.size * pixelsPerMeter)));
                             Enemy.isBlocked = true;
                         }
-                    } else if (Enemy.isBlocked && Enemy.isDead && !Enemy.readyToExplode) {
+                    } else if (Enemy.isDead && !Enemy.readyToExplode) {
                         health -= Enemy.damage * 0.5;
                         Enemy.isBlocked = false;
-                    } else if (Enemy.isBlocked && !Enemy.isDead && Enemy.readyToExplode) {
+                    } else if (!Enemy.isDead && Enemy.readyToExplode) {
                         health -= Enemy.damage;
                         Enemy.destroy();
                     } else {

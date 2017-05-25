@@ -49,13 +49,13 @@ public class Wave {
         for (int i = 0; i < numCircles; i++){
             circles.add(i,new Enemy_Circle(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
         }
-        int numSquares = (int)(numEnemies*0.33);
-        for (int i = 0; i < numSquares; i++){
-            squares.add(i,new Enemy_Square(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
-        }
-        int numTriangles = numEnemies-(numCircles + numSquares);
+        int numTriangles = (int)(numEnemies*0.33);
         for (int i = 0; i < numTriangles; i++){
             triangles.add(i,new Enemy_Triangle(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
+        }
+        int numSquares = (numEnemies - (numCircles + numTriangles));
+        for (int i = 0; i < numSquares; i++){
+            squares.add(i,new Enemy_Square(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
         }
     }
 

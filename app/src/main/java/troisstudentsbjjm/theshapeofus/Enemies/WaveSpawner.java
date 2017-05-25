@@ -14,10 +14,10 @@ public class WaveSpawner extends GameObject{
     public Wave currentWave = null;
     public Wave nextWave = null;
 
-    private int waveNumber = 1;
+    public int waveNumber = 1;
     private int countDown = 10;
     private int enemiesInWave = 3;
-    private double enemySpawnRate = 5;             // 5 seconds
+    private double enemySpawnRate = 3;             // 5 seconds
     private final double MIN_SPAWN_RATE = 0.5;
     private int pixelsPerMeter;
     private int omniGonPosX;
