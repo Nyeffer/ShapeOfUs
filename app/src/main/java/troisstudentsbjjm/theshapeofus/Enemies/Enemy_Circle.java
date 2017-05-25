@@ -5,9 +5,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PointF;
+import android.util.Log;
 
 import java.util.ArrayList;
 
+import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Primatives.Circle;
 import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 
@@ -46,7 +48,7 @@ public class Enemy_Circle extends Circle {
     private final long TIME_BETWEEN_TICKS = 500;        //self explanatory == 0.5seconds
 
 
-    public Enemy_Circle(int x,int y, double healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
+    public Enemy_Circle(int x, int y, double healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY) {
         this.pixelsPerMeter = pixelsPerMeter;
         this.health *= healthFactor;
 
@@ -82,13 +84,11 @@ public class Enemy_Circle extends Circle {
             setHealth(fps);
             if (isDead){
                 deathAnimation.update(center.x, (float) (center.y - 0.5*size*pixelsPerMeter), size,fps);
-            } else if (!isDead && !isBlocked && isActive){
+            } else if (!isBlocked && isActive){
                 setVelocityX();
                 roll(fps);
-            } else if (!isDead && isBlocked){
+            } else if (isBlocked){
                 startTimer(pixelsPerMeter,fps);
-            } else if (isDead && !isActive){
-                reset();
             }
         }
     }
@@ -183,7 +183,6 @@ public class Enemy_Circle extends Circle {
             triangle.C.set(center.x,center.y);
             triangle.A.set((float) (center.x - 0.5*triangle.size*pixelsPerMeter), center.y + triangle.size*pixelsPerMeter);
             triangle.B.set((float) (center.x + 0.5*triangle.size*pixelsPerMeter), triangle.A.y);
-
         }
     }
 
@@ -193,6 +192,7 @@ public class Enemy_Circle extends Circle {
         if (System.currentTimeMillis() >= tickStartTime + TIME_BETWEEN_TICKS){
             tickStartTime = System.currentTimeMillis();
             tickCounter += 1;
+            Log.d("tickCounter", "startTimer: ");
             if (combined){
                 tickCounter = 0;
                 combined = false;
@@ -247,13 +247,13 @@ public class Enemy_Circle extends Circle {
 
 
     private void setDamage(){
+        if (combined){
+            damage += 10;
+        }
         if (damage < 20){
             damage = 20;
         } else if (damage > 40){
             damage = 40;
-        }
-        if (combined){
-            damage += 10;
         }
     }
 

@@ -1,4 +1,4 @@
-package troisstudentsbjjm.theshapeofus;
+package troisstudentsbjjm.theshapeofus.Level;
 
 
 import android.util.Log;
@@ -10,6 +10,7 @@ import java.util.Random;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Circle;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Square;
 import troisstudentsbjjm.theshapeofus.Enemies.Enemy_Triangle;
+import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Primatives.GameObject;
 
 public class Wave {
@@ -45,16 +46,22 @@ public class Wave {
 
     private void initArrays(int xStartPosition, int yStartPosition, float healthFactor, int pixelsPerMeter, int omniGonPosX, int omniGonPosY, int numEnemies){
         int numCircles = (int)(numEnemies*0.33);
-        for (int i = 0; i < numCircles; i++){
-            circles.add(i,new Enemy_Circle(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
+        if (numCircles > 0) {
+            for (int i = 0; i < numCircles; i++) {
+                circles.add(i, new Enemy_Circle(xStartPosition, yStartPosition, healthFactor, pixelsPerMeter, omniGonPosX, omniGonPosY));
+            }
         }
-        int numSquares =(int)(numEnemies*0.33);
-        for (int i = 0; i < numSquares; i++){
-            squares.add(i,new Enemy_Square(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
+        int numTriangles = (int)(numEnemies*0.33);
+        if (numTriangles > 0) {
+            for (int i = 0; i < numTriangles; i++) {
+                triangles.add(i, new Enemy_Triangle(xStartPosition, yStartPosition, healthFactor, pixelsPerMeter, omniGonPosX, omniGonPosY));
+            }
         }
-        int numTriangles = numEnemies-(numCircles + numSquares);
-        for (int i = 0; i < numTriangles; i++){
-            triangles.add(i,new Enemy_Triangle(xStartPosition,yStartPosition,healthFactor,pixelsPerMeter,omniGonPosX,omniGonPosY));
+        int numSquares = (numEnemies - (numCircles + numTriangles));
+        if (numSquares > 0) {
+            for (int i = 0; i < numSquares; i++) {
+                squares.add(i, new Enemy_Square(xStartPosition, yStartPosition, healthFactor, pixelsPerMeter, omniGonPosX, omniGonPosY));
+            }
         }
     }
 

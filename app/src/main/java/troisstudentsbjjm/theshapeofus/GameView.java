@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
-import android.os.Bundle;
 import android.graphics.RectF;
 
 import android.util.Log;
@@ -14,20 +13,16 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.util.ArrayList;
-
-import troisstudentsbjjm.theshapeofus.Enemies.WaveSpawner;
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Level.LevelManager;
-import troisstudentsbjjm.theshapeofus.Towers.Circle_Tower;
-import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
-import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
+import troisstudentsbjjm.theshapeofus.Towers.OmniGon;
 
 public class GameView extends SurfaceView implements Runnable {
     private boolean debugging = true;
     private volatile boolean running;
     private Thread gameThread = null;
     public boolean playing;
+    public boolean notEnoughResources;
 
     private boolean gameEnded;
     private GameOverActivity gameover;
@@ -49,6 +44,8 @@ public class GameView extends SurfaceView implements Runnable {
     int counter = 0;                    //for calculating fps
     public int money = 0;
 
+    OmniGon omniGon;
+
     private LevelManager lm;
     private InputController ic;
     private Rect terrain;
@@ -65,12 +62,14 @@ public class GameView extends SurfaceView implements Runnable {
         paint = new Paint();
         ourHolder = getHolder();
 
+        omniGon = new OmniGon(context,(float) (screenWidth*0.75), (float) (screenHeight*0.5),pixelsPerMeter);
         ic = new InputController(screenWidth,screenHeight, pixelsPerMeter);
-        lm = new LevelManager(-50,(int)((screenHeight*0.5)), pixelsPerMeter, (int)(screenWidth*0.5), (int)(screenHeight*0.5));
+        lm = new LevelManager(-50,(int)((screenHeight*0.5)), pixelsPerMeter, (int)(omniGon.omniGonCenter.x), (int)(omniGon.omniGonCenter.y));
 
         terrain = new Rect(0,screenHeight/2+pixelsPerMeter,screenWidth,screenHeight);
 
         playing = true;
+        notEnoughResources = false;
         running = true;
 
     }
@@ -126,6 +125,11 @@ public class GameView extends SurfaceView implements Runnable {
                 sumfps = 0;
             }
             lm.update(ic, fps);
+            if (omniGon.isActive) {
+                omniGon.update(lm.spawner.currentWave.circles, lm.spawner.currentWave.squares, lm.spawner.currentWave.triangles, fps);
+            } else {
+                playing = false;
+            }
         }
         
     }
@@ -143,17 +147,28 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setColor(Color.argb(255,99,74,51));
             canvas.drawRect(terrain,paint);
 
-            DrawPauseButton();
-            DrawUpgradeButton();
+            omniGon.draw(canvas,paint);
 
-            ic.drawButtons(canvas,paint);
+            ic.drawButtons(canvas,paint,this);
 
-            if(!playing) {
+            if(notEnoughResources) {
                 paint.setTextAlign(Paint.Align.CENTER);
-                paint.setColor(Color.argb(255, 255, 255, 255));
+                paint.setColor(Color.argb(255, 255, 0, 0));
 
                 paint.setTextSize(120);
+                canvas.drawText("Insufficient Resources", (int) (screenWidth*0.5), (int)(screenHeight*0.5), paint);
+
+                notEnoughResources = false;
+            }
+
+            paint.setTextAlign(Paint.Align.CENTER);
+            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setTextSize(120);
+            if(!playing && omniGon.isActive) {
                 canvas.drawText("Paused", (int) (screenWidth*0.5), (int)(screenHeight*0.5), paint);
+            } else if (!playing){
+                canvas.drawText("Game Over", (int) (screenWidth*0.5), (int)(screenHeight*0.5), paint);
+                canvas.drawText("Highest wave reached " + lm.spawner.waveNumber, (int) (screenWidth*0.5), (int)(screenHeight*0.7), paint);
             }
             if(debugging) {
                 paint.setTextSize(30);
@@ -161,46 +176,5 @@ public class GameView extends SurfaceView implements Runnable {
             }
             ourHolder.unlockCanvasAndPost(canvas);
         }
-    }
-
-
-    public void DrawPauseButton() {
-        // Draws the pause button
-        paint.setColor(Color.argb(80, 255, 255, 255));
-        Rect drawPause;
-        drawPause = ic.PauseButton();
-
-        RectF rp = new RectF(drawPause.left, drawPause.top, drawPause.right, drawPause.bottom);
-        canvas.drawRoundRect(rp, 15f, 15f, paint);
-
-        if(playing) {
-            paint.setColor(Color.argb(255, 255, 255, 255));
-            paint.setTextSize(64);
-            canvas.drawText("Pause", drawPause.left + 25, drawPause.bottom - 50, paint);
-        } else if(!playing) {
-            paint.setColor(Color.argb(255, 255, 255, 255));
-            paint.setTextSize(64);
-            canvas.drawText("Play", drawPause.left + 50, drawPause.bottom - 50, paint);
-        }
-    }
-
-
-    public void DrawUpgradeButton() {
-        // Draws the upgrade button
-        // determines whether the button is active or not
-        if(ic.isUpgradeTapped()) {
-            paint.setColor(Color.argb(180, 255, 255, 255));
-        } else if(!ic.isUpgradeTapped()) {
-            paint.setColor(Color.argb(80, 255, 255, 255));
-        }
-        Rect drawUpgrade;
-        drawUpgrade = ic.UpgradeButton();
-
-        RectF ru = new RectF(drawUpgrade.left, drawUpgrade.top, drawUpgrade.right, drawUpgrade.bottom);
-        canvas.drawRoundRect(ru, 15f, 15f, paint);
-
-        paint.setColor(Color.argb(255, 255, 255, 255));
-        paint.setTextSize(52);
-        canvas.drawText("Upgrade", drawUpgrade.left + 15, drawUpgrade.bottom - 55, paint);
     }
 }
