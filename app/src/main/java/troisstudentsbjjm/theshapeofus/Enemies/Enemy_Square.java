@@ -120,10 +120,12 @@ public class Enemy_Square extends Square{
                     healthPool += Enemy.health;
                     Enemy.health = 0;
                     Enemy.isActive = false;
+                    Enemy.isDead = true;
                 } else if(Enemy.health > health){
                     Enemy.healthPool += health;
                     health = 0;
                     isActive = false;
+                    isDead = true;
                 }
             }
         }

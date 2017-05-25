@@ -104,10 +104,10 @@ public class OmniGon extends Square{
                             Enemy.location.x += (hitBox.left - (Enemy.center.x + (0.5 * Enemy.size * pixelsPerMeter)));
                             Enemy.isBlocked = true;
                         }
-                    } else if (Enemy.isDead && !Enemy.readyToExplode) {
+                    } else if (Enemy.isDead && !Enemy.readyToExplode && Enemy.center.x + size*pixelsPerMeter > hitBox.left) {
                         health -= Enemy.damage * 0.5;
                         Enemy.isBlocked = false;
-                    } else if (!Enemy.isDead && Enemy.readyToExplode) {
+                    } else if (!Enemy.isDead && Enemy.readyToExplode && Enemy.center.x + size*pixelsPerMeter > hitBox.left) {
                         health -= Enemy.damage;
                         Enemy.destroy();
                     } else {
