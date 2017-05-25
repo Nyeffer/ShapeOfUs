@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import java.util.ArrayList;
 
 import troisstudentsbjjm.theshapeofus.GameView;
+import troisstudentsbjjm.theshapeofus.Level.LevelManager;
 import troisstudentsbjjm.theshapeofus.Towers.Circle_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Square_Tower;
 import troisstudentsbjjm.theshapeofus.Towers.Triangle_Tower;
@@ -59,7 +60,7 @@ public class InputController {
         upgradeTap = true;
     }
 
-    public void handleInput(MotionEvent motionEvent, GameView gv) {
+    public void handleInput(MotionEvent motionEvent, LevelManager lm, GameView gv) {
         int pointerCount = motionEvent.getPointerCount();
         float dX = 0;
         float dY = 0;
@@ -75,7 +76,7 @@ public class InputController {
                 case MotionEvent.ACTION_POINTER_DOWN:
                     if (towerMenu.isActive){
                         if (towerMenu.S_button.contains(x,y) && resources >= 4){
-                            gv.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter, towerIndex));
+                            lm.square_towers.add(new Square_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter, towerIndex));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                             subtractResources(4);
@@ -83,7 +84,7 @@ public class InputController {
                             towerMenu.isActive = false;
                             gv.notEnoughResources = true;
                         } else if (towerMenu.T_button.contains(x,y) && resources >= 2){
-                            gv.triangle_towers.add(new Triangle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
+                            lm.triangle_towers.add(new Triangle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                             subtractResources(2);
@@ -91,7 +92,7 @@ public class InputController {
                             towerMenu.isActive = false;
                             gv.notEnoughResources = true;
                         } else if (towerMenu.C_button.contains(x,y) && resources >= 10){
-                            gv.circle_towers.add(new Circle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
+                            lm.circle_towers.add(new Circle_Tower((int)(buildBlocks.hitBlocks.get(towerIndex).location.x),(int)(buildBlocks.hitBlocks.get(towerIndex).location.y), pixelsPerMeter));
                             towerMenu.isActive = false;
                             buildBlocks.hitBlocks.get(towerIndex).isActive = false;
                             subtractResources(10);
