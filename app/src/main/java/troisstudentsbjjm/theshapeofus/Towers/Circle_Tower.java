@@ -45,6 +45,7 @@ public class Circle_Tower {
     private boolean charging = false;
     private boolean readyToFire = true;
     private boolean bulletFired = false;
+    public boolean isActive;
 
     private long fireTime;
     private long fireRate = 3000;
@@ -75,6 +76,7 @@ public class Circle_Tower {
         targetingRange = new RectF((float) (x + 0.5*pixelsPerMeter) - range*pixelsPerMeter, y-2*pixelsPerMeter, (float) (x + 0.5*pixelsPerMeter) + range*pixelsPerMeter, y+2*pixelsPerMeter);
         initShapes(pixelsPerMeter);
         distToClosestEnemy = (range*pixelsPerMeter);
+        isActive = true;
     }
 
 
@@ -94,9 +96,11 @@ public class Circle_Tower {
 
 
     public void update(ArrayList<Enemy_Circle> C_Enemies, ArrayList<Enemy_Square> S_Enemies, ArrayList<Enemy_Triangle> T_Enemies, long fps){
-        update_C(C_Enemies, fps);
-        update_S(S_Enemies, fps);
-        update_T(T_Enemies, fps);
+        if (isActive) {
+            update_C(C_Enemies, fps);
+            update_S(S_Enemies, fps);
+            update_T(T_Enemies, fps);
+        }
     }
 
 
@@ -184,6 +188,7 @@ public class Circle_Tower {
 
 
     public void update_T(ArrayList<Enemy_Triangle> triangles, long fps){
+
         updateCircleSize(fps);
         rotateAccent(fps);
         for (Enemy_Triangle Enemy : triangles) {

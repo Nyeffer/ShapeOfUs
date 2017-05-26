@@ -21,14 +21,18 @@ import troisstudentsbjjm.theshapeofus.Primatives.Triangle;
 public class Triangle_Tower {
 
     public ArrayList<Triangle> spikes;
+
     public final int NUM_SPIKES = 4;
     public float spikeSize = (float) (0.25);
-    public RectF hitbox;
     private float damage = 3;
+
+    public RectF hitbox;
+
     int pixelsPerMeter;
 
-
     public PointF location;
+
+    public boolean isActive;
 
     public Triangle_Tower(int x, int y, int pixelsPerMeter){
         this.pixelsPerMeter = pixelsPerMeter;
@@ -64,9 +68,11 @@ public class Triangle_Tower {
 
 
     public void update(ArrayList<Enemy_Circle> C_Enemies, ArrayList<Enemy_Square> S_Enemies, ArrayList<Enemy_Triangle> T_enemies, long fps){
-        update_C(C_Enemies, fps);
-        update_S(S_Enemies, fps);
-        update_T(T_enemies, fps);
+        if (isActive) {
+            update_C(C_Enemies, fps);
+            update_S(S_Enemies, fps);
+            update_T(T_enemies, fps);
+        }
     }
 
 

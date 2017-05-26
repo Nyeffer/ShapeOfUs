@@ -146,7 +146,6 @@ public class Enemy_Circle extends Circle {
     }
 
 
-
     private void drawTriangles(Canvas canvas, Paint paint){
         setPaths();
         paint.setColor(Color.argb(150, 0, 0, 0));
