@@ -182,7 +182,7 @@ public class Enemy_Square extends Square{
     public void setSize(){
         if (health * 0.025 > 0.5){
             size = ((float) (health * 0.025));
-            damage = (float) (health*0.2);
+            damage = (float) (health*0.25);
             if (size > 2){
                 size = 2;
             }

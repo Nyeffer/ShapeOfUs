@@ -43,15 +43,13 @@ public class Square_Tower extends Square {
             if (isActive) {
                 if (Enemy.facingRight && isActive) {
                     if (!Enemy.isBlocked) {
-                        if (((Enemy.center.x + 0.5 * size * pixelsPerMeter) + Enemy.velocityX / fps) >= hitBox.left) {
+                        if (((Enemy.center.x + Enemy.radius * pixelsPerMeter) + Enemy.velocityX / fps) >= hitBox.left && ((Enemy.center.x + Enemy.radius * pixelsPerMeter) + Enemy.velocityX / fps) < hitBox.right) {
                             Enemy.location.x += (hitBox.left - (Enemy.center.x + (0.5 * Enemy.size * pixelsPerMeter)));
                             Enemy.isBlocked = true;
-                            numBlocked++;
                         }
-                    } else if (Enemy.isBlocked && Enemy.isDead && !Enemy.readyToExplode) {
+                    } else if (Enemy.isDead && !Enemy.readyToExplode && Enemy.center.x + Enemy.size > hitBox.left && Enemy.center.x + Enemy.size < hitBox.right) {
                         health -= Enemy.damage * 0.5;
-                        Enemy.isBlocked = false;
-                    } else if (Enemy.isBlocked && !Enemy.isDead && Enemy.readyToExplode) {
+                    } else if (!Enemy.isDead && Enemy.readyToExplode && Enemy.center.x + Enemy.size > hitBox.left && Enemy.center.x + Enemy.size < hitBox.right) {
                         health -= Enemy.damage;
                         Enemy.destroy();
                     } else {
@@ -134,7 +132,6 @@ public class Square_Tower extends Square {
                     if ((Enemy.A.x + pixelsPerMeter) >= hitBox.left && !Enemy.isBlocked && (Enemy.A.x + pixelsPerMeter) < hitBox.right) {
                         Enemy.location.x = (hitBox.left - pixelsPerMeter);
                         Enemy.velocity.x = 0;
-                        numBlocked++;
                         if (Enemy.location.y + Enemy.velocity.y / fps >= Enemy.spawnPoint.y) {
                             Enemy.location.y = Enemy.spawnPoint.y;
                             Enemy.isBlocked = true;
