@@ -251,7 +251,11 @@ public class Circle_Tower {
 
     private void rotateAccent(long fps){
         if (readyToFire && !bulletFired){
-            velocity += Math.PI/180;
+            if (velocity < -Math.PI){
+                velocity += Math.PI/180;
+            } else {
+                velocity -= Math.PI/180;
+            }
         }
         circleAccent.center.x = (float) (AccentXpos + (CIRCLE_MAX_SIZE*pixelsPerMeter*Math.sin(velocity/(0.1*circle.size))));
         circleAccent2.center.x = (float) (AccentXpos - (CIRCLE_MAX_SIZE*pixelsPerMeter*Math.sin(velocity/(0.1*circle.size))));

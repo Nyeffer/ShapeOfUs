@@ -53,7 +53,7 @@ public class Enemy_Circle extends Circle {
         this.health *= healthFactor;
 
         isBlocked = false;
-        damage = 20;
+        damage = 40;
 
         triangles = new ArrayList<>();
         paths = new ArrayList<>();
@@ -124,7 +124,7 @@ public class Enemy_Circle extends Circle {
 
 
     private void combine(Enemy_Circle Enemy){
-        if (Enemy != null){
+        if (Enemy != this){
             if (!Enemy.isDead && Enemy.isActive && !isDead){
                 if (Enemy.center.x < center.x + 0.5*size*pixelsPerMeter && Enemy.center.x > center.x - 0.5*size*pixelsPerMeter){
                     if (Enemy.health <= health){
@@ -219,7 +219,7 @@ public class Enemy_Circle extends Circle {
         if (healthPool - healthPool/fps < 0){
             healthPool = 0;
         }
-        if (health <= 0){
+        if (health < 0){
             destroy();
         }
         setSize();
