@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import troisstudentsbjjm.theshapeofus.Input.InputController;
 import troisstudentsbjjm.theshapeofus.Level.LevelManager;
@@ -25,7 +26,6 @@ public class GameView extends SurfaceView implements Runnable {
     public boolean notEnoughResources;
 
     private boolean gameEnded;
-    private GameOverActivity gameover;
 
     private Paint paint;
     private Canvas canvas;
@@ -116,6 +116,7 @@ public class GameView extends SurfaceView implements Runnable {
         }
     }
 
+
     private void update() {
         if (playing) {
             counter++;
@@ -131,7 +132,6 @@ public class GameView extends SurfaceView implements Runnable {
                 playing = false;
             }
         }
-        
     }
 
 
