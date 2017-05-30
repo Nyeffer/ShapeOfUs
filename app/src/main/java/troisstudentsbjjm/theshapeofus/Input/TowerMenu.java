@@ -135,7 +135,10 @@ public class TowerMenu extends GameObject {
             canvas.drawPath(Ticon,paint);
             canvas.drawRect(S_icon.hitBox,paint);
             canvas.drawCircle(C_icon.center.x,C_icon.center.y,C_icon.size,paint);
-
+            paint.setColor(Color.argb(255,0,0,0));
+            canvas.drawText("15",C_icon.center.x,C_icon.center.y+10,paint);
+            canvas.drawText("8",(float) (S_icon.hitBox.left+0.5*S_icon.size)+15,(float) (S_icon.hitBox.top + 0.5*S_icon.size)+20,paint);
+            canvas.drawText("5",T_icon.A.x, (float) (T_icon.A.y - 0.4*T_icon.size),paint);
         }
     }
 }
